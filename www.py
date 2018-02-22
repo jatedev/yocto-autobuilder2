@@ -1,5 +1,5 @@
 from buildbot.plugins import util
-from yoctoab import config
+from yoctoabb import config
 
 
 # allow = []

@@ -1,6 +1,6 @@
 from buildbot.plugins import reporters
 
-from yoctoab import config
+from yoctoabb import config
 
 
 services = []
@@ -25,7 +25,7 @@ services = []
 #                   channels=["yocto"],
 #                   noticeOnChannel=True))
 
-# from yoctoab.reporters import wikilog
+# from yoctoabb.reporters import wikilog
 # services.append(
 #     wikilog.WikiLog("https://wiki.yoctoproject.org/wiki/api.php",
 #                     "User", "password", "LogPage"

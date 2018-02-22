@@ -1,5 +1,5 @@
 from buildbot.plugins import worker
-from yoctoab import config
+from yoctoabb import config
 
 workers = []
 

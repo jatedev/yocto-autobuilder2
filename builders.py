@@ -1,7 +1,7 @@
 from buildbot.plugins import *
 
-from yoctoab import config
-from yoctoab.steps.writelayerinfo import WriteLayerInfo
+from yoctoabb import config
+from yoctoabb.steps.writelayerinfo import WriteLayerInfo
 
 import os
 

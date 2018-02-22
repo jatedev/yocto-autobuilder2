@@ -3,7 +3,7 @@ from buildbot.process import buildstep
 import json
 import os
 
-from yoctoab import config
+from yoctoabb import config
 
 
 class WriteLayerInfo(buildstep.ShellMixin, buildstep.BuildStep):

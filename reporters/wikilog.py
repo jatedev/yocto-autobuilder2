@@ -3,7 +3,7 @@ from buildbot.util import service
 from twisted.internet import defer
 from twisted.python import log
 
-from yoctoab.lib.wiki import YPWiki
+from yoctoabb.lib.wiki import YPWiki
 
 
 class WikiLog(service.BuildbotService):
