@@ -62,22 +62,26 @@ implementation
 ### Upstream Yocto Project autobuilder
 __on the controller__
 ```
-$ buildbot create-master <controller>
-$ cd <controller>
-$ git clone <yoctoab repo>
+$ buildbot create-master <yocto-controller>
+$ cd <yocto-controller>
+$ git clone <yoctoabb repo>
 $ cd ..
-$ ln -rs controller/yoctoab/master.cfg controller/master.cfg
-$ $EDITOR controller/yoctoab/master.cfg
+$ ln -rs <yocto-controller>/yoctoabb/master.cfg <yocto-controller>/master.cfg
+$ $EDITOR <yocto-controller>/yoctoabb/master.cfg
 <modify c['buildbotURL']>
-$ $EDITOR controller/yoctoab/services.py
+$ $EDITOR <yocto-controller>/yoctoabb/services.py
 <Enable desired services, set appropriate configuration values>
-$ $EDITOR controller/yoctoab/www.py
+$ $EDITOR <yocto-controller>/yoctoabb/www.py
 <Configure and enable autorisation if desired>
+$ $EDITOR <yocto-controller>/yoctoabb/config.py
+<>
+$ buildbot start <yocto-controller>
 ```
 
 __on the worker__
 ```
-$ buildbot-worker create-worker <worker> <localhost> <example-worker> <pass>
+$ buildbot-worker create-worker <yocto-worker> <localhost> <example-worker> <pass>
+$ buildbot-worker start <yocto-worker>
 ```
 
 NOTE: the 3rd parameter to create-worker, the worker name, need not be
