@@ -25,19 +25,19 @@ schedulers which can supply custom versions of the required values for the
 yocto-autobuilder-helper script parameters.
 
 ### Code layout
-builders.py -- configures the builders with minimal buildsteps to invoke the yocto-autobuilder-helper scripts
-lib/
-  wiki.py -- implements some mediawiki related functionality as used by the wikilog plugin
+- [builders.py](builders.py) -- configures the builders with minimal buildsteps to invoke the yocto-autobuilder-helper scripts
+- lib/
+  - [wiki.py](lib/wiki.py) -- implements some mediawiki related functionality as used by the wikilog plugin
 reporters/
-  wikilog.py -- our custom plugin to write info on build failures to a wiki page
-steps/
-  writelayerinfo.py -- write the user supplied (or default) repos to a JSON file for use by the scripts
-config.py -- goal is to contain all values that might need changing to redeploy this code elsewhere. Goal hasn't yet been met.
-master.cfg -- calls into other scripts to do most configuration. Cluster specific config still lives here (i.e. controller url).
-schedulers.py -- sets up the force schedulers with controls for modifying inputs for each builder.
-services.py -- configures irc, mail and wikilog` reporters.
-workers.py -- configures the worker objects
-www.py -- sets up the web UI
+  - [wikilog.py](reporters/wikilog.py) -- our custom plugin to write info on build failures to a wiki page
+- steps/
+  - [writelayerinfo.py](steps/writelayerinfo.py) -- write the user supplied (or default) repos to a JSON file for use by the scripts
+- [config.py](config.py) -- goal is to contain all values that might need changing to redeploy this code elsewhere. Goal hasn't yet been met.
+- [master.cfg](master.cfg) -- calls into other scripts to do most configuration. Cluster specific config still lives here (i.e. controller url).
+- [schedulers.py](schedulers.py) -- sets up the force schedulers with controls for modifying inputs for each builder.
+- [services.py](services.py) -- configures irc, mail and wikilog reporters.
+- [workers.py](workers.py) -- configures the worker objects
+- [www.py](www.py) -- sets up the web UI
 
 ## Customisations
 Whilst the goal is as little custom code as possible, there were some
@@ -46,14 +46,15 @@ workflows and to replicate the workflows established with the outgoing
 yocto-autobuilder[2].
 
 ### WriteLayerInfo buildstep
-steps/writelayerinfo.py -- implements a simple custom buildset to iterate the
+[steps/writelayerinfo.py](steps/writelayerinfo.py) -- implements a simple custom buildset to iterate the
 repo_, branch_, and commit_ properties set by the schedulers and write a JSON
 file with the user's values.
 
 ### WikiLog reporter
-reporters/wikilog.py -- a buildbot service to listen for build failures and
+[reporters/wikilog.py](reporters/wikilog.py) -- a buildbot service to listen for build failures and
 write some information on them to the configured wiki page.
-lib/wiki.py -- some helper functions for the wiki plugin, much of this code can
+
+[lib/wiki.py](lib/wiki.py) -- some helper functions for the wiki plugin, much of this code can
 be replaced by porting the plugin to be a buildbot.util.service.HTTPClient
 implementation
 
