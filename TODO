@@ -1,0 +1,15 @@
+# Initial release
+* TODO items, esp in builders.py i.e finishing up nightly builder config
+* formatting/labels of the yocto-autobuilder-helper inputs
+
+# Future
+* add mail notification functionality to yocto-autobuilder-helper, it already
+  knows how to iterate error reports.
+* Move clobber script, janitor, etc into yocto-autobuilder-helper and make use of them
+* Simple script to start buildbot controller, janitor and PRServer
+* Review ForceScheduler inputs and whether they are used by the helper scripts, particularly the poky_number parameter of nightly is possibly no longer required
+* Teach the janitor to pre-clone the repos
+* add SendQAMail
+* Look into allowed_origins property of built in web server
+* add buildhistory trigger
+* switch wikilog to buildbot.util.service.HTTPClient?

@@ -1,0 +1,33 @@
+from buildbot.plugins import reporters
+
+from yoctoab import config
+
+
+services = []
+
+# TODO: we'll replace this with functionality in yocto-autobuilder-helpers
+# to mail the error reports to the list
+# services.append(
+#     reporters.MailNotifier(fromaddr="yocto-builds@yoctoproject.org",
+#                            sendToInterestedUsers=False,
+#                            extraRecipients=["yocto-builds@yoctoproject.org"],
+#                            mode=('failing',))
+# )
+
+# services.append(
+#     reporters.IRC(host="irc.freenode.net",
+#                   nick="YoctoAutobuilderBot",
+#                   password=""
+#                   notify_events={
+#                     'successToFailure': 1,
+#                     'failureToSuccess': 0
+#                   },
+#                   channels=["yocto"],
+#                   noticeOnChannel=True))
+
+# from yoctoab.reporters import wikilog
+# services.append(
+#     wikilog.WikiLog("https://wiki.yoctoproject.org/wiki/api.php",
+#                     "User", "password", "LogPage"
+#                     "production cluster")
+# )
