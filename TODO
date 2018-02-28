@@ -1,5 +1,5 @@
 # Initial release
-* TODO items, esp in builders.py i.e finishing up nightly builder config
+* TODO & FIXME items, esp in builders.py i.e finishing up nightly builder config
 * formatting/labels of the yocto-autobuilder-helper inputs
 
 # Future
