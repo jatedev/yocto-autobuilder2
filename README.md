@@ -59,6 +59,9 @@ be replaced by porting the plugin to be a buildbot.util.service.HTTPClient
 implementation
 
 ## Deployment
+__Note__: If using a reverse proxy be aware that modern buildbot uses a  websocket for various communications between the master and the web UI.
+Refer to the buildbot documentation for information on how to correctly configure a reverse proxy: http://docs.buildbot.net/latest/manual/cfg-www.html#reverse-proxy-configuration
+
 ### Upstream Yocto Project autobuilder
 __on the controller__
 ```
