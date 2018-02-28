@@ -1,7 +1,8 @@
 # ## Build configuration, tied to config.json in yocto-autobuilder-helpers
 # Repositories used by each builder
 buildertorepos = {
-    "eclipse": ["eclipse-poky-neon", "eclipse-poky-oxygen"],
+    "eclipse-poky-neon": ["eclipse-poky-neon"],
+    "eclipse-poky-oxygen": ["eclipse-poky-oxygen"],
     "nightly": ["poky", "meta-intel", "openembedded-core", "bitbake",
                 "eclipse-poky-neon", "eclipse-poky-oxygen", "meta-qt4",
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
