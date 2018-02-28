@@ -41,9 +41,11 @@ def ensure_props_set(props):
 def create_builder_factory():
     f = util.BuildFactory()
 
-    # FIXME: use RP's script
+    # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
+    # directory of the user running buildbot.
+    clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
     f.addStep(steps.ShellCommand(
-        command=["rm", "-fr", util.Interpolate("%(prop:builddir)s/")],
+        command=[clob, util.Interpolate("%(prop:builddir)s/")],
         name="Clobber build dir"))
     f.addStep(steps.Git(
         repourl='git://git.yoctoproject.org/yocto-autobuilder-helper',
@@ -86,9 +88,11 @@ for builder in config.triggered_builders:
                                        factory=f))
 
 factory = util.BuildFactory()
-# FIXME: use RP's script
-factory.addStep(steps.ShellCommand(
-    command=["rm", "-fr", util.Interpolate("%(prop:builddir)s/")],
+# NOTE: Assumes that yocto-autobuilder repo has been cloned to home
+# directory of the user running buildbot.
+clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
+f.addStep(steps.ShellCommand(
+    command=[clob, util.Interpolate("%(prop:builddir)s/")],
     name="Clobber build dir"))
 # check out the source
 factory.addStep(steps.Git(
