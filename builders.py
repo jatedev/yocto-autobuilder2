@@ -136,20 +136,26 @@ factory.addStep(steps.ShellCommand(
     timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
 
 # trigger the buildsets contained in the nightly set
-set_props = {
-    "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
-    "is_release": util.Property("is_release"),
-    "buildappsrcrev": "None",
-    "branch_poky": util.Property("branch_poky"),
-    "commit_poky": util.Property("commit_poky"),
-    "repo_poky": util.Property("repo_poky")
-}
+def get_props_set():
+    set_props = {
+        "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
+        "is_release": util.Property("is_release"),
+        "buildappsrcrev": "None"
+    }
+
+    for repo in config.repos:
+        set_props["branch_%s" % repo] = util.Property("branch_%s" % repo)
+        set_props["commit_%s" % repo] = util.Property("commit_%s" % repo)
+        set_props["repo_%s" % repo] = util.Property("repo_%s" % repo)
+
+    return set_props
+
 factory.addStep(steps.Trigger(schedulerNames=['nowait'],
                               waitForFinish=False,
-                              set_properties=set_props))
+                              set_properties=get_props_set()))
 factory.addStep(steps.Trigger(schedulerNames=['wait'],
                               waitForFinish=True,
-                              set_properties=set_props))
+                              set_properties=get_props_set()))
 
 # selftest
 factory.addStep(steps.ShellCommand(
