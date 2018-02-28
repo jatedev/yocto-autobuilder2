@@ -36,7 +36,7 @@ trigger_builders_wait = [
     "nightly-arm", "nightly-arm-lsb", "nightly-arm64",
     "nightly-mips", "nightly-mips-lsb", "nightly-mips64",
     "nightly-multilib", "nightly-x32",
-    "nightly-ppc", "nightly-ppc-lsb"
+    "nightly-ppc", "nightly-ppc-lsb",
     "nightly-x86-64", "nightly-x86-64-lsb",
     "nightly-x86", "nightly-x86-lsb",
     "nightly-packagemanagers",
