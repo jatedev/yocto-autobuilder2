@@ -5,6 +5,7 @@ buildertorepos = {
     "nightly": ["poky", "meta-intel", "openembedded-core", "bitbake",
                 "eclipse-poky-neon", "eclipse-poky-oxygen", "meta-qt4",
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
+    "nightly-non-gpl3": ["poky", "meta-gplv2"],
     "nightly-qa-extras": ["poky", "meta-mingw"],
     "nightly-oecore": ["openembedded-core", "bitbake"],
     "nightly-checkuri": ["poky", "meta-qt4", "meta-qt3"],
