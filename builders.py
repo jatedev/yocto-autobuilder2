@@ -70,7 +70,8 @@ def create_builder_factory():
                  util.Interpolate("%(prop:buildappsrcrev)s"),
                  get_publish_dest(),
                  util.URLForBuild],
-        name="run-config"))
+        name="run-config",
+        timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
     return f
 
 
@@ -131,7 +132,8 @@ factory.addStep(steps.ShellCommand(
         "None",
         get_publish_dest(),
         util.URLForBuild],
-    name="run-config"))
+    name="run-config",
+    timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
 
 # trigger the buildsets contained in the nightly set
 set_props = {
