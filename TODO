@@ -1,6 +1,10 @@
 # Initial release
+* Fix Eclipse builds, they don't use run-config
 * TODO & FIXME items, esp in builders.py i.e finishing up nightly builder config
 * formatting/labels of the yocto-autobuilder-helper inputs
+* finish port of wikilog
+* figure out htpasswd & auth for scheduling builds
+* Display poky revision in web UI, not the yocto-autobuilder-helper revision
 
 # Future
 * add mail notification functionality to yocto-autobuilder-helper, it already
