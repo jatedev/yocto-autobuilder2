@@ -91,9 +91,9 @@ factory = util.BuildFactory()
 # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
 # directory of the user running buildbot.
 clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
-f.addStep(steps.ShellCommand(
-    command=[clob, util.Interpolate("%(prop:builddir)s/")],
-    name="Clobber build dir"))
+factory.addStep(steps.ShellCommand(
+                command=[clob, util.Interpolate("%(prop:builddir)s/")],
+                name="Clobber build dir"))
 # check out the source
 factory.addStep(steps.Git(
     repourl='git://git.yoctoproject.org/yocto-autobuilder-helper',
