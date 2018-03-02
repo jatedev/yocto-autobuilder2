@@ -1,28 +1,26 @@
 # Initial release
 
- * sstate release number handling (builders.py)
- * get_publish_dest (builders.py)
- * finish port of wikilog
- * figure out htpasswd & auth for scheduling builds
- * ensure need auth to trigger builds
- * Display poky revision in web UI, not the yocto-autobuilder-helper revision
+ * sstate release number handling (builders.py) [Joshua]
+ * get_publish_dest (builders.py) [Joshua]
+ * figure out htpasswd & auth for scheduling builds [Michael]
+ * ensure need auth to trigger builds  [Michael]
+ * Display poky revision in web UI, not the yocto-autobuilder-helper revision [Paul]
 
 # Future
 
- * implement buildhistory writeback step in -helper (can then drop from builders.py)
+ * finish port of wikilog [Joshua]
+ * implement buildhistory writeback step in -helper (can then drop from builders.py) [Richard]
  * implement send QA email step (builders.py)
  * implement current link (builders.py)
  * per worker auth (config.py)
- * implement default population for different releases in webform (schedulers.py?)
+ * implement default population for different releases in webform (schedulers.py?) [Paul]
  * DEFAULT for buildapp SRCREV still true? (schedulers.py)
- * Add IRC notifier (services.py)
+ * Add IRC notifier (services.py) [Michael]
  * Add link on console page to error report for build?
- * formatting/labels of the yocto-autobuilder-helper inputs (schedulers.py)
+ * formatting/labels of the yocto-autobuilder-helper inputs (schedulers.py) [Paul]
  * add mail notification functionality to yocto-autobuilder-helper, it already
    knows how to iterate error reports. (services.py)
- * Simple script to start buildbot controller, janitor and PRServer
+ * Simple script to start buildbot controller, janitor and PRServer [Michael]
  * Review ForceScheduler inputs and whether they are used by the helper scripts, particularly the poky_number parameter of nightly is possibly no longer required
- * Teach the janitor to pre-clone the repos
  * Look into allowed_origins property of built in web server
- * add buildhistory trigger
  * switch wikilog to buildbot.util.service.HTTPClient?
