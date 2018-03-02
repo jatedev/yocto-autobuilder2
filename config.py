@@ -47,7 +47,7 @@ trigger_builders_wait = [
 trigger_builders_nowait = [
     "build-appliance", "buildtools", "eclipse-plugin-neon",
     "eclipse-plugin-oxygen", "nightly-non-gpl3", "nightly-oecore",
-    "nightly-world", "nightly-world-wic", "nightly-world-lsb",
+    "nightly-world", "nightly-wic", "nightly-world-lsb",
     "poky-tiny", "nightly-musl", "nightly-musl-x86-64", "nightly-no-x11",
     "nightly-qa-extras", "nightly-oe-selftest"
 ]
