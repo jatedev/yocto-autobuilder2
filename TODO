@@ -1,6 +1,5 @@
 # Initial release
 
- * sstate release number handling (builders.py) [Joshua]
  * get_publish_dest (builders.py) [Joshua]
  * figure out htpasswd & auth for scheduling builds [Michael]
  * ensure need auth to trigger builds  [Michael]

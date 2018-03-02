@@ -9,14 +9,18 @@ import os
 builders = []
 
 
-def get_sstate_release_number():
-    # TODO: implement
-    # release_number = util.Interpolate("%(prop:yocto_number)s")
-    # if not release_number:
-    #     return ""
-    # release_components = release_number.split('.', 3)
-    # return '.'.join(release_components).strip('.')
-    return "None"
+@util.renderer
+def get_sstate_release_number(props):
+    """
+    Uses the values submitted to the scheduler to determine the major number
+    of the release for the purposes of publishing per-major release
+    shared-state artefacts.
+    """
+    release_number = props.getProperty("yocto_number")
+    if not release_number:
+        return ""
+    release_components = release_number.split('.', 3)
+    return '.'.join(release_components).strip('.')
 
 
 def get_publish_dest():
