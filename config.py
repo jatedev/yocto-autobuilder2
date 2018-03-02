@@ -3,12 +3,12 @@
 buildertorepos = {
     "eclipse-plugin-neon": ["eclipse-poky-neon"],
     "eclipse-plugin-oxygen": ["eclipse-poky-oxygen"],
-    "nightly": ["poky", "meta-intel", "openembedded-core", "bitbake",
+    "nightly": ["poky", "meta-intel", "oecore", "bitbake",
                 "eclipse-poky-neon", "eclipse-poky-oxygen", "meta-qt4",
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
     "nightly-non-gpl3": ["poky", "meta-gplv2"],
     "nightly-qa-extras": ["poky", "meta-mingw"],
-    "nightly-oecore": ["openembedded-core", "bitbake"],
+    "nightly-oecore": ["oecore", "bitbake"],
     "nightly-checkuri": ["poky", "meta-qt4", "meta-qt3"],
     "default": ["poky"]
 }
@@ -25,7 +25,7 @@ repos = {
                             "oxygen-master"],
     "poky": ["git://git.yoctoproject.org/poky", "master"],
     "meta-intel": ["git://git.yoctoproject.org/meta-intel", "master"],
-    "openembedded-core": ["git://git.openembedded.org/openembedded-core",
+    "oecore": ["git://git.openembedded.org/openembedded-core",
                           "master"],
     "bitbake": ["git://git.openembedded.org/bitbake", "master"],
     "meta-qt4": ["git://git.yoctoproject.org/meta-qt4", "master"],
