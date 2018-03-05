@@ -2,8 +2,10 @@ from buildbot.plugins import *
 
 from yoctoabb import config
 from yoctoabb.steps.writelayerinfo import WriteLayerInfo
+from datetime import datetime
 
 import os
+import json
 
 
 builders = []
@@ -23,9 +25,67 @@ def get_sstate_release_number(props):
     return '.'.join(release_components).strip('.')
 
 
-def get_publish_dest():
-    # if deploy_artifacts property is False return None
-    return "None"  # FIXME: based on SetDest?
+@util.renderer
+def get_publish_dest(props):
+    """
+    Calculate the location to which artefacts should be published and store it
+    as a property for use by other workers.
+    """
+    dest = ""
+    if props.getProperty("deploy_artifacts", "False") != "False":
+        rel_name = ""
+        dest = props.getProperty("publish_destination", "")
+        if dest:
+            return dest
+
+        if props.getProperty("is_release", "None") != "None":
+            milestone = props.getProperty("milestone_number", "")
+            rc_number = props.getProperty("rc_number", "")
+            snapshot = ""
+            if milestone:
+                snapshot += "_" + milestone
+            if rc_number:
+                snapshot += "." + rc_number
+
+            rel_name = util.Interpolate("yocto-%(prop:yocto_number)s%s")
+            rel_name += snapshot
+            dest = os.path.join(config.publish_dest, rel_name)
+        else:
+            dest_base = os.path.join(config.publish_dest,
+                                     props.getProperty("buildername"),
+                                     datetime.now().strftime("%Y%m%d"))
+
+            # We want to make sure that we aren't writing artefacts to a publish
+            # directory which already exists, therefore we keep a list of used
+            # publish paths to prevent re-use. We store that in a JSON file.
+            useddests = {}
+            # NOTE: we make a strong assumption here that this code lives in a
+            # directory which is an immediate child of the buildbot master's
+            # working directory.
+            basedir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                   "..")
+            persist = os.path.join(basedir, "pub_locations.json")
+            if os.path.exists(persist):
+                useddests = json.loads(persist)
+
+            rev = useddests.get(dest_base, "")
+            if rev:  # incremenent and use
+                rev = int(rev) + 1
+            else:  # use the base path and store rev 0
+                rev = 1
+            dest = "%s-%s" % (dest_base, rev)
+            # need to update the used destinations
+            useddests[dest_base] = rev
+            # save the info, overwriting the file if it exists
+            with open(persist, 'w') as out:
+                json.dump(useddests, out)
+
+        # set the destination as a property to be inherited by workers, so that
+        # all workers in a triggered set publish to the same location
+        props.setProperty("publish_destination", dest)
+        return dest
+    else:
+        return "None"
 
 
 @util.renderer
@@ -38,7 +98,8 @@ def ensure_props_set(props):
     return {
         "sharedrepolocation": props.getProperty("sharedrepolocation", "None"),
         "is_release": props.getProperty("is_release", "None"),
-        "buildappsrcrev": props.getProperty("buildappsrcrev", "None")
+        "buildappsrcrev": props.getProperty("buildappsrcrev", "None"),
+        "publish_destination": props.getProperty("publish_destination", "None")
     }
 
 

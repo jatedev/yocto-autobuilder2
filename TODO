@@ -1,6 +1,5 @@
 # Initial release
 
- * get_publish_dest (builders.py) [Joshua]
  * figure out htpasswd & auth for scheduling builds [Michael]
  * ensure need auth to trigger builds  [Michael]
  * Display poky revision in web UI, not the yocto-autobuilder-helper revision [Paul]
