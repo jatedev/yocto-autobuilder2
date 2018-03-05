@@ -10,7 +10,7 @@
  * implement buildhistory writeback step in -helper (can then drop from builders.py) [Richard]
  * implement send QA email step (builders.py)
  * implement current link (builders.py)
- * per worker auth (config.py)
+ * per worker auth (workers.py & config.py)
  * implement default population for different releases in webform (schedulers.py?) [Paul]
  * DEFAULT for buildapp SRCREV still true? (schedulers.py)
  * Add IRC notifier (services.py) [Michael]
@@ -19,6 +19,6 @@
  * add mail notification functionality to yocto-autobuilder-helper, it already
    knows how to iterate error reports. (services.py)
  * Simple script to start buildbot controller, janitor and PRServer [Michael]
- * Review ForceScheduler inputs and whether they are used by the helper scripts, particularly the poky_number parameter of nightly is possibly no longer required
+ * Review ForceScheduler inputs and whether they are used by the helper scripts, particularly the poky_number parameter of nightly is possibly no longer required (possibly unused parameters are annotated in schedulers.py)
  * Look into allowed_origins property of built in web server
  * switch wikilog to buildbot.util.service.HTTPClient?
