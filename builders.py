@@ -38,7 +38,7 @@ def get_publish_dest(props):
         if dest:
             return dest
 
-        if props.getProperty("is_release", "None") != "None":
+        if props.getProperty("is_release", "False") == "True":
             milestone = props.getProperty("milestone_number", "")
             rc_number = props.getProperty("rc_number", "")
             snapshot = ""
@@ -66,7 +66,8 @@ def get_publish_dest(props):
                                    "..")
             persist = os.path.join(basedir, "pub_locations.json")
             if os.path.exists(persist):
-                useddests = json.loads(persist)
+                with open(persist) as f:
+                    useddests = json.load(f)
 
             rev = useddests.get(dest_base, "")
             if rev:  # incremenent and use
@@ -82,7 +83,8 @@ def get_publish_dest(props):
 
         # set the destination as a property to be inherited by workers, so that
         # all workers in a triggered set publish to the same location
-        props.setProperty("publish_destination", dest)
+        props.setProperty("publish_destination", dest,
+                          "get_publish_dest")
         return dest
     else:
         return "None"
@@ -209,7 +211,9 @@ def get_props_set():
     set_props = {
         "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
         "is_release": util.Property("is_release"),
-        "buildappsrcrev": "None"
+        "buildappsrcrev": "None",
+        "deploy_artifacts": util.Property("deploy_artifacts"),
+        "publish_destination": util.Property("publish_destination")
     }
 
     for repo in config.repos:
