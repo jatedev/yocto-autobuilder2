@@ -133,9 +133,9 @@ def create_builder_factory():
                  util.Interpolate("%(prop:builddir)s/build/build"),
                  util.Interpolate("%(prop:branch_poky)s"),
                  util.Interpolate("%(prop:repo_poky)s"),
-                 get_sstate_release_number(),
+                 get_sstate_release_number,
                  util.Interpolate("%(prop:buildappsrcrev)s"),
-                 get_publish_dest(),
+                 get_publish_dest,
                  util.URLForBuild],
         name="run-config",
         timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
@@ -197,9 +197,9 @@ factory.addStep(steps.ShellCommand(
         util.Interpolate("%(prop:builddir)s/build/build"),
         util.Interpolate("%(prop:branch_poky)s"),
         util.Interpolate("%(prop:repo_poky)s"),
-        get_sstate_release_number(),
+        get_sstate_release_number,
         "None",
-        get_publish_dest(),
+        get_publish_dest,
         util.URLForBuild],
     name="run-config",
     timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
