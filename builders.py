@@ -113,14 +113,16 @@ def create_builder_factory():
     clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
     f.addStep(steps.ShellCommand(
         command=[clob, util.Interpolate("%(prop:builddir)s/")],
+        haltOnFailure=True,
         name="Clobber build dir"))
     f.addStep(steps.Git(
         repourl='git://git.yoctoproject.org/yocto-autobuilder-helper',
         workdir=util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper"),
         mode='incremental',
+        haltOnFailure=True,
         name='Fetch yocto-autobuilder-helper'))
     f.addStep(steps.SetProperties(properties=ensure_props_set))
-    f.addStep(WriteLayerInfo(name='Write main layerinfo.json'))
+    f.addStep(WriteLayerInfo(name='Write main layerinfo.json', haltOnFailure=True))
     f.addStep(steps.ShellCommand(
         command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/shared-repo-unpack"),
                  util.Interpolate("%(prop:builddir)s/layerinfo.json"),
@@ -128,6 +130,7 @@ def create_builder_factory():
                  util.Interpolate("%(prop:builddir)s/build"),
                  util.Property("buildername"),
                  util.Property("is_release")],
+        haltOnFailure=True,
         name="Unpack shared repositories"))
     f.addStep(steps.ShellCommand(
         command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-config"),
@@ -160,20 +163,23 @@ factory = util.BuildFactory()
 clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
 factory.addStep(steps.ShellCommand(
                 command=[clob, util.Interpolate("%(prop:builddir)s/")],
+                haltOnFailure=True,
                 name="Clobber build dir"))
 # check out the source
 factory.addStep(steps.Git(
     repourl='git://git.yoctoproject.org/yocto-autobuilder-helper',
     workdir=util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper"),
     mode='incremental',
+    haltOnFailure=True,
     name='Fetch yocto-autobuilder-helper'))
-factory.addStep(WriteLayerInfo(name='Write main layerinfo.json'))
+factory.addStep(WriteLayerInfo(name='Write main layerinfo.json', haltOnFailure=True))
 factory.addStep(steps.ShellCommand(
     command=[
         util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/prepare-shared-repos"),
         util.Interpolate("%(prop:builddir)s/layerinfo.json"),
         util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
         config.publish_dest],
+    haltOnFailure=True,
     name="Prepare shared repositories"))
 factory.addStep(steps.SetProperty(
     property="sharedrepolocation",
@@ -189,6 +195,7 @@ factory.addStep(steps.ShellCommand(
         util.Interpolate("%(prop:builddir)s/build"),
         util.Property("buildername"),
         util.Property("is_release")],
+    haltOnFailure=True,
     name="Unpack shared repositories"))
 
 # run-config
