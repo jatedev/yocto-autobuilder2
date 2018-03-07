@@ -198,6 +198,11 @@ factory.addStep(steps.ShellCommand(
     haltOnFailure=True,
     name="Unpack shared repositories"))
 
+factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
+                                             property="got_revision",
+                                             haltOnFailure=True,
+                                             name='Set build revision'))
+
 # run-config
 factory.addStep(steps.ShellCommand(
     command=[
