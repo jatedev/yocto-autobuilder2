@@ -132,6 +132,12 @@ def create_builder_factory():
                  util.Property("is_release")],
         haltOnFailure=True,
         name="Unpack shared repositories"))
+
+    f.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
+                                           property="got_revision",
+                                           haltOnFailure=True,
+                                           name='Set build revision'))
+
     f.addStep(steps.ShellCommand(
         command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-config"),
                  util.Property("buildername"),
@@ -198,10 +204,6 @@ factory.addStep(steps.ShellCommand(
     haltOnFailure=True,
     name="Unpack shared repositories"))
 
-factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
-                                             property="got_revision",
-                                             haltOnFailure=True,
-                                             name='Set build revision'))
 
 # run-config
 factory.addStep(steps.ShellCommand(
@@ -241,6 +243,11 @@ factory.addStep(steps.Trigger(schedulerNames=['nowait'],
 factory.addStep(steps.Trigger(schedulerNames=['wait'],
                               waitForFinish=True,
                               set_properties=get_props_set()))
+
+factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
+                                             property="got_revision",
+                                             haltOnFailure=True,
+                                             name='Set build revision'))
 
 # selftest
 factory.addStep(steps.ShellCommand(
