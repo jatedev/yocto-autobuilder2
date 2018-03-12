@@ -42,9 +42,7 @@ trigger_builders_wait = [
     "nightly-x86-64", "nightly-x86-64-lsb",
     "nightly-x86", "nightly-x86-lsb",
     "nightly-packagemanagers",
-    "nightly-rpm-non-rpm", "nightly-deb-non-deb"
-]
-trigger_builders_nowait = [
+    "nightly-rpm-non-rpm", "nightly-deb-non-deb",
     "build-appliance", "buildtools", "eclipse-plugin-neon",
     "eclipse-plugin-oxygen", "nightly-non-gpl3", "nightly-oecore",
     "nightly-world", "nightly-wic", "nightly-world-lsb",
@@ -52,7 +50,7 @@ trigger_builders_nowait = [
     "nightly-qa-extras", "nightly-oe-selftest"
 ]
 
-triggered_builders = trigger_builders_wait + trigger_builders_nowait
+triggered_builders = trigger_builders_wait
 builders = ["nightly"] + triggered_builders
 
 # Supported Yocto Project releases, by name

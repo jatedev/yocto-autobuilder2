@@ -237,9 +237,6 @@ def get_props_set():
 
     return set_props
 
-factory.addStep(steps.Trigger(schedulerNames=['nowait'],
-                              waitForFinish=False,
-                              set_properties=get_props_set()))
 factory.addStep(steps.Trigger(schedulerNames=['wait'],
                               waitForFinish=True,
                               set_properties=get_props_set()))

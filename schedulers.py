@@ -85,9 +85,6 @@ for builder in config.triggered_builders:
 wait = sched.Triggerable(name="wait",
                          builderNames=config.trigger_builders_wait)
 schedulers.append(wait)
-nowait = sched.Triggerable(name="nowait",
-                           builderNames=config.trigger_builders_nowait)
-schedulers.append(nowait)
 
 schedulers.append(sched.ForceScheduler(
     name="nightly",
