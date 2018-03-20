@@ -47,7 +47,7 @@ def get_publish_dest(props):
             if rc_number:
                 snapshot += "." + rc_number
 
-            rel_name = util.Interpolate("yocto-%(prop:yocto_number)s%s")
+            rel_name = util.Interpolate("yocto-%(prop:yocto_number)s")
             rel_name += snapshot
             dest = os.path.join(config.publish_dest, rel_name)
         else:
