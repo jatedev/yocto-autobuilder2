@@ -48,7 +48,7 @@ def get_publish_dest(props):
                 snapshot += "." + rc_number
 
             rel_name = "yocto-" + props.getProperty("yocto_number", "") + snapshot
-            dest = os.path.join(config.publish_dest, rel_name)
+            dest = os.path.join(config.publish_dest, "releases", rel_name)
         else:
             dest_base = os.path.join(config.publish_dest,
                                      props.getProperty("buildername"),
