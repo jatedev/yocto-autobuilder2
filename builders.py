@@ -245,13 +245,6 @@ factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop
                                              haltOnFailure=True,
                                              name='Set build revision'))
 
-# selftest
-factory.addStep(steps.ShellCommand(
-    command=". ./oe-init-build-env; bitbake-selftest",
-    workdir=util.Interpolate("%(prop:builddir)s/build")
-))
-
-# TODO: trigger buildhistory_nowait - possibly no longer required?
 
 # TODO: send QA mail if a release - compose and pass to sendmail command?
 

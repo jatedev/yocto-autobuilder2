@@ -5,6 +5,7 @@
 
 # Future
 
+ * Add nightly-checkuri
  * finish port of wikilog [Joshua]
  * implement buildhistory writeback step in -helper (can then drop from builders.py) [Richard]
  * implement send QA email step (builders.py)
