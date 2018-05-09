@@ -236,14 +236,15 @@ def get_props_set():
 
     return set_props
 
-factory.addStep(steps.Trigger(schedulerNames=['wait'],
-                              waitForFinish=True,
-                              set_properties=get_props_set()))
-
 factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
                                              property="got_revision",
                                              haltOnFailure=True,
                                              name='Set build revision'))
+
+factory.addStep(steps.Trigger(schedulerNames=['wait'],
+                              waitForFinish=True,
+                              set_properties=get_props_set()))
+
 
 
 # TODO: send QA mail if a release - compose and pass to sendmail command?
