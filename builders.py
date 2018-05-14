@@ -32,6 +32,7 @@ def get_publish_dest(props):
     as a property for use by other workers.
     """
     dest = ""
+    deploy = props.getProperty("deploy_artifacts", "False")
     if props.getProperty("deploy_artifacts", "False") != "False":
         rel_name = ""
         dest = props.getProperty("publish_destination", "")
@@ -100,6 +101,7 @@ def ensure_props_set(props):
         "sharedrepolocation": props.getProperty("sharedrepolocation", "None"),
         "is_release": props.getProperty("is_release", "None"),
         "buildappsrcrev": props.getProperty("buildappsrcrev", "None"),
+        "deploy_artifacts": props.getProperty("deploy_artifacts", "False"),
         "publish_destination": props.getProperty("publish_destination", "None")
     }
 
