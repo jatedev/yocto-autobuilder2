@@ -245,11 +245,14 @@ factory.addStep(steps.Trigger(schedulerNames=['wait'],
                               waitForFinish=True,
                               set_properties=get_props_set()))
 
-
-
-# TODO: send QA mail if a release - compose and pass to sendmail command?
-
-# TODO: update Current Link if published
+factory.addStep(steps.ShellCommand(
+    command=[
+        util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/send-qa-email"),
+        util.Interpolate("%(prop:builddir)s/layerinfo.json"),
+        get_publish_dest,
+        os.path.basename(get_publish_dest),
+        ],
+    name="Send QA Email"))
 
 builders.append(
     util.BuilderConfig(name="nightly",
