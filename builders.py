@@ -25,8 +25,7 @@ def get_sstate_release_number(props):
     return '.'.join(release_components).strip('.')
 
 
-@util.renderer
-def get_publish_dest(props):
+def get_publish_internal(props, basename=False):
     """
     Calculate the location to which artefacts should be published and store it
     as a property for use by other workers.
@@ -37,6 +36,8 @@ def get_publish_dest(props):
         rel_name = ""
         dest = props.getProperty("publish_destination", "")
         if dest:
+            if basename:
+                return os.path.basename(dest)
             return dest
 
         if props.getProperty("is_release", "False") == "True":
@@ -85,10 +86,19 @@ def get_publish_dest(props):
         # all workers in a triggered set publish to the same location
         props.setProperty("publish_destination", dest,
                           "get_publish_dest")
+        if basename:
+            return os.path.basename(dest)
         return dest
     else:
         return "None"
 
+@util.renderer
+def get_publish_dest(props):
+    return get_publish_internal(props, basename=False)
+
+@util.renderer
+def get_publish_name(props):
+    return get_publish_internal(props, basename=True)
 
 @util.renderer
 def ensure_props_set(props):
@@ -252,7 +262,7 @@ factory.addStep(steps.ShellCommand(
         util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/send-qa-email"),
         util.Interpolate("%(prop:builddir)s/layerinfo.json"),
         get_publish_dest,
-        os.path.basename(get_publish_dest),
+        get_publish_name,
         ],
     name="Send QA Email"))
 
