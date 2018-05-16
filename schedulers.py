@@ -90,7 +90,7 @@ schedulers.append(sched.ForceScheduler(
     name="nightly",
     builderNames=["nightly"],
     buttonName="Start Nightly Build",
-    codebases = [util.CodebaseParameter(label="yocto-autobuilder-helper:", project=None)],
+    codebases = [util.CodebaseParameter(codebase='', label="yocto-autobuilder-helper:", project=None)],
     reason=util.StringParameter(
         name="reason",
         label="""Reason (please note the reason for triggering the build and
