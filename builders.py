@@ -263,6 +263,7 @@ factory.addStep(steps.ShellCommand(
         util.Interpolate("%(prop:builddir)s/layerinfo.json"),
         get_publish_dest,
         get_publish_name,
+        util.Interpolate("%(prop:sharedrepolocation)s")
         ],
     name="Send QA Email"))
 
