@@ -145,7 +145,7 @@ def create_builder_factory():
         name="Unpack shared repositories"))
 
     f.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
-                                           property="got_revision",
+                                           property="yp_build_revision",
                                            haltOnFailure=True,
                                            name='Set build revision'))
 
@@ -215,6 +215,10 @@ factory.addStep(steps.ShellCommand(
     haltOnFailure=True,
     name="Unpack shared repositories"))
 
+factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
+                                             property="yp_build_revision",
+                                             haltOnFailure=True,
+                                             name='Set build revision'))
 
 # run-config
 factory.addStep(steps.ShellCommand(
@@ -238,7 +242,7 @@ def get_props_set():
         "is_release": util.Property("is_release"),
         "buildappsrcrev": "None",
         "deploy_artifacts": util.Property("deploy_artifacts"),
-        "publish_destination": util.Property("publish_destination")
+        "publish_destination": util.Property("publish_destination"),
     }
 
     for repo in config.repos:
@@ -247,11 +251,6 @@ def get_props_set():
         set_props["repo_%s" % repo] = util.Property("repo_%s" % repo)
 
     return set_props
-
-factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
-                                             property="got_revision",
-                                             haltOnFailure=True,
-                                             name='Set build revision'))
 
 factory.addStep(steps.Trigger(schedulerNames=['wait'],
                               waitForFinish=True,
