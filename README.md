@@ -75,7 +75,7 @@ Refer to the buildbot documentation for information on how to correctly configur
 ```
 $ buildbot create-master <yocto-controller>
 $ cd <yocto-controller>
-$ git clone <yoctoabb repo>
+$ git clone https://git.yoctoproject.org/git/yocto-autobuilder2 yoctoabb
 $ cd ..
 $ ln -rs <yocto-controller>/yoctoabb/master.cfg <yocto-controller>/master.cfg
 $ $EDITOR <yocto-controller>/yoctoabb/master.cfg
@@ -87,6 +87,9 @@ $ $EDITOR <yocto-controller>/yoctoabb/www.py
 $ $EDITOR <yocto-controller>/yoctoabb/config.py
 <Modify configuration options such as worker configuration, etc.>
 $ buildbot start <yocto-controller>
+$ cd ..
+## should be above <yocto-controller> location
+git clone https://git.yoctoproject.org/git/yocto-autobuilder-helper
 ```
 
 #### on the worker
