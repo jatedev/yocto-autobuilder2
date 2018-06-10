@@ -104,19 +104,6 @@ schedulers.append(sched.ForceScheduler(
             label="Generate a release?",
             choices=["False", "True"],
             default="False"),
-        util.ChoiceStringParameter(
-            name="poky_name",  # possibly unused?
-            label="Name of the Poky release.",
-            choices=config.releases,
-            default=""),
-        util.ChoiceStringParameter(
-            name="is_milestone",
-            label="Is the release a milestone release?",
-            choices=["False", "True"],
-            default="False"),
-        util.StringParameter(
-            name="poky_number",  # possibly unused?
-            label="Poky Release Number (10.0.0, 11.0.1 etc.)"),
         util.StringParameter(
             name="yocto_number",  # used to form publish path
             label="Yocto Project Release Number (1.5, 1.6 etc.)"),
