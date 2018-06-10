@@ -1,0 +1,37 @@
+div.yoctochangedetails(style="width:100%;")
+    div(style="width:100%;", ng-click="change.show_details = !change.show_details")
+        a(ng-if="change.revlink", ng-href="{{change.revlink}}", uib-tooltip="{{change.comments}}")
+            | {{ change.caption }} &nbsp;
+        a(ng-if="change.errorlink", ng-href="{{change.errorlink}}")
+            | {{ "Errors" }} &nbsp;
+        span(ng-if="!change.revlink", uib-tooltip="{{change.comments}}")
+            | {{ change.caption }} &nbsp;
+        span(ng-if="!compact" uib-tooltip="{{change.when_timestamp | dateformat:'LLL'}}")
+            | ({{ change.when_timestamp | timeago }}) &nbsp;
+        i.fa.fa-chevron-circle-right.rotate.clickable(ng-class="{'fa-rotate-90':change.show_details}")
+    div.anim-changedetails(ng-show="change.show_details")
+        table.table.table-striped.table-condensed(ng-show="change.show_details")
+          tr(ng-show="change.author")
+            td Author
+            td {{ change.author }}
+          tr
+            td Date
+            td {{ change.when_timestamp | dateformat:'LLL'}} ({{ change.when_timestamp | timeago }})
+          tr(ng-show="change.repository")
+            td Repository
+            td {{ change.repository }}
+          tr(ng-show="change.branch")
+            td Branch
+            td {{ change.branch }}
+          tr
+            td Revision
+            td 
+              a(ng-if="change.revlink", ng-href="{{change.revlink}}") 
+                | {{ change.revision }}
+
+        h5 Comment
+        pre {{ change.comments }}
+        h5 Changed files
+        ul
+          li(ng-repeat='file in change.files') {{file}}
+        p(ng-hide="change.files.length") No files
