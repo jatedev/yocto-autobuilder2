@@ -2,6 +2,8 @@ from buildbot.plugins import schedulers as sched
 from buildbot.plugins import util
 from yoctoabb import config
 
+from yoctoabb.yocto_console_view.yocto_console_view import ReleaseSelector
+
 schedulers = []
 
 
@@ -139,5 +141,72 @@ schedulers.append(sched.ForceScheduler(
             name="deploy_artifacts",
             label="Do we want to deploy artifacts? ",
             choices=["False", "True"],
-            default="False")
+            default="False"),
+        ReleaseSelector(
+        name="branch",
+            label="Release Shortcut Selector",
+            choices=["master", "rocko", "sumo", "pyro", "morty"],
+            selectors={
+              'master': {
+                'branch_poky': 'master',
+                'branch_bitbake': 'master',
+                'branch_eclipse-poky-neon': 'neon-master',
+                'branch_eclipse-poky-oxygen': 'oxygen-master',
+                'branch_meta-gplv2': 'master',
+                'branch_meta-intel': 'master',
+                'branch_meta-mingw': 'master',
+                'branch_meta-qt3': 'master',
+                'branch_meta-qt4': 'master',
+                'branch_oecore': 'master',
+              },
+              'sumo': {
+                'branch_poky': 'sumo',
+                'branch_bitbake': '1.38',
+                'branch_eclipse-poky-neon': 'neon/sumo',
+                'branch_eclipse-poky-oxygen': 'oxygen/sumo',
+                'branch_meta-gplv2': 'sumo',
+                'branch_meta-intel': 'sumo',
+                'branch_meta-mingw': 'sumo',
+                'branch_meta-qt3': 'sumo',
+                'branch_meta-qt4': 'sumo',
+                'branch_oecore': 'sumo',
+              },
+              'rocko': {
+                'branch_poky': 'rocko',
+                'branch_bitbake': '1.36',
+                'branch_eclipse-poky-neon': 'neon/rocko',
+                'branch_eclipse-poky-oxygen': 'oxygen/rocko',
+                'branch_meta-gplv2': 'rocko',
+                'branch_meta-intel': 'rocko',
+                'branch_meta-mingw': 'rocko',
+                'branch_meta-qt3': 'rocko',
+                'branch_meta-qt4': 'rocko',
+                'branch_oecore': 'rocko',
+              },
+              'pyro': {
+                'branch_poky': 'pyro',
+                'branch_bitbake': '1.34',
+                'branch_eclipse-poky-neon': 'neon/pyro',
+                'branch_eclipse-poky-oxygen': 'oxygen/pyro',
+                'branch_meta-gplv2': 'pyro',
+                'branch_meta-intel': 'pyro',
+                'branch_meta-mingw': 'pyro',
+                'branch_meta-qt3': 'pyro',
+                'branch_meta-qt4': 'pyro',
+                'branch_oecore': 'pyro',
+              },
+              'morty': {
+                'branch_poky': 'morty',
+                'branch_bitbake': '1.32',
+                'branch_eclipse-poky-neon': 'neon/morty',
+                'branch_eclipse-poky-oxygen': 'oxygen/morty',
+                'branch_meta-gplv2': 'master',
+                'branch_meta-intel': 'morty',
+                'branch_meta-mingw': 'morty',
+                'branch_meta-qt3': 'morty',
+                'branch_meta-qt4': 'morty',
+                'branch_oecore': 'morty',
+              }
+            })
+               
     ]+repos_for_builder("nightly")))
