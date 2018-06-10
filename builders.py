@@ -259,6 +259,7 @@ factory.addStep(steps.Trigger(schedulerNames=['wait'],
 factory.addStep(steps.ShellCommand(
     command=[
         util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/send-qa-email"),
+        util.Property("send_email"),
         util.Interpolate("%(prop:builddir)s/layerinfo.json"),
         get_publish_dest,
         get_publish_name,
