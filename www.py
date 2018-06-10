@@ -1,7 +1,6 @@
 from buildbot.plugins import util
 from yoctoabb import config
 
-
 # allow = []
 #
 # for builder in config.builders:
@@ -17,7 +16,7 @@ from yoctoabb import config
 # www = dict(port=config.web_port,
 #            auth=auth,
 #            authz=authz,
-#            plugins=dict(waterfall_view={}, console_view={}, grid_view={}))
+#            plugins=dict(waterfall_view={}, yocto_console_view={}, grid_view={}))
 
 www = dict(port=config.web_port,
-           plugins=dict(waterfall_view={}, console_view={}, grid_view={}))
+           plugins=dict(waterfall_view={}, yocto_console_view={}, grid_view={}))
