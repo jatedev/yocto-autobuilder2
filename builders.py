@@ -31,8 +31,8 @@ def get_publish_internal(props, basename=False):
     as a property for use by other workers.
     """
     dest = ""
-    deploy = props.getProperty("deploy_artifacts", "False")
-    if props.getProperty("deploy_artifacts", "False") != "False":
+    deploy = props.getProperty("deploy_artefacts", False)
+    if deploy:
         rel_name = ""
         dest = props.getProperty("publish_destination", "")
         if dest:
@@ -40,7 +40,7 @@ def get_publish_internal(props, basename=False):
                 return os.path.basename(dest)
             return dest
 
-        if props.getProperty("is_release", "False") == "True":
+        if props.getProperty("is_release", False):
             milestone = props.getProperty("milestone_number", "")
             rc_number = props.getProperty("rc_number", "")
             snapshot = ""
@@ -109,9 +109,9 @@ def ensure_props_set(props):
     """
     return {
         "sharedrepolocation": props.getProperty("sharedrepolocation", "None"),
-        "is_release": props.getProperty("is_release", "None"),
+        "is_release": props.getProperty("is_release", False),
         "buildappsrcrev": props.getProperty("buildappsrcrev", "None"),
-        "deploy_artifacts": props.getProperty("deploy_artifacts", "False"),
+        "deploy_artefacts": props.getProperty("deploy_artefacts", False),
         "publish_destination": props.getProperty("publish_destination", "None")
     }
 
@@ -241,7 +241,7 @@ def get_props_set():
         "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
         "is_release": util.Property("is_release"),
         "buildappsrcrev": "None",
-        "deploy_artifacts": util.Property("deploy_artifacts"),
+        "deploy_artefacts": util.Property("deploy_artefacts"),
         "publish_destination": util.Property("publish_destination"),
     }
 

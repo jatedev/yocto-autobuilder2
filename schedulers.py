@@ -60,11 +60,10 @@ def props_for_builder(builder):
             default="None",
         ))
     if builder in ['build-appliance', 'buildtools']:
-        props.append(util.ChoiceStringParameter(
+        props.append(util.BooleanParameter(
             name="deploy_artifacts",
             label="Do we want to deploy artifacts? ",
-            choices=["False", "True"],
-            default="False"
+            default=Boolean
         ))
 
     props = props + repos_for_builder(builder)
@@ -99,11 +98,10 @@ schedulers.append(sched.ForceScheduler(
  any expectations for the build's outcome:""",
         required=False),
     properties=[
-        util.ChoiceStringParameter(
+        util.BooleanParameter(
             name="is_release",
             label="Generate a release?",
-            choices=["False", "True"],
-            default="False"),
+            default=False),
         util.StringParameter(
             name="yocto_number",  # used to form publish path
             label="Yocto Project Release Number (1.5, 1.6 etc.)"),
@@ -119,16 +117,14 @@ schedulers.append(sched.ForceScheduler(
             choices=["", "rc1", "rc2", "rc3", "rc4", "rc5", "rc6", "rc7",
                      "rc8", "rc9"],
             default=""),
-        util.ChoiceStringParameter(
+        util.BooleanParameter(
             name="send_email",
             label="Send QA alert emails?",
-            choices=["False", "True"],
-            default="False"),
-        util.ChoiceStringParameter(
-            name="deploy_artifacts",
-            label="Do we want to deploy artifacts? ",
-            choices=["False", "True"],
-            default="False"),
+            default=False),
+        util.BooleanParameter(
+            name="deploy_artefacts",
+            label="Do we want to save build output? ",
+            default=False),
         ReleaseSelector(
         name="branch",
             label="Release Shortcut Selector",
