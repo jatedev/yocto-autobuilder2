@@ -63,7 +63,7 @@ def props_for_builder(builder):
         props.append(util.BooleanParameter(
             name="deploy_artifacts",
             label="Do we want to deploy artifacts? ",
-            default=Boolean
+            default=False
         ))
 
     props = props + repos_for_builder(builder)
