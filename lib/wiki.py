@@ -73,8 +73,6 @@ class YPWiki(object):
         # whereas in requests 2.1.10 (Fedora 23) Response.content is a str
         # Ensure that bom is the same type as the content, codecs.BOM_UTF8 is
         # a str
-        if type(response.content) == unicode:
-            bom = unicode(codecs.BOM_UTF8, 'utf8')
 
         # If we discover a BOM set the encoding appropriately so that the
         # built in decoding routines in requests work correctly.
@@ -137,9 +135,8 @@ class YPWiki(object):
             return None, None
 
         parsed = self.parse_json(req)
-        pageid = sorted(parsed['query']['pages'].keys())[-1].encode('utf-8')
+        pageid = sorted(parsed['query']['pages'].keys())[-1]
         content = parsed['query']['pages'][pageid]['revisions'][0]['*']
-        content = content.encode('utf-8')
         blurb, entries = content.split('==', 1)
         # ensure we keep only a single newline after the blurb
         blurb = blurb.strip() + "\n"
@@ -166,12 +163,12 @@ class YPWiki(object):
             return False
 
         parsed = self.parse_json(req)
-        pageid = sorted(parsed['query']['pages'].keys())[-1].encode('utf-8')
+        pageid = sorted(parsed['query']['pages'].keys())[-1]
         edit_token = parsed['query']['pages'][pageid]['edittoken']
-        edit_token = edit_token.encode('utf-8')
-
         edit_cookie = cookies.copy()
         edit_cookie.update(req.cookies)
+
+        content = content.encode('utf-8')
 
         content_hash = hashlib.md5(content).hexdigest()
 
@@ -200,7 +197,7 @@ class YPWiki(object):
             return False
         else:
             result = self.parse_json(req)
-            status = result.get('edit', {}).get('result', '').encode('utf-8')
+            status = result.get('edit', {}).get('result', '')
             if status == 'Success':
                 return True
             return False

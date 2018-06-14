@@ -1,6 +1,5 @@
 
  * Add nightly-checkuri
- * finish port of wikilog [Joshua]
  * Add wikilog link on console page
  * implement buildhistory writeback step in -helper (can then drop from builders.py) [Richard]
  * per worker auth (workers.py & config.py)

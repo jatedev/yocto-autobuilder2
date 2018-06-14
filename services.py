@@ -28,6 +28,6 @@ services = []
 # from yoctoabb.reporters import wikilog
 # services.append(
 #     wikilog.WikiLog("https://wiki.yoctoproject.org/wiki/api.php",
-#                     "User", "password", "LogPage"
-#                     "production cluster")
+#                     "User", "password", "LogPage",
+#                     "Production Cluster")
 # )
