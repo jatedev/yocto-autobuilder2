@@ -217,23 +217,28 @@ class WikiLog(service.BuildbotService):
             log.err(errmsg.format(buildid, parent['url']))
             return False
 
-        logs = ''
-        new_entry = ''
-        log_fmt = '\n** '
+        new_entry = entry
         buildid = build['buildid']
         builder = build['builder']['name']
-        builderfmt = '\n* [%s %s] failed' % (url, builder)
 
         if len(log_entries) > 0:
+            logs = ''
+            log_fmt = '\n** '
+            builderfmt = '\n* [%s %s] failed' % (url, builder)
             builderfmt = builderfmt + ': ' + log_fmt
             logs = log_fmt.join(log_entries)
-        logs = logs + '\n'
-        new_entry = '\n' + entry.strip() + builderfmt + logs
+            logs = logs + '\n'
+            new_entry = '\n' + entry.strip() + builderfmt + logs
 
         summary = 'Updating entry with failures in %s' % builder
         summary = summary + self.idstring
 
         new_entry, new_title = self.updateEntryBuildInfo(new_entry, title, parent)
+
+        # If unchanged, skip the update
+        if entry == new_entry and title == new_title:
+            log.msg("wkl: Entry unchanged for wikilog entry %s" % buildid)
+            return True
 
         # Find the point where the first entry's title starts and the second
         # entry's title begins, then replace the text between those points
@@ -259,4 +264,3 @@ class WikiLog(service.BuildbotService):
 
         log.msg("wkl: Updating wikilog entry for %s" % buildid)
         return True
-
