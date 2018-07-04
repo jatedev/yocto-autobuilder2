@@ -280,12 +280,18 @@ class Console extends Controller
             change.errorlink = "http://errors.yoctoproject.org/Errors/Latest/Autobuilder/?filter=" + rev + "&type=commit"
 
         else
-            rev = "Unresolved"
             if  buildset? and buildset.parent_buildid?
                 rev = "Unresolved #{buildset.parent_buildid}"
-                change = @makeFakeChange("Unresolved #{buildset.parent_buildid}", build.started_at, "Unresolved #{buildset.parent_buildid}")
+                if not change?
+                    change = @changesBySSID[rev]
+                if not change?
+                    change = @makeFakeChange("Unresolved #{buildset.parent_buildid}", build.started_at, "Unresolved #{buildset.parent_buildid}")
             if not change?
-                change = @makeFakeChange("Unresolved #{build.builderid}-#{build.buildid}", build.started_at, "Unresolved #{build.builderid}-#{build.buildid}")
+                rev = "Unresolved #{build.builderid}-#{build.buildid}"
+                if not change?
+                    change = @changesBySSID[rev]
+                if not change?
+                    change = @makeFakeChange("Unresolved #{build.builderid}-#{build.buildid}", build.started_at, "Unresolved #{build.builderid}-#{build.buildid}")
             change.caption = rev
 
         change.buildersById[build.builderid].builds.push(build)
