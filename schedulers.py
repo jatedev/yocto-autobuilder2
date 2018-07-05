@@ -46,7 +46,7 @@ def repos_for_builder(buildername):
 def buildappsrcrev_param():
     return util.StringParameter(
             name="buildappsrcrev",
-            label="""Build appliance source revision to use. Empty defaults to the srcrev currently in the recipe, use AUTOREV to use latest revision:""",
+            label="""Build appliance source revision to use. "None" means default to the srcrev currently in the recipe, use "AUTOREV" to use latest revision or specify a revision to use:""",
             default="AUTOREV")
 
 def props_for_builder(builder):
