@@ -14,15 +14,14 @@ def create_repo_inputs(reponame):
     and commit/hash values
     """
 
-    # TODO: formatting? Typically had branch & commit on same line?
     repo = util.StringParameter("repo_{}".format(reponame),
-                                label="{} repository".format(reponame),
+                                label="Repository:",
                                 default=config.repos[reponame][0])
     branch = util.StringParameter("branch_{}".format(reponame),
-                                  label="Branch",
+                                  label="Branch:",
                                   default=config.repos[reponame][1])
     commit = util.StringParameter("commit_{}".format(reponame),
-                                  label="Tag/Commit hash",
+                                  label="Revision:",
                                   default="HEAD")
     return [repo, branch, commit]
 
@@ -40,7 +39,7 @@ def repos_for_builder(buildername):
         repos = config.buildertorepos["default"]
     for repo in repos:
         inputs = create_repo_inputs(repo)
-        parameters = parameters + inputs
+        parameters = parameters + [util.NestedParameter(name='', label=repo, fields=inputs, columns=2)]
     return parameters
 
 def buildappsrcrev_param():
