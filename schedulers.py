@@ -97,34 +97,6 @@ schedulers.append(sched.ForceScheduler(
  any expectations for the build's outcome:""",
         required=False),
     properties=[
-        buildappsrcrev_param(),
-        util.BooleanParameter(
-            name="is_release",
-            label="Generate a release?",
-            default=False),
-        util.StringParameter(
-            name="yocto_number",  # used to form publish path
-            label="Yocto Project Release Number (1.5, 1.6 etc.)"),
-        util.ChoiceStringParameter(
-            name="milestone_number",
-            label="Milestone number",
-            choices=["", "M1", "M2", "M3", "M4"],
-            default=""
-        ),
-        util.ChoiceStringParameter(
-            name="rc_number",
-            label="Release candidate number",
-            choices=["", "rc1", "rc2", "rc3", "rc4", "rc5", "rc6", "rc7",
-                     "rc8", "rc9"],
-            default=""),
-        util.BooleanParameter(
-            name="send_email",
-            label="Send QA alert emails?",
-            default=False),
-        util.BooleanParameter(
-            name="deploy_artefacts",
-            label="Do we want to save build output? ",
-            default=False),
         ReleaseSelector(
             name="branch",
             label="Release Shortcut Selector",
@@ -190,6 +162,33 @@ schedulers.append(sched.ForceScheduler(
                 'branch_meta-qt4': 'morty',
                 'branch_oecore': 'morty',
               }
-            })
-               
+            }),
+        buildappsrcrev_param(),
+        util.BooleanParameter(
+            name="is_release",
+            label="Generate a release?",
+            default=False),
+        util.StringParameter(
+            name="yocto_number",  # used to form publish path
+            label="Yocto Project Release Number (1.5, 1.6 etc.)"),
+        util.ChoiceStringParameter(
+            name="milestone_number",
+            label="Milestone number",
+            choices=["", "M1", "M2", "M3", "M4"],
+            default=""
+        ),
+        util.ChoiceStringParameter(
+            name="rc_number",
+            label="Release candidate number",
+            choices=["", "rc1", "rc2", "rc3", "rc4", "rc5", "rc6", "rc7",
+                     "rc8", "rc9"],
+            default=""),
+        util.BooleanParameter(
+            name="send_email",
+            label="Send QA alert emails?",
+            default=False),
+        util.BooleanParameter(
+            name="deploy_artefacts",
+            label="Do we want to save build output? ",
+            default=False)
     ]+repos_for_builder("nightly")))
