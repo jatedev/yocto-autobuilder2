@@ -3,7 +3,6 @@
  * Add wikilog link on console page
  * implement buildhistory writeback step in -helper (can then drop from builders.py) [Richard]
  * per worker auth (workers.py & config.py)
- * DEFAULT for buildapp SRCREV still true? (schedulers.py)
  * Add IRC notifier (services.py) [Michael]
  * formatting/labels of the yocto-autobuilder-helper inputs (schedulers.py) [Paul]
  * add mail notification functionality to yocto-autobuilder-helper, it already

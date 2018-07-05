@@ -43,6 +43,11 @@ def repos_for_builder(buildername):
         parameters = parameters + inputs
     return parameters
 
+def buildappsrcrev_param():
+    return util.StringParameter(
+            name="buildappsrcrev",
+            label="""Build appliance source revision to use. Empty defaults to the srcrev currently in the recipe, use AUTOREV to use latest revision:""",
+            default="AUTOREV")
 
 def props_for_builder(builder):
     """
@@ -52,13 +57,7 @@ def props_for_builder(builder):
 
     props = []
     if builder == 'build-appliance':
-        props.append(util.StringParameter(
-            name="buildappsrcrev",
-            # TODO: is this statement still true?
-            label="""Build appliance src revision. Use DEFAULT to take the
- srcrev currently in the recipe:""",
-            default="None",
-        ))
+        props.append(buildappsrcrev_param())
     if builder in ['build-appliance', 'buildtools']:
         props.append(util.BooleanParameter(
             name="deploy_artifacts",
@@ -98,6 +97,7 @@ schedulers.append(sched.ForceScheduler(
  any expectations for the build's outcome:""",
         required=False),
     properties=[
+        buildappsrcrev_param(),
         util.BooleanParameter(
             name="is_release",
             label="Generate a release?",
@@ -126,7 +126,7 @@ schedulers.append(sched.ForceScheduler(
             label="Do we want to save build output? ",
             default=False),
         ReleaseSelector(
-        name="branch",
+            name="branch",
             label="Release Shortcut Selector",
             choices=["master", "rocko", "sumo", "pyro", "morty"],
             selectors={
