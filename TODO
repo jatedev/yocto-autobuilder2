@@ -1,13 +1,10 @@
 
  * Add nightly-checkuri
  * Add wikilog link on console page
- * implement buildhistory writeback step in -helper (can then drop from builders.py) [Richard]
  * per worker auth (workers.py & config.py)
  * Add IRC notifier (services.py) [Michael]
- * formatting/labels of the yocto-autobuilder-helper inputs (schedulers.py) [Paul]
  * add mail notification functionality to yocto-autobuilder-helper, it already
    knows how to iterate error reports. (services.py)
  * Simple script to start buildbot controller, janitor and PRServer [Michael]
- * Clean up ForceScheduler form layout (multiple column?)
  * Look into allowed_origins property of built in web server
  * switch wikilog to buildbot.util.service.HTTPClient?
