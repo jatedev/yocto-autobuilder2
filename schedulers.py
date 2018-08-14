@@ -97,12 +97,13 @@ schedulers.append(sched.ForceScheduler(
         required=False),
     properties=[
         ReleaseSelector(
-            name="targetbranch",
+            name="branchselector",
             default="master",
             label="Release Shortcut Selector",
             choices=["master", "master-next", "mut", "rocko", "sumo", "pyro", "morty"],
             selectors={
               'master': {
+                'branch': 'master',
                 'branch_poky': 'master',
                 'branch_bitbake': 'master',
                 'branch_eclipse-poky-neon': 'neon-master',
@@ -115,6 +116,7 @@ schedulers.append(sched.ForceScheduler(
                 'branch_oecore': 'master',
               },
               'master-next': {
+                'branch': 'master',
                 'branch_poky': 'master-next',
                 'branch_bitbake': 'master-next',
                 'branch_eclipse-poky-neon': 'neon-master',
@@ -127,6 +129,7 @@ schedulers.append(sched.ForceScheduler(
                 'branch_oecore': 'master-next',
               },
               'mut': {
+                'branch': 'master',
                 'branch_poky': 'ross/mut',
                 'repo_poky': 'git://git.yoctoproject.org/poky-contrib',
                 'branch_bitbake': 'master',
@@ -140,6 +143,7 @@ schedulers.append(sched.ForceScheduler(
                 'branch_oecore': 'master',
               },
               'sumo': {
+                'branch': 'sumo',
                 'branch_poky': 'sumo',
                 'branch_bitbake': '1.38',
                 'branch_eclipse-poky-neon': 'neon/sumo',
@@ -152,6 +156,7 @@ schedulers.append(sched.ForceScheduler(
                 'branch_oecore': 'sumo',
               },
               'rocko': {
+                'branch': 'rocko',
                 'branch_poky': 'rocko',
                 'branch_bitbake': '1.36',
                 'branch_eclipse-poky-neon': 'neon/rocko',
@@ -164,6 +169,7 @@ schedulers.append(sched.ForceScheduler(
                 'branch_oecore': 'rocko',
               },
               'pyro': {
+                'branch': 'pyro',
                 'branch_poky': 'pyro',
                 'branch_bitbake': '1.34',
                 'branch_eclipse-poky-neon': 'neon/pyro',
@@ -176,6 +182,7 @@ schedulers.append(sched.ForceScheduler(
                 'branch_oecore': 'pyro',
               },
               'morty': {
+                'branch': 'morty',
                 'branch_poky': 'morty',
                 'branch_bitbake': '1.32',
                 'branch_eclipse-poky-neon': 'neon/morty',
