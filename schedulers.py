@@ -97,7 +97,7 @@ schedulers.append(sched.ForceScheduler(
         required=False),
     properties=[
         ReleaseSelector(
-            name="branch",
+            name="targetbranch",
             default="master",
             label="Release Shortcut Selector",
             choices=["master", "master-next", "mut", "rocko", "sumo", "pyro", "morty"],
