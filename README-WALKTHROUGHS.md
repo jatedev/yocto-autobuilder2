@@ -14,6 +14,9 @@ PATH=$PATH:/.local/bin
 # To edit/rebuild UI Plugin
 ######################################################################
 
+# Ensure prereqs are installed
+apt install sudo git build-essential python3-pip virtualenv enchant npm
+
 # Create a new user
 sudo adduser pokybuild3
 sudo -iu pokybuild3
@@ -24,12 +27,10 @@ git clone http://github.com/buildbot/buildbot.git
 # Build up the right virtualenv
 cd buildbot
 make virtualenv VENV_PY_VERSION=python3.6 VENV_NAME=testenv
-export VENV_PY_VERSION=python3.6 
-export VENV_NAME=testenv
 . testenv/bin/activate
 
 # Build the web frontend components
-make frontend
+make frontend VENV_PY_VERSION=python3.6 VENV_NAME=testenv
 
 # Clone our plugin and rebuild it
 cd ~
@@ -52,8 +53,6 @@ git clone http://github.com/buildbot/buildbot.git
 # Build up the right virtualenv
 cd buildbot
 make virtualenv VENV_PY_VERSION=python3.6 VENV_NAME=testenv
-export VENV_PY_VERSION=python3.6 
-export VENV_NAME=testenv
 . testenv/bin/activate
 
 # Build the web frontend components
@@ -61,7 +60,7 @@ pip install --editable pkg
 pip install --editable master/
 pip install --editable www/waterfall_view/
 pip install --editable www/grid_view/
-make frontend
+make frontend VENV_PY_VERSION=python3.6 VENV_NAME=testenv
 
 # Create controller and worker
 buildbot create-master ~/yocto-controller
@@ -78,7 +77,7 @@ ln -rs yoctoabb/master.cfg master.cfg
     "BASE_SHAREDDIR" : "/home/pokybuild3/shareddir"
 }
 export ABHELPER_JSON="config.json /home/pokybuild3/config-local.json"
-(set set env in config.py)
+(or set env in config.py for builders)
 
 # Rebuild our plugin
 cd ~/yoctoabb/yocto_console_view
