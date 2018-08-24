@@ -10,6 +10,10 @@ import json
 
 builders = []
 
+# Environment to pass into the workers, e.g. to load further local configuration
+# fragments
+extra_env = {}
+#extra_env = {"ABHELPER_JSON" : "config.json /home/pokybuild/config-local.json"}
 
 @util.renderer
 def get_sstate_release_number(props):
@@ -172,7 +176,7 @@ for builder in config.triggered_builders:
         workers = config.builder_to_workers['default']
     builders.append(util.BuilderConfig(name=builder,
                                        workernames=workers,
-                                       factory=f))
+                                       factory=f, env=extra_env))
 
 factory = util.BuildFactory()
 # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
@@ -270,4 +274,4 @@ factory.addStep(steps.ShellCommand(
 builders.append(
     util.BuilderConfig(name="nightly",
                        workernames=config.workers,
-                       factory=factory))
+                       factory=factory, env=extra_env))
