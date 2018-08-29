@@ -1,0 +1,54 @@
+From d5fb6c086c18722532333c8af1e19b42b9ffb138 Mon Sep 17 00:00:00 2001
+From: Aaron Chan <aaron.chun.yew.chan@intel.com>
+Date: Tue, 28 Aug 2018 10:49:13 +0800
+Subject: [PATCH] config.py: Add new job category with suffix bsp
+
+Add new support on Open Source Automated Hardware Tests on BSP test
+cases. New job category is define with builder name standard as
+"nightly-<arch>-bsp" where Yocto Project supports architecutures on
+hardware platforms of x86, x86-64, arm, arm64, mips, mips64, pcc.
+
+Add initial support on x86-64 BSP hardware tests and included meta
+layers needed to run QA test cases on these platforms.
+Community to adopt and add support to autobuilder job config to
+support future BSP testing and validation on their architecture.
+
+Signed-off-by: Aaron Chan <aaron.chun.yew.chan@intel.com>
+---
+ config.py | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/config.py b/config.py
+index 2568768..10f740d 100644
+--- a/config.py
++++ b/config.py
+@@ -11,6 +11,7 @@
+     "nightly-oecore": ["oecore", "bitbake"],
+     "nightly-checkuri": ["poky", "meta-qt4", "meta-qt3"],
+     "nightly-check-layer": ["poky", "meta-mingw", "meta-gplv2"],
++    "nightly-x86-64-bsp": ["poky", "meta-intel", "meta-openembedded", "meta-security", "meta-ros", "meta-browser"],
+     "default": ["poky"]
+ }
+ 
+@@ -32,7 +33,11 @@
+     "meta-qt4": ["git://git.yoctoproject.org/meta-qt4", "master"],
+     "meta-qt3": ["git://git.yoctoproject.org/meta-qt3", "master"],
+     "meta-mingw": ["git://git.yoctoproject.org/meta-mingw", "master"],
+-    "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"]
++    "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"],
++    "meta-security": ["git://git.yoctoproject.org/meta-security", "master"],
++    "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "master"],
++    "meta-ros": ["git://github.com/bmwcarit/meta-ros", "master"],
++    "meta-browser": ["git://github.com/OSSystems/meta-browser", "master"]
+ }
+ 
+ trigger_builders_wait = [
+@@ -40,7 +45,7 @@
+     "nightly-mips", "nightly-mips-lsb", "nightly-mips64",
+     "nightly-multilib", "nightly-x32",
+     "nightly-ppc", "nightly-ppc-lsb",
+-    "nightly-x86-64", "nightly-x86-64-lsb",
++    "nightly-x86-64", "nightly-x86-64-lsb", "nightly-x86-64-bsp",
+     "nightly-x86", "nightly-x86-lsb",
+     "nightly-packagemanagers",
+     "nightly-rpm-non-rpm", "nightly-deb-non-deb",
