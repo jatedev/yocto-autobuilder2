@@ -2,6 +2,7 @@ from buildbot.plugins import *
 
 from yoctoabb import config
 from yoctoabb.steps.writelayerinfo import WriteLayerInfo
+from yoctoabb.steps.observer import RunConfigLogObserver
 from datetime import datetime
 
 import os
@@ -119,6 +120,11 @@ def ensure_props_set(props):
         "publish_destination": props.getProperty("publish_destination", "None")
     }
 
+def get_buildlogs():
+    logfiles = {}
+    for i in range(1,30):
+        logfiles["step" + str(i)] = "build/command.log." + str(i)
+    return logfiles
 
 def create_builder_factory():
     f = util.BuildFactory()
@@ -153,7 +159,8 @@ def create_builder_factory():
                                            haltOnFailure=True,
                                            name='Set build revision'))
 
-    f.addStep(steps.ShellCommand(
+
+    f.addStep(RunConfigLogObserver(
         command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-config"),
                  util.Property("buildername"),
                  util.Interpolate("%(prop:builddir)s/build/build"),
@@ -164,6 +171,8 @@ def create_builder_factory():
                  get_publish_dest,
                  util.URLForBuild],
         name="run-config",
+        logfiles=get_buildlogs(),
+        lazylogfiles=True,
         timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
     return f
 
@@ -225,7 +234,7 @@ factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop
                                              name='Set build revision'))
 
 # run-config
-factory.addStep(steps.ShellCommand(
+factory.addStep(RunConfigLogObserver(
     command=[
         util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-config"),
         util.Property("buildername"),
@@ -237,6 +246,8 @@ factory.addStep(steps.ShellCommand(
         get_publish_dest,
         util.URLForBuild],
     name="run-config",
+    logfiles=get_buildlogs(),
+    lazylogfiles=True,
     timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
 
 # trigger the buildsets contained in the nightly set
