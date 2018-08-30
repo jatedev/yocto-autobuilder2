@@ -95,7 +95,7 @@ def get_publish_internal(props, basename=False):
             return os.path.basename(dest)
         return dest
     else:
-        return "None"
+        return ""
 
 @util.renderer
 def get_publish_dest(props):
@@ -113,11 +113,11 @@ def ensure_props_set(props):
     correct defaults are set and passed to the helper scripts.
     """
     return {
-        "sharedrepolocation": props.getProperty("sharedrepolocation", "None"),
+        "sharedrepolocation": props.getProperty("sharedrepolocation", ""),
         "is_release": props.getProperty("is_release", False),
-        "buildappsrcrev": props.getProperty("buildappsrcrev", "None"),
+        "buildappsrcrev": props.getProperty("buildappsrcrev", ""),
         "deploy_artefacts": props.getProperty("deploy_artefacts", False),
-        "publish_destination": props.getProperty("publish_destination", "None")
+        "publish_destination": props.getProperty("publish_destination", "")
     }
 
 def get_buildlogs():
@@ -147,10 +147,10 @@ def create_builder_factory():
     f.addStep(steps.ShellCommand(
         command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/shared-repo-unpack"),
                  util.Interpolate("%(prop:builddir)s/layerinfo.json"),
-                 util.Interpolate("%(prop:sharedrepolocation)s"),
                  util.Interpolate("%(prop:builddir)s/build"),
                  util.Property("buildername"),
-                 util.Property("is_release")],
+                 "-c", util.Interpolate("%(prop:sharedrepolocation)s"),
+                 "-p", get_publish_dest],
         haltOnFailure=True,
         name="Unpack shared repositories"))
 
@@ -166,10 +166,11 @@ def create_builder_factory():
                  util.Interpolate("%(prop:builddir)s/build/build"),
                  util.Interpolate("%(prop:branch_poky)s"),
                  util.Interpolate("%(prop:repo_poky)s"),
-                 get_sstate_release_number,
-                 util.Interpolate("%(prop:buildappsrcrev)s"),
-                 get_publish_dest,
-                 util.URLForBuild],
+                 "-s", get_sstate_release_number,
+                 "-b", util.Interpolate("%(prop:buildappsrcrev)s"),
+                 "-p", get_publish_dest,
+                 "-u", util.URLForBuild,
+                 "-q"],
         name="run-config",
         logfiles=get_buildlogs(),
         lazylogfiles=True,
@@ -207,8 +208,8 @@ factory.addStep(steps.ShellCommand(
     command=[
         util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/prepare-shared-repos"),
         util.Interpolate("%(prop:builddir)s/layerinfo.json"),
-        util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
-        get_publish_dest],
+        "-c", util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
+        "-p", get_publish_dest],
     haltOnFailure=True,
     name="Prepare shared repositories"))
 factory.addStep(steps.SetProperty(
@@ -221,10 +222,10 @@ factory.addStep(steps.ShellCommand(
     command=[
         util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/shared-repo-unpack"),
         util.Interpolate("%(prop:builddir)s/layerinfo.json"),
-        util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
         util.Interpolate("%(prop:builddir)s/build"),
         util.Property("buildername"),
-        util.Property("is_release")],
+        "-c", util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
+        "-p", util.Property("is_release")],
     haltOnFailure=True,
     name="Unpack shared repositories"))
 
@@ -241,10 +242,10 @@ factory.addStep(RunConfigLogObserver(
         util.Interpolate("%(prop:builddir)s/build/build"),
         util.Interpolate("%(prop:branch_poky)s"),
         util.Interpolate("%(prop:repo_poky)s"),
-        get_sstate_release_number,
-        "None",
-        get_publish_dest,
-        util.URLForBuild],
+        "-s", get_sstate_release_number,
+        "-p", get_publish_dest,
+        "-u", util.URLForBuild,
+        "-q"],
     name="run-config",
     logfiles=get_buildlogs(),
     lazylogfiles=True,
@@ -255,7 +256,7 @@ def get_props_set():
     set_props = {
         "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
         "is_release": util.Property("is_release"),
-        "buildappsrcrev": "None",
+        "buildappsrcrev": "",
         "deploy_artefacts": util.Property("deploy_artefacts"),
         "publish_destination": util.Property("publish_destination"),
     }
@@ -276,9 +277,9 @@ factory.addStep(steps.ShellCommand(
         util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/send-qa-email"),
         util.Property("send_email"),
         util.Interpolate("%(prop:builddir)s/layerinfo.json"),
-        get_publish_dest,
-        get_publish_name,
-        util.Interpolate("%(prop:sharedrepolocation)s")
+        util.Interpolate("%(prop:sharedrepolocation)s"),
+        "-p", get_publish_dest,
+        "-r", get_publish_name
         ],
     name="Send QA Email"))
 
