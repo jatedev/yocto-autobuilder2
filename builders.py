@@ -208,7 +208,7 @@ factory.addStep(steps.ShellCommand(
     command=[
         util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/prepare-shared-repos"),
         util.Interpolate("%(prop:builddir)s/layerinfo.json"),
-        "-c", util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
+        util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
         "-p", get_publish_dest],
     haltOnFailure=True,
     name="Prepare shared repositories"))
