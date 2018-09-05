@@ -11,6 +11,9 @@ div.yoctochangedetails(style="width:100%;")
         i.fa.fa-chevron-circle-right.rotate.clickable(ng-class="{'fa-rotate-90':change.show_details}")
     div.anim-changedetails(ng-show="change.show_details")
         table.table.table-striped.table-condensed(ng-show="change.show_details")
+          tr(ng-show="change.reason")
+            td Reason
+            td {{ change.reason }}
           tr(ng-show="change.author")
             td Author
             td {{ change.author }}

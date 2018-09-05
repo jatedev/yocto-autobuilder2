@@ -76,7 +76,7 @@ class Console extends Controller
                 return 1
 
         @$scope.builds = @builds = @dataAccessor.getBuilds
-            property: ["yp_build_revision", "yp_build_branch"]
+            property: ["yp_build_revision", "yp_build_branch", "reason"]
             limit: @buildLimit
             order: '-started_at'
         @changes = @dataAccessor.getChanges({limit: @changeLimit, order: '-changeid'})
@@ -280,6 +280,8 @@ class Console extends Controller
                 change.caption = build.properties.yp_build_branch[0]
             change.revlink = "http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=" + rev
             change.errorlink = "http://errors.yoctoproject.org/Errors/Latest/Autobuilder/?filter=" + rev + "&type=commit"
+            if build.properties?.reason?
+                change.reason = build.properties.reason[0]
 
         else
             if  buildset? and buildset.parent_buildid?
