@@ -14,8 +14,8 @@ maxsteps = 8
 
 # Environment to pass into the workers, e.g. to load further local configuration
 # fragments
-#extra_env = {}
-extra_env = {"ABHELPER_JSON" : "config.json /home/pokybuild/config-local.json"}
+extra_env = {}
+#extra_env = {"ABHELPER_JSON" : "config.json /home/pokybuild/config-local.json"}
 
 @util.renderer
 def get_sstate_release_number(props):
@@ -139,7 +139,7 @@ def create_builder_factory():
         haltOnFailure=True,
         name="Clobber build dir"))
     f.addStep(steps.Git(
-        repourl='file:///home/pokybuild/yocto-autobuilder-helper',
+        repourl='git://git.yoctoproject.org/yocto-autobuilder-helper',
         workdir=util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper"),
         mode='incremental',
         haltOnFailure=True,

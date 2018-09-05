@@ -60,8 +60,8 @@ releases = ["", "sumo", "rocko", "pyro", "morty"]
 
 # ## Cluster configuration
 # Publishing settings
-sharedrepodir = "/home/pokybuild/shareddir/repos.yoctoproject.org"
-publish_dest = "/home/pokybuild/shareddir/pub"
+sharedrepodir = "/srv/www/vhosts/repos.yoctoproject.org"
+publish_dest = "/srv/www/vhosts/autobuilder.yoctoproject.org/pub"
 
 # Web UI settings
 web_port = 8010
@@ -72,12 +72,12 @@ workers = ["example-worker"]
 # Worker configuration, all workers configured the same...
 # TODO: support per-worker config
 worker_password = "pass"
-worker_max_builds = 3
+worker_max_builds = None
 notify_on_missing = None
 
 # Some builders should only run on specific workers (host OS dependent)
 builder_to_workers = {
-    "nightly-rpm-non-rpm": ["example-worker"],
-    "nightly-deb-non-deb": ["example-worker"],
+    "nightly-rpm-non-rpm": [],
+    "nightly-deb-non-deb": [],
     "default": workers
 }
