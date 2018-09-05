@@ -159,6 +159,10 @@ def create_builder_factory():
                                            haltOnFailure=True,
                                            name='Set build revision'))
 
+    f.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse --abbrev-ref HEAD"),
+                                           property="yp_build_branch",
+                                           haltOnFailure=True,
+                                           name='Set build branch'))
 
     f.addStep(RunConfigLogObserver(
         command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-config"),
@@ -233,6 +237,11 @@ factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop
                                              property="yp_build_revision",
                                              haltOnFailure=True,
                                              name='Set build revision'))
+
+factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse --abbrev-ref HEAD"),
+                                             property="yp_build_branch",
+                                             haltOnFailure=True,
+                                             name='Set build branch'))
 
 # run-config
 factory.addStep(RunConfigLogObserver(
