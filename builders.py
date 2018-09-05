@@ -10,6 +10,7 @@ import json
 
 
 builders = []
+maxsteps = 8
 
 # Environment to pass into the workers, e.g. to load further local configuration
 # fragments
@@ -120,10 +121,11 @@ def ensure_props_set(props):
         "publish_destination": props.getProperty("publish_destination", "")
     }
 
-def get_buildlogs():
+def get_buildlogs(maxsteps):
     logfiles = {}
-    for i in range(1,30):
-        logfiles["step" + str(i)] = "build/command.log." + str(i)
+    for i in range(1, maxsteps):
+        for j in ['a', 'b', 'c', 'd']:
+            logfiles["step" + str(i) + str(j)] = "build/command.log." + str(i) + str(j)
     return logfiles
 
 def create_builder_factory():
@@ -176,8 +178,9 @@ def create_builder_factory():
                  "-u", util.URLForBuild,
                  "-q"],
         name="run-config",
-        logfiles=get_buildlogs(),
+        logfiles=get_buildlogs(maxsteps),
         lazylogfiles=True,
+        maxsteps=maxsteps,
         timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
     return f
 
@@ -256,8 +259,9 @@ factory.addStep(RunConfigLogObserver(
         "-u", util.URLForBuild,
         "-q"],
     name="run-config",
-    logfiles=get_buildlogs(),
+    logfiles=get_buildlogs(maxsteps),
     lazylogfiles=True,
+    maxsteps=maxsteps,
     timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
 
 # trigger the buildsets contained in the nightly set

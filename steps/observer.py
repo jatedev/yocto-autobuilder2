@@ -18,14 +18,15 @@ class RunConfigLogObserver(ShellCommand):
     warnings = 0
     errors = 0
 
-    def __init__(self, python=None, *args, **kwargs):
+    def __init__(self, python=None, maxsteps=10, *args, **kwargs):
         ShellCommand.__init__(self, *args, **kwargs)
         self.python = python
         self.warningLines = []
         self.errorLines = []
         self.addLogObserver('stdio', logobserver.LineConsumerLogObserver(self.logConsumer))
-        for i in range(1, 30):
-            self.addLogObserver('step' + str(i), logobserver.LineConsumerLogObserver(self.logConsumer))
+        for i in range(1, maxsteps):
+            for j in ['a', 'b', 'c', 'd']:
+                self.addLogObserver('step' + str(i) + str(j), logobserver.LineConsumerLogObserver(self.logConsumer))
 
     def logConsumer(self):
         while True:
