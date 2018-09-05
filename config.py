@@ -48,7 +48,8 @@ trigger_builders_wait = [
     "eclipse-plugin-oxygen", "nightly-non-gpl3", "nightly-oecore",
     "nightly-world", "nightly-wic", "nightly-world-lsb",
     "poky-tiny", "nightly-musl", "nightly-musl-x86-64", "nightly-no-x11",
-    "nightly-qa-extras", "nightly-oe-selftest", "nightly-check-layer"
+    "nightly-qa-extras", "nightly-qa-extras2", "nightly-oe-selftest",
+    "nightly-check-layer"
 ]
 
 triggered_builders = trigger_builders_wait

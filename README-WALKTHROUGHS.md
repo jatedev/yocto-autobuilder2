@@ -64,7 +64,7 @@ make frontend VENV_PY_VERSION=python3.6 VENV_NAME=testenv
 
 # Create controller and worker
 buildbot create-master ~/yocto-controller
-buildbot-worker create-worker ~/yocto-worker localhost example-worker pass
+buildbot-worker create-worker ~/yocto-worker localhost example-worker pass --umask=0o22
 
 # Setup the controller
 cd ~/yocto-controller
@@ -80,7 +80,7 @@ export ABHELPER_JSON="config.json /home/pokybuild3/config-local.json"
 (or set env in config.py for builders)
 
 # Rebuild our plugin
-cd ~/yoctoabb/yocto_console_view
+cd ~/yocto-controller/yoctoabb/yocto_console_view
 python3 setup.py build
 
 # Setup the helper
@@ -88,7 +88,7 @@ cd ~
 git clone https://git.yoctoproject.org/git/yocto-autobuilder-helper
 
 # Startup commands (janitor, controller, worker)
-~/yocto-autobuilder-helper/janitor/ab-janitor
+~/yocto-autobuilder-helper/janitor/ab-janitor &
 buildbot start ~/yocto-controller
 buildbot-worker start ~/yocto-worker
 
