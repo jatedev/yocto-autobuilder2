@@ -279,7 +279,7 @@ class Console extends Controller
             if build.properties?.yp_build_branch?
                 change.caption = build.properties.yp_build_branch[0]
             change.revlink = "http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=" + rev
-            change.errorlink = "http://errors.yoctoproject.org/Errors/Latest/Autobuilder/?filter=" + rev + "&type=commit"
+            change.errorlink = "http://errors.yoctoproject.org/Errors/Latest/?filter=" + rev + "&type=commit&limit=150"
             if build.properties?.reason?
                 change.reason = build.properties.reason[0]
 
