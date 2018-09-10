@@ -274,6 +274,11 @@ class Console extends Controller
             if not change?
                 change = @changesBySSID[rev]
             if not change?
+                if buildset? and buildset.parent_buildid?
+                    oldrev = "Unresolved #{buildset.parent_buildid}"
+                    delete @changesBySSID.oldrev
+                oldrev = "Unresolved #{build.builderid}-#{build.buildid}"
+                delete @changesBySSID.oldrev
                 change = @makeFakeChange(rev, build.started_at, rev)
             change.caption = "Commit"
             if build.properties?.yp_build_branch?
@@ -282,20 +287,21 @@ class Console extends Controller
             change.errorlink = "http://errors.yoctoproject.org/Errors/Latest/?filter=" + rev + "&type=commit&limit=150"
             if build.properties?.reason?
                 change.reason = build.properties.reason[0]
-
         else
-            if  buildset? and buildset.parent_buildid?
+            if buildset? and buildset.parent_buildid?
                 rev = "Unresolved #{buildset.parent_buildid}"
                 if not change?
                     change = @changesBySSID[rev]
                 if not change?
-                    change = @makeFakeChange("Unresolved #{buildset.parent_buildid}", build.started_at, "Unresolved #{buildset.parent_buildid}")
+                    oldrev = "Unresolved #{build.builderid}-#{build.buildid}"
+                    delete @changesBySSID.oldrev
+                    change = @makeFakeChange(rev, build.started_at, rev)
             if not change?
                 rev = "Unresolved #{build.builderid}-#{build.buildid}"
                 if not change?
                     change = @changesBySSID[rev]
                 if not change?
-                    change = @makeFakeChange("Unresolved #{build.builderid}-#{build.buildid}", build.started_at, "Unresolved #{build.builderid}-#{build.buildid}")
+                    change = @makeFakeChange(rev, build.started_at, rev)
             change.caption = rev
 
         change.buildersById[build.builderid].builds.push(build)
