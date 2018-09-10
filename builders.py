@@ -10,7 +10,7 @@ import json
 
 
 builders = []
-maxsteps = 8
+maxsteps = 9
 
 # Environment to pass into the workers, e.g. to load further local configuration
 # fragments
