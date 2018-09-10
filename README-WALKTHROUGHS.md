@@ -89,6 +89,8 @@ git clone https://git.yoctoproject.org/git/yocto-autobuilder-helper
 
 # Startup commands (janitor, controller, worker)
 ~/yocto-autobuilder-helper/janitor/ab-janitor &
+cd buildbot
+. testenv/bin/activate
 buildbot start ~/yocto-controller
 buildbot-worker start ~/yocto-worker
 
