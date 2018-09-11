@@ -276,9 +276,9 @@ class Console extends Controller
             if not change?
                 if buildset? and buildset.parent_buildid?
                     oldrev = "Unresolved #{buildset.parent_buildid}"
-                    delete @changesBySSID.oldrev
+                    delete @changesBySSID[oldrev]
                 oldrev = "Unresolved #{build.builderid}-#{build.buildid}"
-                delete @changesBySSID.oldrev
+                delete @changesBySSID[oldrev]
                 change = @makeFakeChange(rev, build.started_at, rev)
             change.caption = "Commit"
             if build.properties?.yp_build_branch?
@@ -294,7 +294,7 @@ class Console extends Controller
                     change = @changesBySSID[rev]
                 if not change?
                     oldrev = "Unresolved #{build.builderid}-#{build.buildid}"
-                    delete @changesBySSID.oldrev
+                    delete @changesBySSID[oldrev]
                     change = @makeFakeChange(rev, build.started_at, rev)
             if not change?
                 rev = "Unresolved #{build.builderid}-#{build.buildid}"
