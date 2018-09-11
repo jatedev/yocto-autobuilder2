@@ -106,12 +106,11 @@ class Console extends Controller
         for change in @changes
             @changesBySSID[change.sourcestamp.ssid] = change
             @changesByRevision[change.revision] = change
+            @populateChange(change)
+
 
         for build in @builds
             @matchBuildWithChange(build)
-
-        for change in @changes
-            @populateChange(change)
 
         @filtered_changes = []
         for ssid, change of @changesBySSID
