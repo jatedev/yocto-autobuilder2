@@ -75,6 +75,8 @@ class Console extends Controller
                     return 0
                 return 1
 
+        @$scope.maping = @maping = {}
+
         @$scope.builds = @builds = @dataAccessor.getBuilds
             property: ["yp_build_revision", "yp_build_branch", "reason"]
             limit: @buildLimit
@@ -84,6 +86,21 @@ class Console extends Controller
         @buildsets = @dataAccessor.getBuildsets({limit: @buildLimit, order: '-submitted_at'})
 
         @builds.onChange = @changes.onChange = @buildrequests.onChange = @buildsets.onChange = @onChange
+
+        @dataAccessor.getBuilds().onChange = (builds) =>
+            for b in builds
+                b.getProperties().onChange = (properties) =>
+                    buildid = properties.endpoint.split('/')[1]
+                    if ! @maping[buildid]
+                        rev = @getBuildProperty(properties[0], 'yp_build_revision')
+                        if rev?
+                            @maping[buildid] = rev
+                            if not @onchange_debounce?
+                                @onchange_debounce = @$timeout(@_onChange, 100)
+
+    getBuildProperty: (properties, property) ->
+        hasProperty = properties && properties.hasOwnProperty(property)
+        return  if hasProperty then properties[property][0] else null
 
     onChange: (s) =>
         # if there is no data, no need to try and build something.
@@ -101,8 +118,8 @@ class Console extends Controller
 
         @sortBuildersByTags(@all_builders)
 
-        @changesBySSID ?= {}
-        @changesByRevision ?= {}
+        @changesBySSID = {}
+        @changesByRevision = {}
         for change in @changes
             @changesBySSID[change.sourcestamp.ssid] = change
             @changesByRevision[change.revision] = change
@@ -268,18 +285,22 @@ class Console extends Controller
             for sourcestamp in buildset.sourcestamps
                 change = @changesBySSID[sourcestamp.ssid]
 
-        if build.properties?.yp_build_revision?
-            rev = build.properties.yp_build_revision[0]
+        if build.properties?.yp_build_revision? or @maping[build.buildid]
+            if build.properties?.yp_build_revision?
+                rev = build.properties.yp_build_revision[0]
+            else
+                rev = @maping[build.buildid]
             change = @changesByRevision[rev]
             if not change?
                 change = @changesBySSID[rev]
             if not change?
-                if buildset? and buildset.parent_buildid?
-                    oldrev = "Unresolved #{buildset.parent_buildid}"
-                    delete @changesBySSID[oldrev]
-                oldrev = "Unresolved #{build.builderid}-#{build.buildid}"
-                delete @changesBySSID[oldrev]
                 change = @makeFakeChange(rev, build.started_at, rev)
+            if buildset? and buildset.parent_buildid?
+                oldrev = "Unresolved #{buildset.parent_buildid}"
+                delete @changesBySSID[oldrev]
+            oldrev = "Unresolved #{build.builderid}-#{build.buildid}"
+            delete @changesBySSID[oldrev]
+
             change.caption = "Commit"
             if build.properties?.yp_build_branch?
                 change.caption = build.properties.yp_build_branch[0]
