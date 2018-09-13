@@ -75,7 +75,8 @@ class Console extends Controller
                     return 0
                 return 1
 
-        @$scope.maping = @maping = {}
+        @$scope.revmapping = @revmapping = {}
+        @$scope.branchmapping = @branchmapping = {}
 
         @$scope.builds = @builds = @dataAccessor.getBuilds
             property: ["yp_build_revision", "yp_build_branch", "reason"]
@@ -89,13 +90,21 @@ class Console extends Controller
 
         @builds.onNew = (build) =>
             build.getProperties().onChange = (properties) =>
+                change = false
                 buildid = properties.endpoint.split('/')[1]
-                if ! @maping[buildid]
+                if ! @revmapping[buildid]
                     rev = @getBuildProperty(properties[0], 'yp_build_revision')
                     if rev?
-                        @maping[buildid] = rev
-                        if not @onchange_debounce?
-                            @onchange_debounce = @$timeout(@_onChange, 100)
+                        @revmapping[buildid] = rev
+                        change = true
+                if ! @branchmapping[buildid]
+                    branch = @getBuildProperty(properties[0], 'yp_build_branch')
+                    if branch?
+                        @branchmapping[buildid] = branch
+                        change = true
+                if change and not @onchange_debounce?
+                    @onchange_debounce = @$timeout(@_onChange, 100)
+
 
     getBuildProperty: (properties, property) ->
         hasProperty = properties && properties.hasOwnProperty(property)
@@ -284,11 +293,11 @@ class Console extends Controller
             for sourcestamp in buildset.sourcestamps
                 change = @changesBySSID[sourcestamp.ssid]
 
-        if build.properties?.yp_build_revision? or @maping[build.buildid]
+        if build.properties?.yp_build_revision? or @revmapping[build.buildid]
             if build.properties?.yp_build_revision?
                 rev = build.properties.yp_build_revision[0]
             else
-                rev = @maping[build.buildid]
+                rev = @revmapping[build.buildid]
             change = @changesByRevision[rev]
             if not change?
                 change = @changesBySSID[rev]
@@ -303,6 +312,8 @@ class Console extends Controller
             change.caption = "Commit"
             if build.properties?.yp_build_branch?
                 change.caption = build.properties.yp_build_branch[0]
+            if @branchmapping[build.buildid]
+                change.caption = @branchmapping[build.buildid]
             change.revlink = "http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=" + rev
             change.errorlink = "http://errors.yoctoproject.org/Errors/Latest/?filter=" + rev + "&type=commit&limit=150"
             if build.properties?.reason?
