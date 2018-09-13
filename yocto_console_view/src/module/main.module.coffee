@@ -87,16 +87,15 @@ class Console extends Controller
 
         @builds.onChange = @changes.onChange = @buildrequests.onChange = @buildsets.onChange = @onChange
 
-        @dataAccessor.getBuilds().onChange = (builds) =>
-            for b in builds
-                b.getProperties().onChange = (properties) =>
-                    buildid = properties.endpoint.split('/')[1]
-                    if ! @maping[buildid]
-                        rev = @getBuildProperty(properties[0], 'yp_build_revision')
-                        if rev?
-                            @maping[buildid] = rev
-                            if not @onchange_debounce?
-                                @onchange_debounce = @$timeout(@_onChange, 100)
+        @builds.onNew = (build) =>
+            build.getProperties().onChange = (properties) =>
+                buildid = properties.endpoint.split('/')[1]
+                if ! @maping[buildid]
+                    rev = @getBuildProperty(properties[0], 'yp_build_revision')
+                    if rev?
+                        @maping[buildid] = rev
+                        if not @onchange_debounce?
+                            @onchange_debounce = @$timeout(@_onChange, 100)
 
     getBuildProperty: (properties, property) ->
         hasProperty = properties && properties.hasOwnProperty(property)
