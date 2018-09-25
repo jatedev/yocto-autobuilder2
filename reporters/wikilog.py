@@ -2,7 +2,7 @@ from buildbot.reporters import utils
 from buildbot.util import service
 from twisted.internet import defer
 from twisted.python import log
-from buildbot.process.results import SUCCESS
+from buildbot.process.results import SUCCESS, WARNINGS, FAILURE, SKIPPED, EXCEPTION, RETRY, CANCELLED
 
 from yoctoabb.lib.wiki import YPWiki
 
@@ -168,10 +168,15 @@ class WikiLog(service.BuildbotService):
         logfmt = '[%s %s]'
         for s in build['steps']:
 
-            # Ignore logs for steps which succeeded
+            # Ignore logs for steps which succeeded/cancelled
             result = s['results']
-            if result == SUCCESS:
+            if result in (SUCCESS, RETRY, CANCELLED):
                 continue
+            if result == WARNINGS:
+                # ignore warnings for log purposes for now
+                continue
+
+            # Log for FAILURE, SKIPPED, EXCEPTION
 
             step_name = s['name']
             step_number = s['number']
