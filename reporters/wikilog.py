@@ -107,7 +107,8 @@ class WikiLog(service.BuildbotService):
         summaryfmt = 'Adding new BuildLog entry for build %s (%s)'
         summary = summaryfmt % (buildid, chash)
         summary = summary + self.idstring
-        content = "* '''Build ID''' - %s" % chash
+        content = '<div id="' + str(buildid) + '"></div>\n'
+        content = content + "* '''Build ID''' - %s" % chash
         content = content + self.idstring
         content = content + '\n* Started at: %s\n' % starttime
         content = content + '* ' + forcedby + '\n* ' + reason + '\n'
@@ -190,7 +191,7 @@ class WikiLog(service.BuildbotService):
                 logstring.append('[%s %s]' % (log_url, l['name']))
 
             logs = ' '.join(logstring)
-            logentry = logentry + '\n* [%s %s] %s failed: %s\n' % (url, builder, step_name, logs)
+            logentry = logentry + '\n* [%s %s] %s failed: %s' % (url, builder, step_name, logs)
 
         blurb, entries = self.wiki.get_content(self.wiki_page)
         if not blurb:
@@ -227,7 +228,7 @@ class WikiLog(service.BuildbotService):
             log.err(errmsg.format(buildid, parent['url']))
             return False
 
-        new_entry = '\n' + entry.strip() + logentry
+        new_entry = '\n' + entry.strip() + logentry + '\n\n'
 
         summary = 'Updating entry with failures in %s' % builder
         summary = summary + self.idstring
