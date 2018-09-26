@@ -136,11 +136,13 @@ class YPWiki(object):
 
         parsed = self.parse_json(req)
         pageid = sorted(parsed['query']['pages'].keys())[-1]
-        content = parsed['query']['pages'][pageid]['revisions'][0]['*']
-        blurb, entries = content.split('==', 1)
-        # ensure we keep only a single newline after the blurb
-        blurb = blurb.strip() + "\n"
-        entries = '=='+entries
+        blurb, entries = "\n", ""
+        if 'revisions' in parsed['query']['pages'][pageid]:
+            content = parsed['query']['pages'][pageid]['revisions'][0]['*']
+            blurb, entries = content.split('==', 1)
+            # ensure we keep only a single newline after the blurb
+            blurb = blurb.strip() + "\n"
+            entries = '=='+entries
 
         return blurb, entries
 

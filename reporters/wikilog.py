@@ -252,9 +252,14 @@ class WikiLog(service.BuildbotService):
         entry_title = next(it)
         while entry_title.group(1) != title:
             entry_title = next(it)
-        next_title = next(it)
         head = entries[:entry_title.start()]
-        tail = entries[next_title.start():]
+        try:
+            next_title = next(it)
+            tail = entries[next_title.start():]
+        except StopIteration:
+            # There was no following entry
+            tail = ""
+
         update = head + "==[" + new_title + "]==\n" + new_entry + tail
 
         cookies = self.wiki.login()
