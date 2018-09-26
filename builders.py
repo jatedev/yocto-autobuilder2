@@ -16,9 +16,10 @@ builders = []
 
 # Environment to pass into the workers, e.g. to load further local configuration
 # fragments
-extra_env = {}
-if os.environ.get('ABHELPER_JSON'):
-    extra_env['ABHELPER_JSON'] = os.environ['ABHELPER_JSON']
+#extra_env = {}
+#if os.environ.get('ABHELPER_JSON'):
+#    extra_env['ABHELPER_JSON'] = os.environ['ABHELPER_JSON']
+extra_env = {"ABHELPER_JSON" : "config.json /home/pokybuild/config-local.json"}
 
 @util.renderer
 def ensure_props_set(props):

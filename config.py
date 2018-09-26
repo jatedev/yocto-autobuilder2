@@ -25,7 +25,7 @@ buildertorepos = {
 # user customisable
 repos = {
     "yocto-autobuilder-helper":
-        ["git://git.yoctoproject.org/yocto-autobuilder-helper",
+        ["file:///home/pokybuild/yocto-autobuilder-helper",
          "master"],
     "eclipse-poky-neon": ["git://git.yoctoproject.org/eclipse-yocto",
                           "neon-master"],
@@ -98,10 +98,16 @@ builders_others = [
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + trigger_builders_wait_perf + builders_others))
 builders = ["a-quick", "a-full", "docs"] + subbuilders
 
+trigger_builders_wait2 = [
+    "buildtools",
+    "poky-tiny",
+    "nightly-check-layer"
+]
+
 # ## Cluster configuration
 # Publishing settings
-sharedrepodir = "/srv/autobuilder/repos"
-publish_dest = "/srv/autobuilder/autobuilder.yoctoproject.org/pub"
+sharedrepodir = "/home/pokybuild/sharedrepos/"
+publish_dest = "/home/pokybuild/publishdest/"
 
 # Web UI settings
 web_port = 8010
@@ -115,7 +121,7 @@ workers_opensuse = ["tumbleweed-ty-1", "tumbleweed-ty-2", "tumbleweed-ty-3", "op
 
 workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse 
 
-workers_bringup = []
+workers_bringup = ["fedora29-ty-1", "opensuse150-ty-1"]
 # workers with wine on them for meta-mingw
 workers_wine = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3"]
 workers_buildperf = ["perf-ubuntu1604", "perf-centos7"]
@@ -135,6 +141,9 @@ workers_prev_releases = {
     "sumo" : ("centos7", "debian8", "debian9", "fedora28", "ubuntu1604", "ubuntu1804", "perf-")
 }
 
+workers = ["example-worker"]
+all_workers = ["example-worker"]
+
 # Worker configuration, all workers configured the same...
 # TODO: support per-worker config
 worker_password = "pass"
@@ -143,22 +152,22 @@ notify_on_missing = None
 
 # Some builders should only run on specific workers (host OS dependent)
 builder_to_workers = {
-    "bringup": workers_bringup,
-    "pkgman-rpm-non-rpm": workers_ubuntu + workers_debian,
-    "pkgman-deb-non-deb": workers_fedora + workers_centos + workers_opensuse,
-    "oe-selftest-ubuntu": workers_ubuntu,
-    "oe-selftest-debian": workers_debian,
-    "oe-selftest-fedora": workers_fedora,
-    "oe-selftest-opensuse": workers_opensuse,
-    "oe-selftest-centos": workers_centos,
-    "meta-mingw": workers_wine,
-    "buildperf-ubuntu1604": ["perf-ubuntu1604"],
-    "buildperf-centos7": ["perf-centos7"],
-    "qemuarm-armhost": workers_arm,
-    "qemuarm64-ptest": workers_arm,
-    "qemuarm64-ptest-fast": workers_arm,
-    "qemuarm64-ltp": workers_arm,
-    "qemuarm64-armhost": workers_arm,
-    "auh" : workers_auh,
-    "default": workers
+    "bringup": "example-worker",
+    "pkgman-rpm-non-rpm": "example-worker",
+    "pkgman-deb-non-deb": "example-worker",
+    "oe-selftest-ubuntu": "example-worker",
+    "oe-selftest-debian": "example-worker",
+    "oe-selftest-fedora": "example-worker",
+    "oe-selftest-opensuse": "example-worker",
+    "oe-selftest-centos": "example-worker",
+    "meta-mingw": "example-worker",
+    "buildperf-ubuntu1604": "example-worker",
+    "buildperf-centos7": "example-worker",
+    "qemuarm-armhost": "example-worker",
+    "qemuarm64-ptest": "example-worker",
+    "qemuarm64-ptest-fast": "example-worker",
+    "qemuarm64-ltp": "example-worker",
+    "qemuarm64-armhost": "example-worker",
+    "auh" : "example-worker",
+    "default": "example-worker"
 }

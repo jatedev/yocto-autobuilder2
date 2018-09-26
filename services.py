@@ -31,3 +31,17 @@ services = []
 #                     "User", "password", "LogPage",
 #                     "Production Cluster")
 # )
+
+#from yoctoabb.reporters import wikilog
+#services.append(
+#    wikilog.WikiLog("https://wiki.yoctoproject.org/wiki/api.php",
+#                    "Joshua_Lock", "oJs]Krv4yo]k8zWf", "Joshua_Lock/BuildLog",
+#                    "old cluster")
+#)
+
+#from yoctoabb.reporters import wikilog
+#services.append(
+#    wikilog.WikiLog("https://wiki.yoctoproject.org/wiki/api.php",
+#                    "Rpurdie", "Somepass77", "Rpurdie/TestBuildLog",
+#                    "RP Test Cluster")
+#)
