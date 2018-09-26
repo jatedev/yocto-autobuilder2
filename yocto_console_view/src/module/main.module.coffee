@@ -316,6 +316,12 @@ class Console extends Controller
                 change.caption = @branchmapping[build.buildid]
             change.revlink = "http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=" + rev
             change.errorlink = "http://errors.yoctoproject.org/Errors/Latest/?filter=" + rev + "&type=commit&limit=150"
+            bid = build.buildid
+            if buildset? and buildset.parent_buildid?
+                bid = buildset.parent_buildid
+            if (change.bid? and bid > change.bid) or !change.bid?
+                change.bid = bid
+                change.loglink = "https://wiki.yoctoproject.org/wiki/BuildLog#" + bid
             if build.properties?.reason?
                 change.reason = build.properties.reason[0]
         else

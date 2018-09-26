@@ -4,6 +4,8 @@ div.yoctochangedetails(style="width:100%;")
             | {{ change.caption }} &nbsp;
         a(ng-if="change.errorlink", ng-href="{{change.errorlink}}")
             | {{ "Errors" }} &nbsp;
+        a(ng-if="change.loglink", ng-href="{{change.loglink}}")
+            | {{ "WikiLog" }} &nbsp;
         span(ng-if="!change.revlink", uib-tooltip="{{change.comments}}")
             | {{ change.caption }} &nbsp;
         span(ng-if="!compact" uib-tooltip="{{change.when_timestamp | dateformat:'LLL'}}")
