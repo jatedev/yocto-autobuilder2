@@ -164,8 +164,10 @@ class WikiLog(service.BuildbotService):
             parent = build
 
         url = build['url']
+        buildid = build['buildid']
+        builder = build['builder']['name']
         log_entries = []
-        logfmt = '[%s %s]'
+        logentry = ""
         for s in build['steps']:
 
             # Ignore logs for steps which succeeded/cancelled
@@ -182,10 +184,13 @@ class WikiLog(service.BuildbotService):
             step_number = s['number']
             logs = yield self.master.data.get(("steps", s['stepid'], 'logs'))
             logs = list(logs)
+            logstring = []
             for l in logs:
                 log_url = '%s/steps/%s/logs/%s' % (url, step_number, l['name'])
-                log_entry = logfmt % (log_url, step_name)
-                log_entries.append(log_entry)
+                logstring.append('[%s %s]' % (log_url, l['name']))
+
+            logs = ' '.join(logstring)
+            logentry = logentry + '\n* [%s %s] %s failed: %s\n' % (url, builder, step_name, logs)
 
         blurb, entries = self.wiki.get_content(self.wiki_page)
         if not blurb:
@@ -222,18 +227,7 @@ class WikiLog(service.BuildbotService):
             log.err(errmsg.format(buildid, parent['url']))
             return False
 
-        new_entry = entry
-        buildid = build['buildid']
-        builder = build['builder']['name']
-
-        if len(log_entries) > 0:
-            logs = ''
-            log_fmt = '\n** '
-            builderfmt = '\n* [%s %s] failed' % (url, builder)
-            builderfmt = builderfmt + ': ' + log_fmt
-            logs = log_fmt.join(log_entries)
-            logs = logs + '\n'
-            new_entry = '\n' + entry.strip() + builderfmt + logs
+        new_entry = '\n' + entry.strip() + logentry
 
         summary = 'Updating entry with failures in %s' % builder
         summary = summary + self.idstring
