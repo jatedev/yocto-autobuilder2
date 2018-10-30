@@ -272,12 +272,18 @@ def get_props_set():
         "buildappsrcrev": "",
         "deploy_artefacts": util.Property("deploy_artefacts"),
         "publish_destination": util.Property("publish_destination"),
+        "yocto_number": util.Property("yocto_number"),
+        "milestone_number": util.Property("milestone_number"),
+        "rc_number": util.Property("rc_number")
     }
 
     for repo in config.repos:
         set_props["branch_%s" % repo] = util.Property("branch_%s" % repo)
         set_props["commit_%s" % repo] = util.Property("commit_%s" % repo)
         set_props["repo_%s" % repo] = util.Property("repo_%s" % repo)
+    set_props["yocto_number"] = util.Property("yocto_number")
+    set_props["milestone_number"] = util.Property("milestone_number")
+    set_props["rc_number"] = util.Property("rc_number")
 
     return set_props
 
