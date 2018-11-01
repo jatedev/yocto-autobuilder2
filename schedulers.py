@@ -100,7 +100,7 @@ schedulers.append(sched.ForceScheduler(
             name="branchselector",
             default="master",
             label="Release Shortcut Selector",
-            choices=["master", "master-next", "mut", "rocko", "sumo", "pyro", "morty"],
+            choices=["master", "master-next", "mut", "thud", "sumo", "rocko", "pyro", "morty"],
             selectors={
               'master': {
                 'branch': 'master',
@@ -141,6 +141,19 @@ schedulers.append(sched.ForceScheduler(
                 'branch_meta-qt3': 'master',
                 'branch_meta-qt4': 'master',
                 'branch_oecore': 'master',
+              },
+              'sumo': {
+                'branch': 'thud',
+                'branch_poky': 'thud',
+                'branch_bitbake': '1.40',
+                'branch_eclipse-poky-neon': 'neon/thud',
+                'branch_eclipse-poky-oxygen': 'oxygen/thud',
+                'branch_meta-gplv2': 'thud',
+                'branch_meta-intel': 'thud',
+                'branch_meta-mingw': 'thud',
+                'branch_meta-qt3': 'thud',
+                'branch_meta-qt4': 'thud',
+                'branch_oecore': 'thud',
               },
               'sumo': {
                 'branch': 'sumo',

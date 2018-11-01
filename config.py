@@ -55,9 +55,6 @@ trigger_builders_wait = [
 triggered_builders = trigger_builders_wait
 builders = ["nightly"] + triggered_builders
 
-# Supported Yocto Project releases, by name
-releases = ["", "sumo", "rocko", "pyro", "morty"]
-
 # ## Cluster configuration
 # Publishing settings
 sharedrepodir = "/srv/www/vhosts/repos.yoctoproject.org"
