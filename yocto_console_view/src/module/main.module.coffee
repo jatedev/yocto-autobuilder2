@@ -89,22 +89,32 @@ class Console extends Controller
         @builds.onChange = @changes.onChange = @buildrequests.onChange = @buildsets.onChange = @onChange
 
         @builds.onNew = (build) =>
-            build.getProperties().onChange = (properties) =>
-                change = false
-                buildid = properties.endpoint.split('/')[1]
-                if ! @revmapping[buildid]
-                    rev = @getBuildProperty(properties[0], 'yp_build_revision')
-                    if rev?
-                        @revmapping[buildid] = rev
-                        change = true
-                if ! @branchmapping[buildid]
-                    branch = @getBuildProperty(properties[0], 'yp_build_branch')
-                    if branch?
-                        @branchmapping[buildid] = branch
+            change = false
+            buildid = build.buildid
+            if build.properties?.yp_build_revision?
+                @revmapping[build.buildid] = build.properties.yp_build_revision[0]
+                change = true
+            if build.properties?.yp_build_branch?
+                @branchmapping[build.buildid] = build.properties.yp_build_branch[0]
+                change = true
+            if (! @revmapping[buildid] || ! @branchmapping[buildid]) && ! build.complete_at
+                build.getProperties().onChange = (properties) =>
+                    change = false
+                    buildid = properties.endpoint.split('/')[1]
+                    if ! @revmapping[buildid]
+                        rev = @getBuildProperty(properties[0], 'yp_build_revision')
+                        if rev?
+                            @revmapping[buildid] = rev
+                            change = true
+                    if ! @branchmapping[buildid]
+                        branch = @getBuildProperty(properties[0], 'yp_build_branch')
+                        if branch?
+                            @branchmapping[buildid] = branch
                         change = true
                 if change and not @onchange_debounce?
                     @onchange_debounce = @$timeout(@_onChange, 100)
-
+            if change and not @onchange_debounce?
+                @onchange_debounce = @$timeout(@_onChange, 100)
 
     getBuildProperty: (properties, property) ->
         hasProperty = properties && properties.hasOwnProperty(property)
