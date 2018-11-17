@@ -142,7 +142,7 @@ schedulers.append(sched.ForceScheduler(
                 'branch_meta-qt4': 'master',
                 'branch_oecore': 'master',
               },
-              'sumo': {
+              'thud': {
                 'branch': 'thud',
                 'branch_poky': 'thud',
                 'branch_bitbake': '1.40',
