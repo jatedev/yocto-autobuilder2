@@ -53,8 +53,7 @@ def get_publish_internal(props):
         rel_name = "yocto-" + props.getProperty("yocto_number", "") + snapshot
         dest = os.path.join(config.publish_dest, "releases", rel_name)
     else:
-        dest_base = os.path.join(config.publish_dest,
-                                 props.getProperty("buildername"),
+        dest_base = os.path.join(config.publish_dest, 'non-release',
                                  datetime.now().strftime("%Y%m%d"))
 
         # We want to make sure that we aren't writing artefacts to a publish
