@@ -59,8 +59,8 @@ def props_for_builder(builder):
         props.append(buildappsrcrev_param())
     if builder in ['build-appliance', 'buildtools']:
         props.append(util.BooleanParameter(
-            name="deploy_artifacts",
-            label="Do we want to deploy artifacts? ",
+            name="deploy_artefacts",
+            label="Do we want to deploy artefacts? ",
             default=False
         ))
 
