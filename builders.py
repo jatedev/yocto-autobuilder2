@@ -36,7 +36,7 @@ def get_publish_internal(props):
     Calculate the location to which artefacts should be published and store it
     as a property for use by other workers.
     """
-    dest = ""
+    # Cache the value in the publish_detination property
     dest = props.getProperty("publish_destination", "")
     if dest:
         return dest
@@ -94,6 +94,10 @@ def get_publish_dest(props):
     deploy = props.getProperty("deploy_artefacts", False)
     if not deploy:
         return ""
+    return get_publish_internal(props)
+
+@util.renderer
+def get_publish_resultdir(props):
     return get_publish_internal(props)
 
 @util.renderer
@@ -173,6 +177,7 @@ def create_builder_factory():
                  "-b", util.Interpolate("%(prop:buildappsrcrev)s"),
                  "-p", get_publish_dest,
                  "-u", util.URLForBuild,
+                 "-r", get_publish_resultdir,
                  "-q"],
         name="run-config",
         logfiles=get_buildlogs(maxsteps),
@@ -254,6 +259,7 @@ factory.addStep(RunConfigLogObserver(
         "-s", get_sstate_release_number,
         "-p", get_publish_dest,
         "-u", util.URLForBuild,
+        "-r", get_publish_resultdir,
         "-q"],
     name="run-config",
     logfiles=get_buildlogs(maxsteps),
