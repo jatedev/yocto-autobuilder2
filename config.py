@@ -65,7 +65,7 @@ trigger_builders_wait_full = [
 ]
 
 subbuilders = trigger_builders_wait_quick + trigger_builders_wait_full
-builders = ["quick", "full"]
+builders = ["quick", "full"] + subbuilders
 
 # ## Cluster configuration
 # Publishing settings

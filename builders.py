@@ -304,6 +304,7 @@ def create_parent_builder_factory(waitname):
             "-r", get_publish_name
             ],
         name="Send QA Email"))
+    return factory
 
 builders.append(util.BuilderConfig(name="quick", workernames=config.workers, factory=create_parent_builder_factory("wait-quick"), env=extra_env))
 builders.append(util.BuilderConfig(name="full", workernames=config.workers, factory=create_parent_builder_factory("wait-full"), env=extra_env))
