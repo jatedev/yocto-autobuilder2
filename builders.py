@@ -188,7 +188,7 @@ def create_builder_factory():
 
 # regular builders
 f = create_builder_factory()
-for builder in config.triggered_builders:
+for builder in config.subbuilders:
     workers = config.builder_to_workers.get(builder, None)
     if not workers:
         workers = config.builder_to_workers['default']
@@ -196,115 +196,114 @@ for builder in config.triggered_builders:
                                        workernames=workers,
                                        factory=f, env=extra_env))
 
-factory = util.BuildFactory()
-# NOTE: Assumes that yocto-autobuilder repo has been cloned to home
-# directory of the user running buildbot.
-clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
-factory.addStep(steps.ShellCommand(
-                command=[clob, util.Interpolate("%(prop:builddir)s/")],
-                haltOnFailure=True,
-                name="Clobber build dir"))
-# check out the source
-factory.addStep(steps.Git(
-    repourl='git://git.yoctoproject.org/yocto-autobuilder-helper',
-    workdir=util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper"),
-    mode='incremental',
-    haltOnFailure=True,
-    name='Fetch yocto-autobuilder-helper'))
-factory.addStep(WriteLayerInfo(name='Write main layerinfo.json', haltOnFailure=True))
-factory.addStep(steps.ShellCommand(
-    command=[
-        util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/prepare-shared-repos"),
-        util.Interpolate("%(prop:builddir)s/layerinfo.json"),
-        util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
-        "-p", get_publish_dest],
-    haltOnFailure=True,
-    name="Prepare shared repositories"))
-factory.addStep(steps.SetProperty(
-    property="sharedrepolocation",
-    value=util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir))
-))
+def create_parent_builder_factory(waitname):
+    factory = util.BuildFactory()
+    # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
+    # directory of the user running buildbot.
+    clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
+    factory.addStep(steps.ShellCommand(
+                    command=[clob, util.Interpolate("%(prop:builddir)s/")],
+                    haltOnFailure=True,
+                    name="Clobber build dir"))
+    # check out the source
+    factory.addStep(steps.Git(
+        repourl='git://git.yoctoproject.org/yocto-autobuilder-helper',
+        workdir=util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper"),
+        mode='incremental',
+        haltOnFailure=True,
+        name='Fetch yocto-autobuilder-helper'))
+    factory.addStep(WriteLayerInfo(name='Write main layerinfo.json', haltOnFailure=True))
+    factory.addStep(steps.ShellCommand(
+        command=[
+            util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/prepare-shared-repos"),
+            util.Interpolate("%(prop:builddir)s/layerinfo.json"),
+            util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
+            "-p", get_publish_dest],
+        haltOnFailure=True,
+        name="Prepare shared repositories"))
+    factory.addStep(steps.SetProperty(
+        property="sharedrepolocation",
+        value=util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir))
+    ))
 
-# shared-repo-unpack
-factory.addStep(steps.ShellCommand(
-    command=[
-        util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/shared-repo-unpack"),
-        util.Interpolate("%(prop:builddir)s/layerinfo.json"),
-        util.Interpolate("%(prop:builddir)s/build"),
-        util.Property("buildername"),
-        "-c", util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
-        "-p", util.Property("is_release")],
-    haltOnFailure=True,
-    name="Unpack shared repositories"))
+    # shared-repo-unpack
+    factory.addStep(steps.ShellCommand(
+        command=[
+            util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/shared-repo-unpack"),
+            util.Interpolate("%(prop:builddir)s/layerinfo.json"),
+            util.Interpolate("%(prop:builddir)s/build"),
+            util.Property("buildername"),
+            "-c", util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
+            "-p", util.Property("is_release")],
+        haltOnFailure=True,
+        name="Unpack shared repositories"))
 
-factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
-                                             property="yp_build_revision",
-                                             haltOnFailure=True,
-                                             name='Set build revision'))
+    factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
+                                                 property="yp_build_revision",
+                                                 haltOnFailure=True,
+                                                 name='Set build revision'))
 
-factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse --abbrev-ref HEAD"),
-                                             property="yp_build_branch",
-                                             haltOnFailure=True,
-                                             name='Set build branch'))
+    factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse --abbrev-ref HEAD"),
+                                                 property="yp_build_branch",
+                                                 haltOnFailure=True,
+                                                 name='Set build branch'))
 
-# run-config
-factory.addStep(RunConfigLogObserver(
-    command=[
-        util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-config"),
-        util.Property("buildername"),
-        util.Interpolate("%(prop:builddir)s/build/build"),
-        util.Interpolate("%(prop:branch_poky)s"),
-        util.Interpolate("%(prop:repo_poky)s"),
-        "-s", get_sstate_release_number,
-        "-p", get_publish_dest,
-        "-u", util.URLForBuild,
-        "-r", get_publish_resultdir,
-        "-q"],
-    name="run-config",
-    logfiles=get_buildlogs(maxsteps),
-    lazylogfiles=True,
-    maxsteps=maxsteps,
-    timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
+    # run-config
+    factory.addStep(RunConfigLogObserver(
+        command=[
+            util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-config"),
+            util.Property("buildername"),
+            util.Interpolate("%(prop:builddir)s/build/build"),
+            util.Interpolate("%(prop:branch_poky)s"),
+            util.Interpolate("%(prop:repo_poky)s"),
+            "-s", get_sstate_release_number,
+            "-p", get_publish_dest,
+            "-u", util.URLForBuild,
+            "-r", get_publish_resultdir,
+            "-q"],
+        name="run-config",
+        logfiles=get_buildlogs(maxsteps),
+        lazylogfiles=True,
+        maxsteps=maxsteps,
+        timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
 
-# trigger the buildsets contained in the nightly set
-def get_props_set():
-    set_props = {
-        "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
-        "is_release": util.Property("is_release"),
-        "buildappsrcrev": "",
-        "deploy_artefacts": util.Property("deploy_artefacts"),
-        "publish_destination": util.Property("publish_destination"),
-        "yocto_number": util.Property("yocto_number"),
-        "milestone_number": util.Property("milestone_number"),
-        "rc_number": util.Property("rc_number")
-    }
+    # trigger the buildsets contained in the nightly set
+    def get_props_set():
+        set_props = {
+            "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
+            "is_release": util.Property("is_release"),
+            "buildappsrcrev": "",
+            "deploy_artefacts": util.Property("deploy_artefacts"),
+            "publish_destination": util.Property("publish_destination"),
+            "yocto_number": util.Property("yocto_number"),
+            "milestone_number": util.Property("milestone_number"),
+            "rc_number": util.Property("rc_number")
+        }
 
-    for repo in config.repos:
-        set_props["branch_%s" % repo] = util.Property("branch_%s" % repo)
-        set_props["commit_%s" % repo] = util.Property("commit_%s" % repo)
-        set_props["repo_%s" % repo] = util.Property("repo_%s" % repo)
-    set_props["yocto_number"] = util.Property("yocto_number")
-    set_props["milestone_number"] = util.Property("milestone_number")
-    set_props["rc_number"] = util.Property("rc_number")
+        for repo in config.repos:
+            set_props["branch_%s" % repo] = util.Property("branch_%s" % repo)
+            set_props["commit_%s" % repo] = util.Property("commit_%s" % repo)
+            set_props["repo_%s" % repo] = util.Property("repo_%s" % repo)
+        set_props["yocto_number"] = util.Property("yocto_number")
+        set_props["milestone_number"] = util.Property("milestone_number")
+        set_props["rc_number"] = util.Property("rc_number")
 
-    return set_props
+        return set_props
 
-factory.addStep(steps.Trigger(schedulerNames=['wait'],
-                              waitForFinish=True,
-                              set_properties=get_props_set()))
+    factory.addStep(steps.Trigger(schedulerNames=[waitname],
+                                  waitForFinish=True,
+                                  set_properties=get_props_set()))
 
-factory.addStep(steps.ShellCommand(
-    command=[
-        util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/send-qa-email"),
-        util.Property("send_email"),
-        util.Interpolate("%(prop:builddir)s/layerinfo.json"),
-        util.Interpolate("%(prop:sharedrepolocation)s"),
-        "-p", get_publish_dest,
-        "-r", get_publish_name
-        ],
-    name="Send QA Email"))
+    factory.addStep(steps.ShellCommand(
+        command=[
+            util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/send-qa-email"),
+            util.Property("send_email"),
+            util.Interpolate("%(prop:builddir)s/layerinfo.json"),
+            util.Interpolate("%(prop:sharedrepolocation)s"),
+            "-p", get_publish_dest,
+            "-r", get_publish_name
+            ],
+        name="Send QA Email"))
 
-builders.append(
-    util.BuilderConfig(name="nightly",
-                       workernames=config.workers,
-                       factory=factory, env=extra_env))
+builders.append(util.BuilderConfig(name="quick", workernames=config.workers, factory=create_parent_builder_factory("wait-quick"), env=extra_env))
+builders.append(util.BuilderConfig(name="full", workernames=config.workers, factory=create_parent_builder_factory("wait-full"), env=extra_env))

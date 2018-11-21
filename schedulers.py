@@ -68,7 +68,7 @@ def props_for_builder(builder):
     return props
 
 
-for builder in config.triggered_builders:
+for builder in config.subbuilders:
     schedulers.append(sched.ForceScheduler(
         name=builder,
         builderNames=[builder],
@@ -81,14 +81,18 @@ for builder in config.triggered_builders:
         buttonName="Force Build"))
 
 # nightly builder triggers various other builders
-wait = sched.Triggerable(name="wait",
-                         builderNames=config.trigger_builders_wait)
-schedulers.append(wait)
+wait_quick = sched.Triggerable(name="wait-quick",
+                         builderNames=config.trigger_builders_wait_quick)
+schedulers.append(wait_quick)
+wait_full = sched.Triggerable(name="wait-full",
+                         builderNames=config.trigger_builders_wait_quick + config.trigger_builders_wait_full)
+schedulers.append(wait_full)
 
-schedulers.append(sched.ForceScheduler(
-    name="nightly",
-    builderNames=["nightly"],
-    buttonName="Start Nightly Build",
+def parent_scheduler(target):
+    return sched.ForceScheduler(
+    name=target,
+    builderNames=[target],
+    buttonName="Start " + target + " Build",
     codebases = [util.CodebaseParameter(codebase='', label="yocto-autobuilder-helper:", project=None)],
     reason=util.StringParameter(
         name="reason",
@@ -236,4 +240,8 @@ schedulers.append(sched.ForceScheduler(
             name="deploy_artefacts",
             label="Do we want to save build output? ",
             default=False)
-    ]+repos_for_builder("nightly")))
+    ]+repos_for_builder(target))
+
+schedulers.append(parent_scheduler("quick"))
+schedulers.append(parent_scheduler("full"))
+

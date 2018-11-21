@@ -3,7 +3,10 @@
 buildertorepos = {
     "eclipse-plugin-neon": ["eclipse-poky-neon"],
     "eclipse-plugin-oxygen": ["eclipse-poky-oxygen"],
-    "nightly": ["poky", "meta-intel", "oecore", "bitbake",
+    "quick": ["poky", "meta-intel", "oecore", "bitbake",
+                "eclipse-poky-neon", "eclipse-poky-oxygen", "meta-qt4",
+                "meta-qt3", "meta-mingw", "meta-gplv2"],
+    "full": ["poky", "meta-intel", "oecore", "bitbake",
                 "eclipse-poky-neon", "eclipse-poky-oxygen", "meta-qt4",
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
     "non-gpl3": ["poky", "meta-gplv2"],
@@ -35,16 +38,16 @@ repos = {
     "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"]
 }
 
-trigger_builders_wait = [
+trigger_builders_wait_quick = [
     "qemuarm", "qemuarm-lsb", "qemuarm64", "qemuarm-oecore",
-    "qemumips", "qemumips-lsb", "qemumips64",
+    "qemumips", "qemumips64",
     "multilib",
-    "qemuppc", "qemuppc-lsb",
+    "qemuppc",
     "qemux86", "qemux86-lsb",
     "qemux86-64", "qemux86-64-lsb",
-    "qemux86-64-x32", "qemux86-world", "qemux86-world-lsb",
-    "edgerouter", "edgerouter-lsb",
-    "mpc8315e-rdb", "mpc8315e-rdb-lsb",
+    "qemux86-64-x32", "qemux86-world",
+    "edgerouter",
+    "mpc8315e-rdb",
     "genericx86", "genericx86-lsb",
     "genericx86-64", "genericx86-64-lsb",
     "beaglebone", "beaglebone-lsb",
@@ -57,8 +60,12 @@ trigger_builders_wait = [
     "check-layer"
 ]
 
-triggered_builders = trigger_builders_wait
-builders = ["nightly"] + triggered_builders
+trigger_builders_wait_full = [
+    "qemumips-lsb", "edgerouter-lsb", "mpc8315e-rdb-lsb", "qemuppc-lsb", "qemux86-world-lsb"
+]
+
+subbuilders = trigger_builders_wait_quick + trigger_builders_wait_full
+builders = ["quick", "full"]
 
 # ## Cluster configuration
 # Publishing settings
