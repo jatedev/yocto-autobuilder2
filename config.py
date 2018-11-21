@@ -6,11 +6,11 @@ buildertorepos = {
     "nightly": ["poky", "meta-intel", "oecore", "bitbake",
                 "eclipse-poky-neon", "eclipse-poky-oxygen", "meta-qt4",
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
-    "nightly-non-gpl3": ["poky", "meta-gplv2"],
-    "nightly-qa-extras": ["poky", "meta-mingw"],
-    "nightly-oecore": ["oecore", "bitbake"],
-    "nightly-checkuri": ["poky", "meta-qt4", "meta-qt3"],
-    "nightly-check-layer": ["poky", "meta-mingw", "meta-gplv2"],
+    "non-gpl3": ["poky", "meta-gplv2"],
+    "qa-extras": ["poky", "meta-mingw"],
+    "qemuarm-oecore": ["oecore", "bitbake"],
+    "checkuri": ["poky", "meta-qt4", "meta-qt3"],
+    "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
     "default": ["poky"]
 }
 
@@ -36,20 +36,25 @@ repos = {
 }
 
 trigger_builders_wait = [
-    "nightly-arm", "nightly-arm-lsb", "nightly-arm64",
-    "nightly-mips", "nightly-mips-lsb", "nightly-mips64",
-    "nightly-multilib", "nightly-x32",
-    "nightly-ppc", "nightly-ppc-lsb",
-    "nightly-x86-64", "nightly-x86-64-lsb",
-    "nightly-x86", "nightly-x86-lsb",
-    "nightly-packagemanagers",
-    "nightly-rpm-non-rpm", "nightly-deb-non-deb",
+    "qemuarm", "qemuarm-lsb", "qemuarm64", "qemuarm-oecore",
+    "qemumips", "qemumips-lsb", "qemumips64",
+    "multilib",
+    "qemuppc", "qemuppc-lsb",
+    "qemux86", "qemux86-lsb",
+    "qemux86-64", "qemux86-64-lsb",
+    "qemux86-64-x32", "qemux86-world", "qemux86-world-lsb",
+    "edgerouter", "edgerouter-lsb",
+    "mpc8315e-rdb", "mpc8315e-rdb-lsb",
+    "genericx86", "genericx86-lsb",
+    "genericx86-64", "genericx86-64-lsb",
+    "beaglebone", "beaglebone-lsb",
+    "pkgman-non-rpm",
+    "pkgman-rpm-non-rpm", "pkgman-deb-non-deb",
     "build-appliance", "buildtools", "eclipse-plugin-neon",
-    "eclipse-plugin-oxygen", "nightly-non-gpl3", "nightly-oecore",
-    "nightly-world", "nightly-wic", "nightly-world-lsb",
-    "poky-tiny", "nightly-musl", "nightly-musl-x86-64", "nightly-no-x11",
-    "nightly-qa-extras", "nightly-qa-extras2", "nightly-oe-selftest",
-    "nightly-check-layer"
+    "eclipse-plugin-oxygen", "non-gpl3", "wic",
+    "poky-tiny", "musl-qemux86", "musl-qemux86-64", "no-x11",
+    "qa-extras", "qa-extras2", "oe-selftest",
+    "check-layer"
 ]
 
 triggered_builders = trigger_builders_wait
@@ -74,7 +79,7 @@ notify_on_missing = None
 
 # Some builders should only run on specific workers (host OS dependent)
 builder_to_workers = {
-    "nightly-rpm-non-rpm": [],
-    "nightly-deb-non-deb": [],
+    "pkgman-rpm-non-rpm": [],
+    "pkgman-deb-non-deb": [],
     "default": workers
 }
