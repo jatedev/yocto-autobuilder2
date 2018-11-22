@@ -10,7 +10,7 @@ buildertorepos = {
                 "eclipse-poky-neon", "eclipse-poky-oxygen", "meta-qt4",
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
     "non-gpl3": ["poky", "meta-gplv2"],
-    "qa-extras": ["poky", "meta-mingw"],
+    "meta-mingw": ["poky", "meta-mingw"],
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky", "meta-qt4", "meta-qt3"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
@@ -57,7 +57,7 @@ trigger_builders_wait_shared = [
     "eclipse-plugin-oxygen", "non-gpl3", "wic",
     "poky-tiny", "musl-qemux86", "musl-qemux86-64", "no-x11",
     "qa-extras", "qa-extras2",
-    "check-layer"
+    "check-layer", "meta-mingw"
 ]
 
 trigger_builders_wait_quick = trigger_builders_wait_shared + [
