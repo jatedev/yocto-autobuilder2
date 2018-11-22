@@ -196,7 +196,7 @@ for builder in config.subbuilders:
                                        workernames=workers,
                                        factory=f, env=extra_env))
 
-def create_parent_builder_factory(waitname):
+def create_parent_builder_factory(buildername, waitname):
     factory = util.BuildFactory()
     # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
     # directory of the user running buildbot.
@@ -280,7 +280,7 @@ def create_parent_builder_factory(waitname):
             "rc_number": util.Property("rc_number")
         }
 
-        for repo in config.repos:
+        for repo in config.buildertorepos[buildername]:
             set_props["branch_%s" % repo] = util.Property("branch_%s" % repo)
             set_props["commit_%s" % repo] = util.Property("commit_%s" % repo)
             set_props["repo_%s" % repo] = util.Property("repo_%s" % repo)
@@ -306,5 +306,5 @@ def create_parent_builder_factory(waitname):
         name="Send QA Email"))
     return factory
 
-builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("wait-quick"), env=extra_env))
-builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("wait-full"), env=extra_env))
+builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), env=extra_env))
+builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), env=extra_env))
