@@ -66,7 +66,8 @@ trigger_builders_wait_quick = trigger_builders_wait_shared + [
 
 trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemumips-lsb", "edgerouter-lsb", "mpc8315e-rdb-lsb", "qemuppc-lsb", "qemux86-world-lsb",
-    "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-opensuse", "oe-selftest-centos"
+    "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-opensuse", "oe-selftest-centos",
+    "qemux86-64-ptest", "qemuarm64-ptest"
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + ["bringup"]))
