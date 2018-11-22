@@ -3,10 +3,10 @@
 buildertorepos = {
     "eclipse-plugin-neon": ["eclipse-poky-neon"],
     "eclipse-plugin-oxygen": ["eclipse-poky-oxygen"],
-    "quick": ["poky", "meta-intel", "oecore", "bitbake",
+    "a-quick": ["poky", "meta-intel", "oecore", "bitbake",
                 "eclipse-poky-neon", "eclipse-poky-oxygen", "meta-qt4",
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
-    "full": ["poky", "meta-intel", "oecore", "bitbake",
+    "a-full": ["poky", "meta-intel", "oecore", "bitbake",
                 "eclipse-poky-neon", "eclipse-poky-oxygen", "meta-qt4",
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
     "non-gpl3": ["poky", "meta-gplv2"],
@@ -70,7 +70,7 @@ trigger_builders_wait_full = trigger_builders_wait_shared + [
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + ["bringup"]))
-builders = ["quick", "full"] + subbuilders
+builders = ["a-quick", "a-full"] + subbuilders
 
 # ## Cluster configuration
 # Publishing settings

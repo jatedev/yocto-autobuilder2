@@ -242,6 +242,6 @@ def parent_scheduler(target):
             default=False)
     ]+repos_for_builder(target))
 
-schedulers.append(parent_scheduler("quick"))
-schedulers.append(parent_scheduler("full"))
+schedulers.append(parent_scheduler("a-quick"))
+schedulers.append(parent_scheduler("a-full"))
 
