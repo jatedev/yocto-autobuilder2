@@ -11,6 +11,8 @@ buildertorepos = {
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
     "non-gpl3": ["poky", "meta-gplv2"],
     "meta-mingw": ["poky", "meta-mingw"],
+    "meta-oe": ["poky", "meta-openembedded"],
+    "meta-virt": ["poky", "meta-openembedded", "meta-virtualization"],
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky", "meta-qt4", "meta-qt3"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
@@ -35,7 +37,9 @@ repos = {
     "meta-qt4": ["git://git.yoctoproject.org/meta-qt4", "master"],
     "meta-qt3": ["git://git.yoctoproject.org/meta-qt3", "master"],
     "meta-mingw": ["git://git.yoctoproject.org/meta-mingw", "master"],
-    "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"]
+    "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"],
+    "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "master"],
+    "meta-virtualization": ["git://git.openembedded.org/meta-openembedded", "master"]
 }
 
 trigger_builders_wait_shared = [
@@ -70,7 +74,13 @@ trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemux86-64-ptest", "qemuarm64-ptest"
 ]
 
-subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + ["bringup"]))
+# Builders which are individually triggered
+builders_others = [
+    "meta-oe", "meta-virt",
+    "bringup"
+]
+
+subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
 builders = ["a-quick", "a-full"] + subbuilders
 
 # ## Cluster configuration
