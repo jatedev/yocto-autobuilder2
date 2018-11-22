@@ -102,6 +102,8 @@ workers_opensuse = ["opensuse423-ty-1"]
 workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse
 
 workers_bringup = ["fedora29-ty-1", "opensuse150-ty-1"]
+# workers with wine on them for meta-mingw
+workers_wine = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3"]
 
 all_workers = workers + workers_bringup
 
@@ -121,5 +123,6 @@ builder_to_workers = {
     "oe-selftest-fedora": workers_fedora,
     "oe-selftest-opensuse": workers_opensuse,
     "oe-selftest-centos": workers_centos,
+    "meta-mingw": workers_wine,
     "default": workers
 }
