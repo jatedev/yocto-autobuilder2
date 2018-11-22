@@ -85,7 +85,7 @@ wait_quick = sched.Triggerable(name="wait-quick",
                          builderNames=config.trigger_builders_wait_quick)
 schedulers.append(wait_quick)
 wait_full = sched.Triggerable(name="wait-full",
-                         builderNames=config.trigger_builders_wait_quick + config.trigger_builders_wait_full)
+                         builderNames=config.trigger_builders_wait_full)
 schedulers.append(wait_full)
 
 def parent_scheduler(target):
