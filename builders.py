@@ -139,7 +139,7 @@ def create_builder_factory():
         haltOnFailure=True,
         name="Clobber build dir"))
     f.addStep(steps.Git(
-        repourl='git://git.yoctoproject.org/yocto-autobuilder-helper',
+        repourl=config.repos["yocto-autobuilder-helper"][0],
         workdir=util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper"),
         mode='incremental',
         haltOnFailure=True,
@@ -207,7 +207,7 @@ def create_parent_builder_factory(waitname):
                     name="Clobber build dir"))
     # check out the source
     factory.addStep(steps.Git(
-        repourl='git://git.yoctoproject.org/yocto-autobuilder-helper',
+        repourl=config.repos["yocto-autobuilder-helper"][0],
         workdir=util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper"),
         mode='incremental',
         haltOnFailure=True,
