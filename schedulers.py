@@ -246,6 +246,6 @@ schedulers.append(parent_scheduler("a-quick"))
 schedulers.append(parent_scheduler("a-full"))
 
 # Run a-quick at 1am each day so we keep master tested and up to date in sstate and buildhistory
-schedulers.append(schedulers.Nightly(name='nightly-quick', branch='master',
+schedulers.append(sched.Nightly(name='nightly-quick', branch='master',
                   builderNames=['a-quick'], hour=1, minute=0))
 
