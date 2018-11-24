@@ -42,6 +42,17 @@ def repos_for_builder(buildername):
         parameters = parameters + [util.NestedParameter(name='', label=repo, fields=inputs, columns=2)]
     return parameters
 
+def parent_default_props(buildername):
+    props = {}
+    repos = config.buildertorepos.get(buildername)
+    if not repos:
+        repos = config.buildertorepos["default"]
+    for repo in repos:
+        props["repo_{}".format(reponame)] = config.repos[repo][0]
+        props["branch_{}".format(reponame)] = config.repos[repo][1]
+        props["commit_{}".format(reponame)] = "HEAD"
+    return props
+
 def buildappsrcrev_param():
     return util.StringParameter(
             name="buildappsrcrev",
@@ -246,6 +257,6 @@ schedulers.append(parent_scheduler("a-quick"))
 schedulers.append(parent_scheduler("a-full"))
 
 # Run a-quick at 1am each day so we keep master tested and up to date in sstate and buildhistory
-schedulers.append(sched.Nightly(name='nightly-quick', branch='master',
+schedulers.append(sched.Nightly(name='nightly-quick', branch='master', properties=parent_default_props('a-quick'),
                   builderNames=['a-quick'], hour=1, minute=0))
 
