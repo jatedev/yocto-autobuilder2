@@ -48,9 +48,9 @@ def parent_default_props(buildername):
     if not repos:
         repos = config.buildertorepos["default"]
     for repo in repos:
-        props["repo_{}".format(reponame)] = config.repos[repo][0]
-        props["branch_{}".format(reponame)] = config.repos[repo][1]
-        props["commit_{}".format(reponame)] = "HEAD"
+        props["repo_{}".format(repo)] = config.repos[repo][0]
+        props["branch_{}".format(repo)] = config.repos[repo][1]
+        props["commit_{}".format(repo)] = "HEAD"
     return props
 
 def buildappsrcrev_param():
