@@ -11,6 +11,7 @@ buildertorepos = {
                 "meta-qt3", "meta-mingw", "meta-gplv2"],
     "non-gpl3": ["poky", "meta-gplv2"],
     "meta-mingw": ["poky", "meta-mingw"],
+    "qa-extras": ["poky", "meta-mingw"],
     "meta-oe": ["poky", "meta-openembedded"],
     "meta-virt": ["poky", "meta-openembedded", "meta-virtualization"],
     "qemuarm-oecore": ["oecore", "bitbake"],
