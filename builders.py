@@ -304,6 +304,13 @@ def create_parent_builder_factory(buildername, waitname):
             "-r", get_publish_name
             ],
         name="Send QA Email"))
+
+
+    factory.addStep(steps.ShellCommand(
+                    command=[clob, util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir))],
+                    haltOnFailure=True,
+                    name="Clobber shared repo dir"))
+
     return factory
 
 builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), env=extra_env))
