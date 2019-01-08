@@ -97,7 +97,7 @@ def get_publish_dest(props):
 
 @util.renderer
 def get_publish_resultdir(props):
-    return get_publish_internal(props)
+    return get_publish_internal(props) + "/testresults"
 
 @util.renderer
 def get_publish_name(props):
