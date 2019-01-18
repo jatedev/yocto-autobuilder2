@@ -79,7 +79,9 @@ trigger_builders_wait_full = trigger_builders_wait_shared + [
 builders_others = [
     "meta-oe", "meta-virt",
     "bringup",
-    "qemuarm64-ptest"
+    "qemuarm64-ptest",
+    "buildperf-ubuntu1604",
+    "buildperf-centos7"
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
@@ -100,13 +102,14 @@ workers_fedora = ["fedora28-ty-1"]
 workers_debian = ["debian9-ty-1", "debian8-ty-1", "debian9-ty-2"]
 workers_opensuse = ["opensuse423-ty-1"]
 
-workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse
+workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse 
 
 workers_bringup = ["fedora29-ty-1", "opensuse150-ty-1"]
 # workers with wine on them for meta-mingw
 workers_wine = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3"]
+workers_buildperf = ["perf-ubuntu1604", "perf-centos7"]
 
-all_workers = workers + workers_bringup
+all_workers = workers + workers_bringup + workers_buildperf
 
 # Worker configuration, all workers configured the same...
 # TODO: support per-worker config
@@ -125,5 +128,7 @@ builder_to_workers = {
     "oe-selftest-opensuse": workers_opensuse,
     "oe-selftest-centos": workers_centos,
     "meta-mingw": workers_wine,
+    "buildperf-ubuntu1604": "perf-ubuntu1604",
+    "buildperf-centos7": "perf-centos7",
     "default": workers
 }
