@@ -301,7 +301,8 @@ def create_parent_builder_factory(buildername, waitname):
             util.Interpolate("%(prop:builddir)s/layerinfo.json"),
             util.Interpolate("%(prop:sharedrepolocation)s"),
             "-p", get_publish_dest,
-            "-r", get_publish_name
+            "-r", get_publish_name,
+            "-R", get_publish_resultdir
             ],
         name="Send QA Email"))
 
