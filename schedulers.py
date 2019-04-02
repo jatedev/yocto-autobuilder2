@@ -115,7 +115,7 @@ def parent_scheduler(target):
             name="branchselector",
             default="master",
             label="Release Shortcut Selector",
-            choices=["master", "master-next", "mut", "thud", "sumo", "rocko", "pyro", "morty"],
+            choices=["master", "master-next", "mut", "warrior", "thud", "sumo", "rocko", "pyro", "morty"],
             selectors={
               'master': {
                 'branch': 'master',
@@ -156,6 +156,19 @@ def parent_scheduler(target):
                 'branch_meta-qt3': 'master',
                 'branch_meta-qt4': 'master',
                 'branch_oecore': 'master',
+              },
+              'warrior': {
+                'branch': 'warrior',
+                'branch_poky': 'warrior',
+                'branch_bitbake': '1.42',
+                'branch_eclipse-poky-neon': 'neon/warrior',
+                'branch_eclipse-poky-oxygen': 'oxygen/warrior',
+                'branch_meta-gplv2': 'warrior',
+                'branch_meta-intel': 'warrior',
+                'branch_meta-mingw': 'warrior',
+                'branch_meta-qt3': 'master',
+                'branch_meta-qt4': 'master',
+                'branch_oecore': 'warrior',
               },
               'thud': {
                 'branch': 'thud',
