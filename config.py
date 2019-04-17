@@ -64,7 +64,7 @@ trigger_builders_wait_shared = [
 ]
 
 trigger_builders_wait_quick = trigger_builders_wait_shared + [
-    "oe-selftest"
+    "oe-selftest", "qemux86-64-ptest-fast"
 ]
 
 trigger_builders_wait_full = trigger_builders_wait_shared + [
@@ -77,7 +77,8 @@ trigger_builders_wait_full = trigger_builders_wait_shared + [
 builders_others = [
     "meta-oe", "meta-virt",
     "bringup",
-    "qemuarm64-ptest"
+    "qemuarm64-ptest",
+    "qemuarm64-ptest-fast"
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
