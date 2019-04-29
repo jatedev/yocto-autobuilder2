@@ -70,7 +70,7 @@ trigger_builders_wait_quick = trigger_builders_wait_shared + [
 trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemumips-lsb", "edgerouter-lsb", "mpc8315e-rdb-lsb", "qemuppc-lsb", "qemux86-world-lsb",
     "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-centos",
-    "qemux86-64-ptest", "buildperf-ubuntu1604", "buildperf-centos7"
+    "qemux86-64-ptest", "buildperf-ubuntu1604", "buildperf-centos7", "qemux86-64-ltp"
 ]
 
 # Builders which are individually triggered
@@ -78,7 +78,8 @@ builders_others = [
     "meta-oe", "meta-virt",
     "bringup",
     "qemuarm64-ptest",
-    "qemuarm64-ptest-fast"
+    "qemuarm64-ptest-fast",
+    "qemuarm64-ltp"
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
