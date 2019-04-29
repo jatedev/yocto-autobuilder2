@@ -96,13 +96,13 @@ web_port = 8010
 # List of workers in the cluster
 workers_ubuntu = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3", "ubuntu1604-ty-1"]
 workers_centos = ["centos7-ty-1", "centos7-ty-2", "centos7-ty-3", "centos7-ty-4"]
-workers_fedora = ["fedora28-ty-1"]
+workers_fedora = ["fedora28-ty-1", "fedora29-ty-1"]
 workers_debian = ["debian9-ty-1", "debian8-ty-1", "debian9-ty-2"]
-workers_opensuse = ["opensuse423-ty-1"]
+workers_opensuse = ["opensuse423-ty-1", "opensuse150-ty-1"]
 
 workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse 
 
-workers_bringup = ["fedora29-ty-1", "opensuse150-ty-1"]
+workers_bringup = ["rhel8-ty-1", "tumbleweed-ty-1", "ubuntu1804-arm-1"]
 # workers with wine on them for meta-mingw
 workers_wine = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3"]
 workers_buildperf = ["perf-ubuntu1604", "perf-centos7"]
