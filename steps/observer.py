@@ -33,10 +33,10 @@ class RunConfigLogObserver(ShellCommand):
             stream, line = yield
             if line.startswith("WARNING:"):
                 self.warnings += 1
-                self.warningLines.append(line)
+                self.warningLines.append(stream + ": " + line)
             if line.startswith("ERROR:"):
                 self.errors += 1
-                self.errorLines.append(line)
+                self.errorLines.append(stream + ": " + line)
 
     def commandComplete(self, cmd):
         self.addCompleteLog('warnings', '\n'.join(self.warningLines))
