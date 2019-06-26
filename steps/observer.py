@@ -7,6 +7,8 @@ from buildbot.process.results import SUCCESS
 from buildbot.process.results import WARNINGS
 from buildbot.steps.shell import ShellCommand
 
+from functools import partial
+
 #
 # Monitor the step 1-X logs and stdio, collecting up any warnings and errors seen
 # and publish them at the end in their own 'logfile' for ease of access to the user
@@ -23,20 +25,21 @@ class RunConfigLogObserver(ShellCommand):
         self.python = python
         self.warningLines = []
         self.errorLines = []
-        self.addLogObserver('stdio', logobserver.LineConsumerLogObserver(self.logConsumer))
+        self.addLogObserver('stdio', logobserver.LineConsumerLogObserver(partial(self.logConsumer, 'stdio')))
         for i in range(1, maxsteps):
             for j in ['a', 'b', 'c', 'd']:
-                self.addLogObserver('step' + str(i) + str(j), logobserver.LineConsumerLogObserver(self.logConsumer))
+                name = 'step' + str(i) + str(j)
+                self.addLogObserver(name, logobserver.LineConsumerLogObserver(partial(self.logConsumer, name)))
 
-    def logConsumer(self):
+    def logConsumer(self, logname):
         while True:
             stream, line = yield
             if line.startswith("WARNING:"):
                 self.warnings += 1
-                self.warningLines.append(stream + ": " + line)
+                self.warningLines.append(logname + ": " + line)
             if line.startswith("ERROR:"):
                 self.errors += 1
-                self.errorLines.append(stream + ": " + line)
+                self.errorLines.append(logname + ": " + line)
 
     def commandComplete(self, cmd):
         self.addCompleteLog('warnings', '\n'.join(self.warningLines))
