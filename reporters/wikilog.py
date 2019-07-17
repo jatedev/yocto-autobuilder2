@@ -1,6 +1,6 @@
 from buildbot.reporters import utils
 from buildbot.util import service
-from twisted.internet import defer
+from twisted.internet import defer, threads
 from twisted.python import log
 from buildbot.process.results import SUCCESS, WARNINGS, FAILURE, SKIPPED, EXCEPTION, RETRY, CANCELLED
 
@@ -15,6 +15,7 @@ class WikiLog(service.BuildbotService):
     wiki = None
     # wantPreviousBuilds wantLogs
     neededDetails = dict(wantProperties=True, wantSteps=True)
+    wikiLock = None
 
     def checkConfig(self, wiki_uri, wiki_un, wiki_pass, wiki_page,
                     identifier=None, **kwargs):
@@ -31,6 +32,7 @@ class WikiLog(service.BuildbotService):
             self.identifier = identifier.replace(" ", "-")
             self.idstring = " on " + self.identifier
         self.wiki = YPWiki(wiki_uri, wiki_un, wiki_pass)
+        self.wikiLock = defer.DeferredLock()
 
     @defer.inlineCallbacks
     def startService(self):
@@ -56,7 +58,13 @@ class WikiLog(service.BuildbotService):
 
         # Only place initial entries in the wiki for builds with no parents
         if not build['buildset']['parent_buildid']:
-            if not self.logBuild(build):
+            yield self.wikiLock.acquire()
+            try:
+                result = yield threads.deferToThread(self.logBuild, build)
+            finally:
+                self.wikiLock.release()
+
+            if not result:
                 log.err("wkl: Failed to log build %s on %s" % (
                     build['buildid'], build['builder']['name']))
 
@@ -71,7 +79,13 @@ class WikiLog(service.BuildbotService):
             parent = yield self.master.data.get(("builds", build['buildset']['parent_buildid']))
             yield utils.getDetailsForBuild(self.master, parent, **self.neededDetails)
 
-        if not self.updateBuild(build, parent):
+        entry = yield self.getEntry(build, parent)
+        yield self.wikiLock.acquire()
+        try:
+            update = yield threads.deferToThread(self.updateBuild, build, parent, entry)
+        finally:
+            self.wikiLock.release()
+        if not update:
             log.err("wkl: Failed to update wikilog with build %s failure" %
                     build['buildid'])
 
@@ -126,8 +140,8 @@ class WikiLog(service.BuildbotService):
             log.err("wkl: Failed to login to wiki")
             return False
 
-        if not self.wiki.post_entry(self.wiki_page, blurb+entries,
-                                    summary, cookies):
+        post = self.wiki.post_entry(self.wiki_page, blurb+entries, summary, cookies)
+        if not post:
             log.err("wkl: Failed to post entry for %s" % buildid)
             return False
 
@@ -155,7 +169,7 @@ class WikiLog(service.BuildbotService):
         return new_entry, new_title
 
     @defer.inlineCallbacks
-    def updateBuild(self, build, parent):
+    def getEntry(self, build, parent):
         """
         Extract information about 'build' and update an entry in the wiki
 
@@ -192,6 +206,16 @@ class WikiLog(service.BuildbotService):
 
             logs = ' '.join(logstring)
             logentry = logentry + '\n* [%s %s] %s failed: %s' % (url, builder, step_name, logs)
+        return logentry
+
+    def updateBuild(self, build, parent, logentry):
+
+        if not parent:
+            parent = build
+        buildid = build['buildid']
+        builder = build['builder']['name']
+
+        log.err("wkl: Starting to update entry for %s(%s)" % (buildid, parent))
 
         blurb, entries = self.wiki.get_content(self.wiki_page)
         if not blurb:
@@ -262,10 +286,10 @@ class WikiLog(service.BuildbotService):
             log.err("wkl: Failed to login to wiki")
             return False
 
-        if not self.wiki.post_entry(self.wiki_page, blurb+update, summary,
-                                    cookies):
-            log.err("wkl: Failed to update entry for %s" % buildid)
+        post = self.wiki.post_entry(self.wiki_page, blurb+update, summary, cookies)
+        if not post:
+            log.err("wkl: Failed to update entry for %s(%s)" % (buildid, parent))
             return False
 
-        log.msg("wkl: Updating wikilog entry for %s" % buildid)
+        log.msg("wkl: Updating wikilog entry for %s(%s)" % (buildid, parent))
         return True
