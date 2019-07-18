@@ -215,7 +215,7 @@ class WikiLog(service.BuildbotService):
         buildid = build['buildid']
         builder = build['builder']['name']
 
-        log.err("wkl: Starting to update entry for %s(%s)" % (buildid, parent))
+        log.err("wkl: Starting to update entry for %s(%s)" % (buildid, parent['buildid']))
 
         blurb, entries = self.wiki.get_content(self.wiki_page)
         if not blurb:
@@ -288,8 +288,8 @@ class WikiLog(service.BuildbotService):
 
         post = self.wiki.post_entry(self.wiki_page, blurb+update, summary, cookies)
         if not post:
-            log.err("wkl: Failed to update entry for %s(%s)" % (buildid, parent))
+            log.err("wkl: Failed to update entry for %s(%s)" % (buildid, parent['buildid']))
             return False
 
-        log.msg("wkl: Updating wikilog entry for %s(%s)" % (buildid, parent))
+        log.msg("wkl: Updating wikilog entry for %s(%s)" % (buildid, parent['buildid']))
         return True
