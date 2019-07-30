@@ -106,3 +106,8 @@ __TODO__: requires a custom config.json for yocto-autobuilder-helper
 
 1. http://git.yoctoproject.org/clean/cgit.cgi/yocto-autobuilder-helper
 2. http://git.yoctoproject.org/clean/cgit.cgi/yocto-autobuilder
+
+## Contributions
+
+Patches for this code should be sent to the yocto@yoctoproject.org mailing list
+with [yocto-autobuilder2] in the subject.
