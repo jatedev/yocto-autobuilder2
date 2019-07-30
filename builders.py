@@ -4,6 +4,7 @@ from yoctoabb import config
 from yoctoabb.steps.writelayerinfo import WriteLayerInfo
 from yoctoabb.steps.observer import RunConfigLogObserver
 from datetime import datetime
+import copy
 
 import os
 import json
@@ -37,6 +38,13 @@ def add_abhelper_steps(factory):
             mastersrc=master_helper,
             workerdest=worker_helper,
             haltOnFailure=True ))
+
+# At the worker, all paths are relative to builddir/yocto-autobuilder-helper
+# once the add_abhelper_steps run.
+worker_env = copy.deepcopy(extra_env)
+if worker_env.get('ABHELPER_JSON'):
+    configs = [os.path.basename(c) for c in worker_env['ABHELPER_JSON'].split(" ")]
+    worker_env['ABHELPER_JSON'] = " ".join(configs)
 
 @util.renderer
 def get_sstate_release_number(props):
@@ -216,7 +224,7 @@ for builder in config.subbuilders:
         workers = config.builder_to_workers['default']
     builders.append(util.BuilderConfig(name=builder,
                                        workernames=workers,
-                                       factory=f, env=extra_env))
+                                       factory=f, env=worker_env))
 
 def create_parent_builder_factory(buildername, waitname):
     factory = util.BuildFactory()
@@ -337,5 +345,5 @@ def create_parent_builder_factory(buildername, waitname):
 
     return factory
 
-builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), env=extra_env))
-builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), env=extra_env))
+builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), env=worker_env))
+builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), env=worker_env))
