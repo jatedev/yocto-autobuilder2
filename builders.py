@@ -15,7 +15,8 @@ maxsteps = 9
 # Environment to pass into the workers, e.g. to load further local configuration
 # fragments
 extra_env = {}
-#extra_env = {"ABHELPER_JSON" : "config.json /home/pokybuild/config-local.json"}
+if os.environ.get('ABHELPER_JSON'):
+    extra_env['ABHELPER_JSON'] = os.environ['ABHELPER_JSON']
 
 @util.renderer
 def get_sstate_release_number(props):
