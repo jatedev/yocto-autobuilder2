@@ -18,6 +18,26 @@ extra_env = {}
 if os.environ.get('ABHELPER_JSON'):
     extra_env['ABHELPER_JSON'] = os.environ['ABHELPER_JSON']
 
+def add_abhelper_steps(factory):
+    """
+    Adds FileDownload steps to the factory for each specified autobuilder
+    helper JSON file and installs the file in the worker's
+    builddir/yocto-autobuilder-helper/ path.
+    """
+    abhelper_dir = os.path.expanduser("~/yocto-autobuilder-helper")
+    abhelper_configs = extra_env.get("ABHELPER_JSON", "config.json").split(" ")
+    for helper in abhelper_configs:
+        helper_name = os.path.basename(helper)
+        worker_helper = util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/" + helper_name)
+        master_helper = helper
+        if not helper.startswith("/"):
+            master_helper = os.path.join(abhelper_dir, helper)
+        factory.addStep(steps.FileDownload(
+            name="Download '{}'".format(helper_name),
+            mastersrc=master_helper,
+            workerdest=worker_helper,
+            haltOnFailure=True ))
+
 @util.renderer
 def get_sstate_release_number(props):
     """
@@ -145,6 +165,7 @@ def create_builder_factory():
         mode='incremental',
         haltOnFailure=True,
         name='Fetch yocto-autobuilder-helper'))
+    add_abhelper_steps(f)
     f.addStep(steps.SetProperties(properties=ensure_props_set))
     f.addStep(WriteLayerInfo(name='Write main layerinfo.json', haltOnFailure=True))
     f.addStep(steps.ShellCommand(
@@ -213,6 +234,7 @@ def create_parent_builder_factory(buildername, waitname):
         mode='incremental',
         haltOnFailure=True,
         name='Fetch yocto-autobuilder-helper'))
+    add_abhelper_steps(factory)
     factory.addStep(WriteLayerInfo(name='Write main layerinfo.json', haltOnFailure=True))
     factory.addStep(steps.ShellCommand(
         command=[
