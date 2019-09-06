@@ -282,7 +282,7 @@ def create_parent_builder_factory(buildername, waitname):
         set_props = {
             "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
             "is_release": util.Property("is_release"),
-            "build_type": : util.Property("build_type"),
+            "build_type": util.Property("build_type"),
             "buildappsrcrev": "",
             "deploy_artefacts": util.Property("deploy_artefacts"),
             "publish_destination": util.Property("publish_destination"),
