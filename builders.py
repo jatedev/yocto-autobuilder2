@@ -116,6 +116,7 @@ def ensure_props_set(props):
     """
     return {
         "sharedrepolocation": props.getProperty("sharedrepolocation", ""),
+        "build_type": props.getProperty("build_type", "quick"),
         "is_release": props.getProperty("is_release", False),
         "buildappsrcrev": props.getProperty("buildappsrcrev", ""),
         "deploy_artefacts": props.getProperty("deploy_artefacts", False),
@@ -176,6 +177,7 @@ def create_builder_factory():
                  util.Interpolate("%(prop:repo_poky)s"),
                  "-s", get_sstate_release_number,
                  "-b", util.Interpolate("%(prop:buildappsrcrev)s"),
+                 "--build-type", util.Interpolate("%(prop:build_type)s"),
                  "-p", get_publish_dest,
                  "-u", util.URLForBuild,
                  "-r", get_publish_resultdir,
@@ -228,6 +230,10 @@ def create_parent_builder_factory(buildername, waitname):
         property="sharedrepolocation",
         value=util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir))
     ))
+    if buildername == "a-full":
+        factory.addStep(steps.SetProperty(property="build_type", value="full"))
+    else:
+        factory.addStep(steps.SetProperty(property="build_type", value="quick"))
 
     # shared-repo-unpack
     factory.addStep(steps.ShellCommand(
@@ -261,6 +267,7 @@ def create_parent_builder_factory(buildername, waitname):
             util.Interpolate("%(prop:repo_poky)s"),
             "-s", get_sstate_release_number,
             "-p", get_publish_dest,
+            "--build-type", util.Interpolate("%(prop:build_type)s"),
             "-u", util.URLForBuild,
             "-r", get_publish_resultdir,
             "-q"],
@@ -275,6 +282,7 @@ def create_parent_builder_factory(buildername, waitname):
         set_props = {
             "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
             "is_release": util.Property("is_release"),
+            "build_type": : util.Property("build_type"),
             "buildappsrcrev": "",
             "deploy_artefacts": util.Property("deploy_artefacts"),
             "publish_destination": util.Property("publish_destination"),
