@@ -75,7 +75,7 @@ trigger_builders_wait_full = trigger_builders_wait_shared + [
 
 # Builders which are individually triggered
 builders_others = [
-    "meta-oe", "meta-virt",
+    "meta-oe", "meta-virt", "meta-intel",
     "bringup",
     "qemuarm64-ptest",
     "qemuarm64-ptest-fast",
