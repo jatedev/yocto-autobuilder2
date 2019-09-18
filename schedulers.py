@@ -74,8 +74,14 @@ def props_for_builder(builder):
             label="Do we want to deploy artefacts? ",
             default=False
         ))
-
     props = props + repos_for_builder(builder)
+    worker_list = config.builder_to_workers.get(builder, config.builder_to_workers['default'])
+    props.append(util.ChoiceStringParameter(name="worker",
+                              label="Worker to run the build on",
+                              default="*",
+                              multiple=False,
+                              strict=True,
+                              choices=worker_list))
     return props
 
 

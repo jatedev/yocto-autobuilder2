@@ -7,6 +7,7 @@ from datetime import datetime
 
 import os
 import json
+import random
 
 
 builders = []
@@ -189,6 +190,14 @@ def create_builder_factory():
         timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
     return f
 
+def nextWorker(bldr, workers, buildrequest):
+    forced_worker = buildrequest.properties.getProperty("worker", "*")
+    if forced_worker == "*":
+        return random.choice(workers) if workers else None
+    for w in workers:
+        if w.worker.workername == forced_worker:
+            return w
+    return None  # worker not yet available
 
 # regular builders
 f = create_builder_factory()
@@ -197,7 +206,7 @@ for builder in config.subbuilders:
     if not workers:
         workers = config.builder_to_workers['default']
     builders.append(util.BuilderConfig(name=builder,
-                                       workernames=workers,
+                                       workernames=workers, nextWorker=nextWorker, 
                                        factory=f, env=extra_env))
 
 def create_parent_builder_factory(buildername, waitname):
