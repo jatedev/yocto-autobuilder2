@@ -81,7 +81,7 @@ def props_for_builder(builder):
                               default="*",
                               multiple=False,
                               strict=True,
-                              choices=worker_list))
+                              choices=worker_list + ["*"]))
     return props
 
 

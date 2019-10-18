@@ -127,7 +127,7 @@ builder_to_workers = {
     "oe-selftest-opensuse": workers_opensuse,
     "oe-selftest-centos": workers_centos,
     "meta-mingw": workers_wine,
-    "buildperf-ubuntu1604": "perf-ubuntu1604",
-    "buildperf-centos7": "perf-centos7",
+    "buildperf-ubuntu1604": ["perf-ubuntu1604"],
+    "buildperf-centos7": ["perf-centos7"],
     "default": workers
 }
