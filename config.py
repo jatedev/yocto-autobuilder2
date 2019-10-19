@@ -61,26 +61,26 @@ trigger_builders_wait_shared = [
     "non-gpl3", "wic",
     "poky-tiny", "musl-qemux86", "musl-qemux86-64", "no-x11",
     "qa-extras", "qa-extras2",
-    "check-layer", "meta-mingw"
+    "check-layer", "meta-mingw",
+    "qemuarm64-armhost"
 ]
 
 trigger_builders_wait_quick = trigger_builders_wait_shared + [
-    "oe-selftest", "qemux86-64-ptest-fast"
+    "oe-selftest", "qemux86-64-ptest-fast", "qemuarm64-ptest-fast"
 ]
 
 trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
     "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-centos",
-    "qemux86-64-ptest", "buildperf-ubuntu1604", "buildperf-centos7", "qemux86-64-ltp"
+    "qemux86-64-ptest", "buildperf-ubuntu1604", "buildperf-centos7", "qemux86-64-ltp",
+    "qemuarm64-ptest", "qemuarm64-ltp"
 ]
 
 # Builders which are individually triggered
 builders_others = [
     "meta-oe", "meta-virt", "meta-intel",
     "bringup",
-    "qemuarm64-ptest",
-    "qemuarm64-ptest-fast",
-    "qemuarm64-ltp"
+    "qemuarm-armhost"
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
@@ -88,27 +88,28 @@ builders = ["a-quick", "a-full"] + subbuilders
 
 # ## Cluster configuration
 # Publishing settings
-sharedrepodir = "/srv/www/vhosts/repos.yoctoproject.org"
-publish_dest = "/srv/www/vhosts/autobuilder.yoctoproject.org/pub"
+sharedrepodir = "/srv/autobuilder/repos"
+publish_dest = "/srv/autobuilder/autobuilder.yoctoproject.org/pub"
 
 # Web UI settings
 web_port = 8010
 
 # List of workers in the cluster
-workers_ubuntu = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3", "ubuntu1604-ty-1"]
+workers_ubuntu = ["ubuntu1904-ty-1", "ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3", "ubuntu1604-ty-1"]
 workers_centos = ["centos7-ty-1", "centos7-ty-2", "centos7-ty-3", "centos7-ty-4"]
-workers_fedora = ["fedora28-ty-1", "fedora29-ty-1"]
-workers_debian = ["debian9-ty-1", "debian8-ty-1", "debian9-ty-2"]
-workers_opensuse = ["opensuse423-ty-1", "opensuse150-ty-1"]
+workers_fedora = ["fedora29-ty-1", "fedora30-ty-1", "fedora30-ty-2"]
+workers_debian = ["debian8-ty-1", "debian9-ty-2", "debian10-ty-1", "debian10-ty-2", "debian10-ty-3"]
+workers_opensuse = ["tumbleweed-ty-1", "tumbleweed-ty-2", "tumbleweed-ty-3", "opensuse151-ty-1", "opensuse150-ty-1"]
 
 workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse 
 
-workers_bringup = ["rhel8-ty-1", "tumbleweed-ty-1", "ubuntu1804-arm-1"]
+workers_bringup = []
 # workers with wine on them for meta-mingw
 workers_wine = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3"]
 workers_buildperf = ["perf-ubuntu1604", "perf-centos7"]
+workers_arm = ["ubuntu1804-arm-1"]
 
-all_workers = workers + workers_bringup + workers_buildperf
+all_workers = workers + workers_bringup + workers_buildperf + workers_arm
 
 # Worker configuration, all workers configured the same...
 # TODO: support per-worker config
@@ -129,5 +130,10 @@ builder_to_workers = {
     "meta-mingw": workers_wine,
     "buildperf-ubuntu1604": ["perf-ubuntu1604"],
     "buildperf-centos7": ["perf-centos7"],
+    "qemuarm-armhost": workers_arm,
+    "qemuarm64-ptest": workers_arm,
+    "qemuarm64-ptest-fast": workers_arm,
+    "qemuarm64-ltp": workers_arm,
+    "qemuarm64-armhost": workers_arm,
     "default": workers
 }

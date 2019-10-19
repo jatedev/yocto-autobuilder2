@@ -253,8 +253,8 @@ schedulers.append(sched.Nightly(name='nightly-quick', branch='master', propertie
                   builderNames=['a-quick'], hour=1, minute=0))
 
 # Run the build performance tests at 3am, 9am, 3pm and 9pm
-#schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='master', properties=parent_default_props('buildperf-ubuntu1604'),
-#                  builderNames=['buildperf-ubuntu1604'], hour=[3,9,15,21], minute=0))
-#schedulers.append(sched.Nightly(name='nightly-buildperf-centos7', branch='master', properties=parent_default_props('buildperf-centos7'),
-#                  builderNames=['buildperf-centos7'], hour=[3,9,15,21], minute=0))
+schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='master', properties=parent_default_props('buildperf-ubuntu1604'),
+                  builderNames=['buildperf-ubuntu1604'], hour=[3,9,15,21], minute=0))
+schedulers.append(sched.Nightly(name='nightly-buildperf-centos7', branch='master', properties=parent_default_props('buildperf-centos7'),
+                  builderNames=['buildperf-centos7'], hour=[3,9,15,21], minute=0))
 
