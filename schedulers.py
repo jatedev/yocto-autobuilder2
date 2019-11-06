@@ -2,6 +2,8 @@ from buildbot.plugins import schedulers as sched
 from buildbot.plugins import util
 from yoctoabb import config
 
+from twisted.internet import defer
+
 from yoctoabb.yocto_console_view.yocto_console_view import ReleaseSelector
 
 schedulers = []
@@ -97,12 +99,22 @@ for builder in config.subbuilders:
         properties=props_for_builder(builder),
         buttonName="Force Build"))
 
+@util.renderer
+@defer.inlineCallbacks
+def builderNamesFromConfig(props):
+    yp_branch = props.getProperty('yp_build_branch')
+
+    if yp_branch in config.trigger_builders_wait_releases:
+        return config.trigger_builders_wait_releases[yp_branch]
+
+    return config.trigger_builders_wait_full
+
 # nightly builder triggers various other builders
 wait_quick = sched.Triggerable(name="wait-quick",
                          builderNames=config.trigger_builders_wait_quick)
 schedulers.append(wait_quick)
 wait_full = sched.Triggerable(name="wait-full",
-                         builderNames=config.trigger_builders_wait_full)
+                         builderNames=builderNamesFromConfig)
 schedulers.append(wait_full)
 
 def parent_scheduler(target):
