@@ -111,6 +111,11 @@ workers_arm = ["ubuntu1804-arm-1"]
 
 all_workers = workers + workers_bringup + workers_buildperf + workers_arm
 
+# Worker filtering for older releases
+workers_prev_releases = {
+    "sumo" : ("centos7", "ubuntu1804", "ubuntu1604", "debian8", "debian9", "fedora28")
+}
+
 # Worker configuration, all workers configured the same...
 # TODO: support per-worker config
 worker_password = "pass"

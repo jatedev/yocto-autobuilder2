@@ -3,6 +3,8 @@ from buildbot.plugins import *
 from yoctoabb import config
 from yoctoabb.steps.writelayerinfo import WriteLayerInfo
 from yoctoabb.steps.observer import RunConfigLogObserver
+
+from twisted.python import log
 from datetime import datetime
 
 import os
@@ -192,9 +194,23 @@ def create_builder_factory():
 
 def nextWorker(bldr, workers, buildrequest):
     forced_worker = buildrequest.properties.getProperty("worker", "*")
+    possible_workers = list(workers)
+
+    # Old releases can only build on a subset of the workers, filter accordingly
+    branch = None
+    if '' in buildrequest.sources:
+        # Has to be a better way to do this
+        branch = buildrequest.sources[''].branch
+    if branch and branch in config.workers_prev_releases:
+        possible_workers = []
+        for w in workers:
+            if w.worker.workername.startswith(config.workers_prev_releases[branch]):
+                possible_workers.append(w)
+        log.msg("nextWorker: Limiting %s to workers %s for %s" % (str(bldr), str(possible_workers), branch))
+
     if forced_worker == "*":
-        return random.choice(workers) if workers else None
-    for w in workers:
+        return random.choice(possible_workers) if possible_workers else None
+    for w in possible_workers:
         if w.worker.workername == forced_worker:
             return w
     return None  # worker not yet available
@@ -334,5 +350,5 @@ def create_parent_builder_factory(buildername, waitname):
 
     return factory
 
-builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), env=extra_env))
-builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), env=extra_env))
+builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), nextWorker=nextWorker, env=extra_env))
+builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), nextWorker=nextWorker, env=extra_env))
