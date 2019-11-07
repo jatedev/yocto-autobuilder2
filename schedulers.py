@@ -3,6 +3,7 @@ from buildbot.plugins import util
 from yoctoabb import config
 
 from twisted.internet import defer
+from twisted.python import log
 
 from yoctoabb.yocto_console_view.yocto_console_view import ReleaseSelector
 
@@ -100,12 +101,14 @@ for builder in config.subbuilders:
         buttonName="Force Build"))
 
 @util.renderer
-@defer.inlineCallbacks
 def builderNamesFromConfig(props):
-    yp_branch = props.getProperty('yp_build_branch')
+    #log.msg("builderNames: Sourcestamp %s, props %s" % (str(props.sourcestamps), str(props)))
+    yp_branch = props.getProperty('branch', '')
 
-    if yp_branch in config.trigger_builders_wait_releases:
-        return config.trigger_builders_wait_releases[yp_branch]
+    for b in config.trigger_builders_wait_releases:
+        if yp_branch.startswith(b):
+            log.msg("builderNames: Filtering branch %s due to entry %s" % (str(yp_branch), str(b)))
+            return config.trigger_builders_wait_releases[b]
 
     return config.trigger_builders_wait_full
 
