@@ -103,7 +103,7 @@ for builder in config.subbuilders:
 @util.renderer
 def builderNamesFromConfig(props):
     #log.msg("builderNames: Sourcestamp %s, props %s" % (str(props.sourcestamps), str(props)))
-    yp_branch = props.getProperty('branch', '')
+    yp_branch = props.sourcestamps[0]['branch']
 
     for b in config.trigger_builders_wait_releases:
         if yp_branch.startswith(b):
