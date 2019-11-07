@@ -215,6 +215,14 @@ def nextWorker(bldr, workers, buildrequest):
             return w
     return None  # worker not yet available
 
+# nextWorker above can block a request if there is no worker available.
+# _getNextUnclaimedBuildRequest will always return the first request
+# which then will always fail to find worker, and this will block the queue
+# We therefore randomise the build requests queue with nextBuild to avoid
+# blocking
+def nextBuild(bldr, requests):
+    return random.choice(requests) if requests else None
+
 # regular builders
 f = create_builder_factory()
 for builder in config.subbuilders:
@@ -222,7 +230,7 @@ for builder in config.subbuilders:
     if not workers:
         workers = config.builder_to_workers['default']
     builders.append(util.BuilderConfig(name=builder,
-                                       workernames=workers, nextWorker=nextWorker, 
+                                       workernames=workers, nextWorker=nextWorker, nextBuild=nextBuild,
                                        factory=f, env=extra_env))
 
 def create_parent_builder_factory(buildername, waitname):
@@ -350,5 +358,5 @@ def create_parent_builder_factory(buildername, waitname):
 
     return factory
 
-builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), nextWorker=nextWorker, env=extra_env))
-builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), nextWorker=nextWorker, env=extra_env))
+builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
+builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
