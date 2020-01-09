@@ -73,7 +73,7 @@ trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
     "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-centos",
     "qemux86-64-ptest", "buildperf-ubuntu1604", "buildperf-centos7", "qemux86-64-ltp",
-    "qemuarm64-ptest", "qemuarm64-ltp"
+    "qemuarm64-ptest", "qemuarm64-ltp", "meta-intel"
 ]
 
 trigger_builders_wait_releases = {
@@ -83,7 +83,7 @@ trigger_builders_wait_releases = {
 
 # Builders which are individually triggered
 builders_others = [
-    "meta-oe", "meta-virt", "meta-intel",
+    "meta-oe", "meta-virt",
     "bringup",
     "qemuarm-armhost"
 ]
