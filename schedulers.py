@@ -106,7 +106,7 @@ def builderNamesFromConfig(props):
     yp_branch = props.sourcestamps[0]['branch']
 
     for b in config.trigger_builders_wait_releases:
-        if yp_branch.startswith(b):
+        if yp_branch and yp_branch.startswith(b):
             log.msg("builderNames: Filtering branch %s due to entry %s" % (str(yp_branch), str(b)))
             return config.trigger_builders_wait_releases[b]
 
