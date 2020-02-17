@@ -338,6 +338,26 @@ def create_parent_builder_factory(buildername, waitname):
                                   waitForFinish=True,
                                   set_properties=get_props_set()))
 
+    factory.addStep(RunConfigLogObserver(
+        command=[
+            util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-config"),
+            util.Property("buildername") + "-posttrigger",
+            util.Interpolate("%(prop:builddir)s/build/build"),
+            util.Interpolate("%(prop:branch_poky)s"),
+            util.Interpolate("%(prop:repo_poky)s"),
+            "--sstateprefix", get_sstate_release_number,
+            "--publish-dir", get_publish_dest,
+            "--build-type", util.Interpolate("%(prop:build_type)s"),
+            "--build-url", util.URLForBuild,
+            "--results-dir", get_publish_resultdir,
+            "--quietlogging"],
+        name="run-config",
+        logfiles=get_buildlogs(maxsteps),
+        lazylogfiles=True,
+        maxsteps=maxsteps,
+        timeout=16200))  # default of 1200s/20min is too short, use 4.5hrs
+
+
     factory.addStep(steps.ShellCommand(
         command=[
             util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/send-qa-email"),
