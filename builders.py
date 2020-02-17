@@ -341,7 +341,7 @@ def create_parent_builder_factory(buildername, waitname):
     factory.addStep(RunConfigLogObserver(
         command=[
             util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-config"),
-            util.Property("buildername") + "-posttrigger",
+            util.Interpolate("%(prop:buildername)s-posttrigger"),
             util.Interpolate("%(prop:builddir)s/build/build"),
             util.Interpolate("%(prop:branch_poky)s"),
             util.Interpolate("%(prop:repo_poky)s"),
