@@ -112,11 +112,17 @@ def builderNamesFromConfig(props):
 
     return config.trigger_builders_wait_full
 
+# Upstream Triggerable class will rasise NotImplementedError() which will mean triggers abort upon reconfig
+# Hack to intercept and ignore this, we'd rather they just survive in our case.
+class ourTriggerable(sched.Triggerable):
+    def reconfigService(self, name=None, *args, **kwargs):
+        return
+
 # nightly builder triggers various other builders
-wait_quick = sched.Triggerable(name="wait-quick",
+wait_quick = ourTriggerable(name="wait-quick",
                          builderNames=config.trigger_builders_wait_quick)
 schedulers.append(wait_quick)
-wait_full = sched.Triggerable(name="wait-full",
+wait_full = ourTriggerable(name="wait-full",
                          builderNames=builderNamesFromConfig)
 schedulers.append(wait_full)
 
