@@ -39,7 +39,7 @@ repos = {
     "meta-mingw": ["git://git.yoctoproject.org/meta-mingw", "master"],
     "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"],
     "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "master"],
-    "meta-virtualization": ["git://git.openembedded.org/meta-openembedded", "master"]
+    "meta-virtualization": ["git://git.yoctoproject.org/meta-virtualization", "master"]
 }
 
 trigger_builders_wait_shared = [
