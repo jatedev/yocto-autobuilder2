@@ -158,6 +158,7 @@ def create_builder_factory():
                  util.Interpolate("%(prop:builddir)s/build"),
                  util.Property("buildername"),
                  "-c", util.Interpolate("%(prop:sharedrepolocation)s"),
+                 "--workername", util.Interpolate("%(prop:workername)s"),
                  "-p", get_publish_dest],
         haltOnFailure=True,
         name="Unpack shared repositories"))
@@ -277,6 +278,7 @@ def create_parent_builder_factory(buildername, waitname):
             util.Interpolate("%(prop:builddir)s/build"),
             util.Property("buildername"),
             "-c", util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
+            "--workername", util.Interpolate("%(prop:workername)s"),
             "-p", util.Property("is_release")],
         haltOnFailure=True,
         name="Unpack shared repositories"))
