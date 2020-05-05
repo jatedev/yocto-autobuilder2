@@ -11,8 +11,8 @@ The final outputs of this section are a controller and worker installed in the s
 The latest version of BuildBot is written in Python 3, so installation via pip3:
 
 ```
-apt install python-pip3 git build-essential python3-pip virtualenv enchang npm
-sudo pip3 install buildbot buildbot-www buildbot-waterfall-view buildbot-console-view buildbot-grid-view
+apt install git build-essential python3-pip virtualenv enchant npm
+sudo pip3 install buildbot buildbot-www buildbot-waterfall-view buildbot-console-view buildbot-grid-view buildbot-worker
 ```
 
 It is recommended to also install `testtools` and `libccpunit-subunit-dev` (via apt, in this case) on the worker in order for certain image tests to work correctly (e.g., `core-image-sato-sdk:do_testimage`).
@@ -63,7 +63,41 @@ Set `BASE_HOMEDIR` should be your build user's home directory.  (There are she
 
 Finally, as root, add the `yocto-*.service` files to `/lib/systemd/system` (See Appendix A).  Run: `systemctl daemon-reload`.  You should now be able to successfully start these services (e.g., `sudo systemctl start yocto-*`).  The controller may take up to 15 seconds to start.
 
-### 1.1) Special Notes for the Worker Environment
+### 1.1) Configuring the Worker's Hash Equivalency Server
+
+A key part of the autobuilder setup is the use of a hash equivalency
+server, which is started manually on the Yocto hosts. By default, the 
+config.json file that is pulled along with yocto-autobuilder-helper 
+contains "BB_HASHSERVE = 'typhoon.yocto.io:8686'", which will likely 
+cause a custom autobuilder instance to hang while trying to communicate 
+with the hash equivalency server. As mentioned in the previous section, 
+any configuration changes made need to be committed to the 
+yocto-autobuilder-helper repo that your worker will pull from. A simple
+way to start the hash equivalency server and properly configure your
+workers is done with the following steps:
+
+1. Clone a copy of the poky distribution repo from
+   https://git.yoctoproject.org/cgit/cgit.cgi/poky/
+2. Source the oe-init-build-env script into your build directory
+3. Run "bitbake-hashserv --bind <PORT>:<IP>" from the build directory
+4. Clone a copy of
+   https://git.yoctoproject.org/cgit/cgit.cgi/yocto-autobuilder-helper/,
+   then create config-local.json by copying config.json (and removing 
+   sections that aren't required). Since the contents of config-local.json 
+   are an overlay for those in config.json, this will preserve as much of 
+   the initial configuration as possible.
+5. Change the BB_HASHSERVE value in config-local.json to point to the IP 
+   and port you specified in step 3
+6. Commit the changes in the local yocto-autobuilder-helper repository
+7. In <autobuilderpath>/yocto-controller/yoctoabb/config.py, change the
+   entry for "yocto-autobuilder-helper" under "repos" to point at your
+   local copy of the yocto-autobuilder-helper repository.
+
+After these steps have been taken, the workers that you start should
+attach to your local hash equivalency server and be able to complete a
+target build.
+
+### 1.2) Special Notes for the Worker Environment
 
 The QEMU tap interfaces also need to be generated and owned by the worker's user (created above).  One way to this is to compile the `meta/recipes-devtools/qemu/qemu-helper/tunctl.c` file and run it _N_ times on the worker's host.  See the related `qemu-helper-native` recipe for instructions.  The resulting executable would be run _N_ times (e.g., 8), so for example: `sudo tunctl -u $(id -u pokybuild3) -g $(id -g pokybuild3) -t tun0`.
 
