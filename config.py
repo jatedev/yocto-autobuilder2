@@ -85,7 +85,8 @@ trigger_builders_wait_releases = {
 builders_others = [
     "meta-oe", "meta-virt",
     "bringup",
-    "qemuarm-armhost"
+    "qemuarm-armhost",
+    "auh"
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
@@ -113,6 +114,8 @@ workers_bringup = []
 workers_wine = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3"]
 workers_buildperf = ["perf-ubuntu1604", "perf-centos7"]
 workers_arm = ["ubuntu1804-arm-1"]
+# workers which don't need buildtools for AUH
+workers_auh = ["ubuntu1904-ty-1", "ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3", "centos8-ty-1", "centos8-ty-2", "debian10-ty-1", "debian10-ty-2", "debian10-ty-3"]
 
 all_workers = workers + workers_bringup + workers_buildperf + workers_arm
 
@@ -149,5 +152,6 @@ builder_to_workers = {
     "qemuarm64-ptest-fast": workers_arm,
     "qemuarm64-ltp": workers_arm,
     "qemuarm64-armhost": workers_arm,
+    "auh" : workers_auh,
     "default": workers
 }
