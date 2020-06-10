@@ -291,3 +291,7 @@ schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='mas
 schedulers.append(sched.Nightly(name='nightly-buildperf-centos7', branch='master', properties=parent_default_props('buildperf-centos7'),
                   builderNames=['buildperf-centos7'], hour=[3,9,15,21], minute=0))
 
+# Run the AUH on the 15th of every month
+schedulers.append(sched.Nightly(name='nightly-auh', branch='master', properties=parent_default_props('auh'),
+                  builderNames=['auh'], dayOfMonth=15, hour=1, minute=0))
+
