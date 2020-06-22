@@ -4,6 +4,8 @@ This guide will walk through how to install a stand-alone autobuilder controller
 
 ## 1) Stand-alone Installation
 
+### 1.1) Basic Requirements
+
 The final outputs of this section are a controller and worker installed in the same server, ready for trimming back to an individual organization's needs.
 
  > NOTE: The guide assumes that your host OS has the packages installed to support BitBake for the release(s) you are targeting.  Please refer to the Yocto manual for those packages:
@@ -18,6 +20,8 @@ sudo pip3 install buildbot buildbot-www buildbot-waterfall-view buildbot-console
 
 It is recommended to also install `testtools` and `libccpunit-subunit-dev` (via apt, in this case) on the worker in order for certain image tests to work correctly (e.g., `core-image-sato-sdk:do_testimage`).
 
+### 1.2) Creating the Autobuilder User's Directory
+
 For a new installation you will need a system user that can run Autobuilder2 as well as a couple of repositories: Autobuilder2 itself and a helper plugin.  As root:
 
 ```
@@ -28,10 +32,13 @@ buildbot-worker create-worker -r --umask=0o22 yocto-worker localhost example-wor
 cd yocto-controller
 git clone https://git.yoctoproject.org/git/yocto-autobuilder2 yoctoabb
 ln -rs yoctoabb/master.cfg master.cfg
-cd ~
+cd -
 git clone https://git.yoctoproject.org/git/yocto-autobuilder-helper
 chown -R pokybuild3:nogroup /home/pokybuild3
 ```
+
+Note: depending on the configuration of your system, you may need to
+replace "nogroup" with "pokybuild3" for the last command to work.
 
  > **IMPORTANT:** In the above command you created a controller and a worker, which will attempt to join the controller using `pass` as the password.  Feel free to change this, knowing that if you do, you must change the controller's master configuration file to match.
 
@@ -51,6 +58,8 @@ being triggered:
 ```
 export LANG=en_US.UTF-8
 ```
+
+### 1.3) Customizing the Autobuilder Configuration
 
 Next, we need to update the `yocto-controller/yoctoabb/master.cfg` towards the bottom where the `title`, `titleURL`, and `buildbotURL` are all set.  This is also where you would specify a different password for binding workers to the master.
 
@@ -72,17 +81,27 @@ Set `BASE_HOMEDIR` should be your build user's home directory.  (There are she
 
 Finally, it is time to start the Autobuilder. There are two ways to do this:
 
-1. As the pokybuild3 user, run the following:
+### 1.4) Starting the Autobuilder
 
-```
-yocto-autobuilder-helper/janitor/ab-janitor&
-buildbot start yocto-controller
-buildbot-worker start yocto-worker
-```
+At this point, you can start your Autobuilder controller, worker, and
+janitor in one of two ways: using buildbot manually, or by creating
+systemd service files.
 
-2. As root, add the `yocto-*.service` files to `/lib/systemd/system` (See Appendix A).  Run: `systemctl daemon-reload`.  You should now be able to successfully start these services (e.g., `sudo systemctl start yocto-*`).  The controller may take up to 15 seconds to start.
+#### 1.4.1) Manually Starting the Autobuilder
 
-### 1.1) Configuring the Worker's Hash Equivalency Server
+Run the following from the pokybuild3 directory:
+
+ 1. yocto-autobuilder-helper/janitor/ab-janitor&
+ 2. buildbot start yocto-controller
+ 3. buildbot-worker start yocto-worker
+
+#### 1.4.2) Creating Service Files
+
+ 1. As root, add the `yocto-*.service` files to `/lib/systemd/system` (See Appendix A).  
+ 2. Run: `systemctl daemon-reload`.  
+ 3. You should now be able to successfully start these services (e.g., `sudo systemctl start yocto-*`). The controller may take up to 15 seconds to start.
+
+### 1.5) Configuring the Worker's Hash Equivalency Server
 
 A key part of the autobuilder setup is the use of a hash equivalency
 server, which is started manually on the Yocto hosts. By default, the 
