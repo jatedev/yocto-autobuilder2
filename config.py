@@ -13,6 +13,7 @@ buildertorepos = {
     "meta-oe": ["poky", "meta-openembedded"],
     "meta-virt": ["poky", "meta-openembedded", "meta-virtualization"],
     "meta-intel": ["poky", "meta-intel"],
+    "meta-arm": ["poky", "meta-arm"],
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
@@ -31,6 +32,7 @@ repos = {
                             "oxygen-master"],
     "poky": ["git://git.yoctoproject.org/poky", "master"],
     "meta-intel": ["git://git.yoctoproject.org/meta-intel", "master"],
+    "meta-arm": ["git://git.yoctoproject.org/meta-arm", "master"],
     "oecore": ["git://git.openembedded.org/openembedded-core",
                           "master"],
     "bitbake": ["git://git.openembedded.org/bitbake", "master"],
@@ -86,7 +88,8 @@ builders_others = [
     "meta-oe", "meta-virt",
     "bringup",
     "qemuarm-armhost",
-    "auh"
+    "auh",
+    "meta-arm"
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
