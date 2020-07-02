@@ -6,7 +6,7 @@ buildertorepos = {
     "a-quick": ["poky", "meta-intel", "oecore", "bitbake",
                 "meta-mingw", "meta-gplv2"],
     "a-full": ["poky", "meta-intel", "oecore", "bitbake",
-                "meta-mingw", "meta-gplv2"],
+                "meta-mingw", "meta-gplv2", "meta-arm"],
     "non-gpl3": ["poky", "meta-gplv2"],
     "meta-mingw": ["poky", "meta-mingw"],
     "qa-extras": ["poky", "meta-mingw"],
@@ -75,7 +75,7 @@ trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
     "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-centos",
     "qemux86-64-ptest", "buildperf-ubuntu1604", "buildperf-centos7", "qemux86-64-ltp",
-    "qemuarm64-ptest", "qemuarm64-ltp", "meta-intel"
+    "qemuarm64-ptest", "qemuarm64-ltp", "meta-intel", "meta-arm"
 ]
 
 trigger_builders_wait_releases = {
@@ -88,8 +88,7 @@ builders_others = [
     "meta-oe", "meta-virt",
     "bringup",
     "qemuarm-armhost",
-    "auh",
-    "meta-arm"
+    "auh"
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
