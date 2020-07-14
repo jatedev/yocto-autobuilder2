@@ -377,9 +377,9 @@ def create_parent_builder_factory(buildername, waitname):
 
 
     factory.addStep(steps.ShellCommand(
-                    command=[clob, util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir))],
+                    command=["rm", "-fr", util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir))],
                     haltOnFailure=True,
-                    name="Clobber shared repo dir"))
+                    name="Remove shared repo dir"))
 
     return factory
 
