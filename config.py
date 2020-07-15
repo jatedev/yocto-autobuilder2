@@ -13,7 +13,7 @@ buildertorepos = {
     "meta-oe": ["poky", "meta-openembedded"],
     "meta-virt": ["poky", "meta-openembedded", "meta-virtualization"],
     "meta-intel": ["poky", "meta-intel"],
-    "meta-arm": ["poky", "meta-arm"],
+    "meta-arm": ["poky", "meta-arm", "meta-kernel"],
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
@@ -41,7 +41,8 @@ repos = {
     "meta-mingw": ["git://git.yoctoproject.org/meta-mingw", "master"],
     "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"],
     "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "master"],
-    "meta-virtualization": ["git://git.yoctoproject.org/meta-virtualization", "master"]
+    "meta-virtualization": ["git://git.yoctoproject.org/meta-virtualization", "master"],
+    "meta-kernel": ["https://gitlab.com/openembedded/community/meta-kernel.git", "master"]
 }
 
 trigger_builders_wait_shared = [
