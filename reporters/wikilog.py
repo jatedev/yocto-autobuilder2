@@ -159,19 +159,19 @@ class WikiLog(service.BuildbotService):
         content = content + '* ' + forcedby + '\n* ' + reason + '\n'
         new_entry = '{}\n{}\n'.format(section_title, content)
 
-        blurb, entries = self.wiki.get_content(self.wiki_page)
+        blurb, entries, footer = self.wiki.get_content(self.wiki_page)
         if not blurb:
             log.err("wkl: Unexpected content retrieved from wiki!")
             return False
 
-        entries = new_entry + entries
+        content = blurb + new_entry + entries + footer
         cookies = self.wiki.login()
 
         if not cookies:
             log.err("wkl: Failed to login to wiki")
             return False
 
-        post = self.wiki.post_entry(self.wiki_page, blurb+entries, summary, cookies)
+        post = self.wiki.post_entry(self.wiki_page, content, summary, cookies)
         if not post:
             log.err("wkl: Failed to post entry for %s" % buildid)
             return False
@@ -248,7 +248,7 @@ class WikiLog(service.BuildbotService):
 
         log.err("wkl: Starting to update entry for %s(%s)" % (buildid, parent['buildid']))
 
-        blurb, entries = self.wiki.get_content(self.wiki_page)
+        blurb, entries, footer = self.wiki.get_content(self.wiki_page)
         if not blurb:
             log.err("wkl: Unexpected content retrieved from wiki!")
             return False
@@ -310,14 +310,14 @@ class WikiLog(service.BuildbotService):
             # There was no following entry
             tail = ""
 
-        update = head + "==[" + new_title + "]==\n" + new_entry + tail
+        update = blurb + head + "==[" + new_title + "]==\n" + new_entry + tail + footer
 
         cookies = self.wiki.login()
         if not cookies:
             log.err("wkl: Failed to login to wiki")
             return False
 
-        post = self.wiki.post_entry(self.wiki_page, blurb+update, summary, cookies)
+        post = self.wiki.post_entry(self.wiki_page, update, summary, cookies)
         if not post:
             log.err("wkl: Failed to update entry for %s(%s)" % (buildid, parent['buildid']))
             return False

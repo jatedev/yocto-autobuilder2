@@ -136,15 +136,20 @@ class YPWiki(object):
 
         parsed = self.parse_json(req)
         pageid = sorted(parsed['query']['pages'].keys())[-1]
-        blurb, entries = "\n", ""
+        blurb, entries, footer = "\n", "", "\n==Archived Logs=="
         if 'revisions' in parsed['query']['pages'][pageid]:
             content = parsed['query']['pages'][pageid]['revisions'][0]['*']
             blurb, entries = content.split('==', 1)
             # ensure we keep only a single newline after the blurb
             blurb = blurb.strip() + "\n"
-            entries = '=='+entries
+            entries = '==' + entries
+            try:
+                entries, footer = entries.rsplit('\n==Archived Logs==', 1)
+                footer = '\n==Archived Logs==' + footer
+            except ValueError:
+                pass
 
-        return blurb, entries
+        return blurb, entries, footer
 
     def post_entry(self, wiki_page, content, summary, cookies):
         """
