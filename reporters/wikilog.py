@@ -253,7 +253,38 @@ class WikiLog(service.BuildbotService):
             log.err("wkl: Unexpected content retrieved from wiki!")
             return False
 
-        entry_list = re.split('\=\=\[(.+)\]\=\=', entries)
+        entry_list = re.split('\=\=\[(.+)\]\=\=.*', entries)
+
+        # [1::2] selects only the odd entries, i.e. separators/titles
+        titles = entry_list[1::2]
+        if len(titles) > 200:
+            # Archive off entries when the log becomes too long
+
+            log.err("wkl: Archiving off entries from %s (size %s)" % (titles[50], len(titles)))
+
+            sep = '==[' + titles[50] + ']=='
+            head, archive = entries.split(sep, 1)
+            archive = sep + archive
+
+
+            archivenum = int(max(re.findall(r'\[%s/Archive/([0-9]+)\]' % self.wiki_page, footer)))
+            nextnum = str(archivenum + 1).zfill(4)
+
+            cookies = self.wiki.login()
+            if not cookies:
+                log.err("wkl: Failed to login to wiki")
+                return False
+
+            post = self.wiki.post_entry(self.wiki_page + "/Archive/" + nextnum, archive, "Archive out older buildlog entries", cookies)
+            if not post:
+                log.err("wkl: Failed to save new archive page %s" % (nextnum))
+                return False
+
+            entries = head
+            entry_list = re.split('\=\=\[(.+)\]\=\=.*', entries)
+
+            footer = footer + "\n* [[" + self.wiki_page + "/Archive/" + nextnum + "]]"
+
         entry = ''
         title = ''
         foundmatch = False
