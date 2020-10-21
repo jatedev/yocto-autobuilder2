@@ -10,6 +10,8 @@ import time
 import pprint
 import re
 
+monitored_parents = ['a-full', 'a-quick']
+
 class WikiLog(service.BuildbotService):
     name = "WikiLog"
     wiki = None
@@ -58,6 +60,9 @@ class WikiLog(service.BuildbotService):
 
         # Only place initial entries in the wiki for builds with no parents
         if not build['buildset']['parent_buildid']:
+            # Only log full/quick builds on the wiki log
+            if build['builder']['name'] not in monitored_parents:
+                return
             yield self.wikiLock.acquire()
             try:
                 result = yield threads.deferToThread(self.logBuild, build)
@@ -78,6 +83,32 @@ class WikiLog(service.BuildbotService):
         if build['buildset']['parent_buildid']:
             parent = yield self.master.data.get(("builds", build['buildset']['parent_buildid']))
             yield utils.getDetailsForBuild(self.master, parent, **self.neededDetails)
+
+        # Only run the logging code for builds in the monitored_parents list, or builds with
+        # failures (to try and cut down on wiki noise)
+        log = False
+        headerpresent = False
+        if build['results'] in [FAILURE, EXCEPTION, WARNINGS]:
+            log = True
+        if (parent and parent['builder']['name'] in monitored_parents) or \
+                (build['builder']['name'] in monitored_parents):
+            log = True
+            headerpresent = True
+
+        if not log:
+            return
+
+        if not headerpresent:
+            yield self.wikiLock.acquire()
+            try:
+                result = yield threads.deferToThread(self.logBuild, build)
+            finally:
+                self.wikiLock.release()
+
+            if not result:
+                log.err("wkl: Failed to log build failure %s on %s" % (
+                    build['buildid'], build['builder']['name']))
+                return
 
         entry = yield self.getEntry(build, parent)
         yield self.wikiLock.acquire()
@@ -187,13 +218,13 @@ class WikiLog(service.BuildbotService):
 
             # Ignore logs for steps which succeeded/cancelled
             result = s['results']
-            if result in (SUCCESS, RETRY, CANCELLED):
+            if result in (SUCCESS, RETRY, CANCELLED, SKIPPED):
                 continue
-            if result == WARNINGS:
-                # ignore warnings for log purposes for now
-                continue
+            #if result == WARNINGS:
+            #    # ignore warnings for log purposes for now
+            #    continue
 
-            # Log for FAILURE, SKIPPED, EXCEPTION
+            # Log for FAILURE, EXCEPTION
 
             step_name = s['name']
             step_number = s['number']
