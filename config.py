@@ -17,6 +17,7 @@ buildertorepos = {
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
+    "docs": ["yocto-docs"],
     "default": ["poky"]
 }
 
@@ -42,7 +43,8 @@ repos = {
     "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"],
     "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "master"],
     "meta-virtualization": ["git://git.yoctoproject.org/meta-virtualization", "master"],
-    "meta-kernel": ["https://gitlab.com/openembedded/community/meta-kernel.git", "master"]
+    "meta-kernel": ["https://gitlab.com/openembedded/community/meta-kernel.git", "master"],
+    "yocto-docs": ["git://git.yoctoproject.org/yocto-docs", "master"]
 }
 
 trigger_builders_wait_shared = [
@@ -93,7 +95,7 @@ builders_others = [
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
-builders = ["a-quick", "a-full"] + subbuilders
+builders = ["a-quick", "a-full", "docs"] + subbuilders
 
 # ## Cluster configuration
 # Publishing settings

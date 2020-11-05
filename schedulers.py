@@ -287,6 +287,18 @@ def parent_scheduler(target):
 schedulers.append(parent_scheduler("a-quick"))
 schedulers.append(parent_scheduler("a-full"))
 
+
+schedulers.append(sched.ForceScheduler(
+        name="docs",
+        builderNames=["docs"],
+        reason=util.StringParameter(
+                name="reason",
+                label="""Reason (please note the reason for triggering the docs build:""",
+                required=False),
+        properties=props_for_builder("docs"),
+        buttonName="Force Build"))
+
+
 # Run a-quick at 1am each day Mon-Sat so we keep master tested and up to date in sstate and buildhistory
 schedulers.append(sched.Nightly(name='nightly-quick', branch='master', properties=parent_default_props('a-quick'),
                   builderNames=['a-quick'], hour=1, minute=0, dayOfWeek=[0,1,2,3,4,5]))

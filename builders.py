@@ -385,3 +385,36 @@ def create_parent_builder_factory(buildername, waitname):
 
 builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
 builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
+
+def create_doc_builder_factory():
+    f = util.BuildFactory()
+
+    # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
+    # directory of the user running buildbot.
+    clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
+    f.addStep(steps.ShellCommand(
+        command=[clob, util.Interpolate("%(prop:builddir)s/")],
+        haltOnFailure=True,
+        name="Clobber build dir"))
+    f.addStep(steps.Git(
+        repourl=config.repos["yocto-autobuilder-helper"][0],
+        branch=config.repos["yocto-autobuilder-helper"][1],
+        workdir=util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper"),
+        mode='incremental',
+        haltOnFailure=True,
+        name='Fetch yocto-autobuilder-helper'))
+    f.addStep(steps.Git(
+        repourl=config.repos["yocto-docs"][0],
+        branch=config.repos["yocto-docs"][1],
+        workdir=util.Interpolate("%(prop:builddir)s/yocto-docs"),
+        mode='incremental',
+        haltOnFailure=True,
+        name='Fetch yocto-docs'))
+    f.addStep(steps.ShellCommand(
+        command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-docs-build"),
+                 util.Interpolate("%(prop:builddir)s/yocto-docs")],
+        haltOnFailure=True,
+        name="Run documentation Build"))
+    return f
+
+builders.append(util.BuilderConfig(name="docs", workernames=config.workers, factory=create_doc_builder_factory(), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
