@@ -316,3 +316,21 @@ schedulers.append(sched.Nightly(name='nightly-buildperf-centos7', branch='master
 schedulers.append(sched.Nightly(name='nightly-auh', branch='master', properties=parent_default_props('auh'),
                   builderNames=['auh'], dayOfMonth=15, hour=1, minute=0))
 
+# If any of our sphinx docs branches change, trigger a build
+schedulers.append(sched.AnyBranchScheduler(name="yocto-docs-changed",
+            change_filter=util.ChangeFilter(project=["yocto-docs"], branch=["master", "master-next", "gatesgarth", "transition"]),
+            treeStableTimer=60,
+            builderNames=["docs"]))
+
+# If bitbake's sphinx docs change, trigger a build
+def isbitbakeDocFile(change):
+    for f in change.files:
+        if "doc/" in f:
+            return True
+    return False
+schedulers.append(sched.AnyBranchScheduler(name="bitbake-docs-changed",
+            change_filter=util.ChangeFilter(project=["bitbake"], branch=["master", "1.48"]),
+            fileIsImportant=isbitbakeDocFile,
+            onlyImportant=True,
+            treeStableTimer=60,
+            builderNames=["docs"]))
