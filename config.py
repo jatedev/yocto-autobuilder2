@@ -17,7 +17,7 @@ buildertorepos = {
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
-    "docs": ["yocto-docs"],
+    "docs": ["yocto-docs", "bitbake"],
     "default": ["poky"]
 }
 

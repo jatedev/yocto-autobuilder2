@@ -410,9 +410,18 @@ def create_doc_builder_factory():
         mode='incremental',
         haltOnFailure=True,
         name='Fetch yocto-docs'))
+    f.addStep(steps.Git(
+        repourl=config.repos["bitbake"][0],
+        branch=config.repos["bitbake"][1],
+        workdir=util.Interpolate("%(prop:builddir)s/bitbake"),
+        mode='incremental',
+        haltOnFailure=True,
+        name='Fetch bitbake'))
     f.addStep(steps.ShellCommand(
         command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-docs-build"),
-                 util.Interpolate("%(prop:builddir)s/yocto-docs")],
+                 util.Interpolate("%(prop:builddir)s"),
+                 util.Interpolate("%(prop:builddir)s/yocto-docs"),
+                 util.Interpolate("%(prop:builddir)s/bitbake")],
         haltOnFailure=True,
         name="Run documentation Build"))
     return f
