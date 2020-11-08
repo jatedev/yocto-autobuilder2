@@ -113,7 +113,7 @@ def builderNamesFromConfig(props):
 
     # Only run performance runs on release builds
     if props.getProperty("is_release", False):
-        builders = builders + trigger_builders_wait_perf
+        builders = builders + config.trigger_builders_wait_perf
 
     return builders
 
