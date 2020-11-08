@@ -77,14 +77,15 @@ trigger_builders_wait_quick = trigger_builders_wait_shared + [
 trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
     "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-centos",
-    "qemux86-64-ptest", "buildperf-ubuntu1604", "buildperf-centos7", "qemux86-64-ltp",
-    "qemuarm64-ptest", "qemuarm64-ltp", "meta-intel", "meta-arm"
+    "qemux86-64-ptest", "qemux86-64-ltp", "qemuarm64-ptest", "qemuarm64-ltp", "meta-intel", "meta-arm"
 ]
 
 trigger_builders_wait_releases = {
     "sumo" : trigger_builders_wait_shared + ["qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
                                              "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-centos"]
 }
+
+trigger_builders_wait_perf = ["buildperf-ubuntu1604", "buildperf-centos7"]
 
 # Builders which are individually triggered
 builders_others = [
@@ -94,7 +95,7 @@ builders_others = [
     "auh"
 ]
 
-subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + builders_others))
+subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + trigger_builders_wait_perf + builders_others))
 builders = ["a-quick", "a-full", "docs"] + subbuilders
 
 # ## Cluster configuration

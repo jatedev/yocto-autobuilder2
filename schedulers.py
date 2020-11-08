@@ -105,12 +105,17 @@ def builderNamesFromConfig(props):
     #log.msg("builderNames: Sourcestamp %s, props %s" % (str(props.sourcestamps), str(props)))
     yp_branch = props.sourcestamps[0]['branch']
 
+    builders = config.trigger_builders_wait_full
     for b in config.trigger_builders_wait_releases:
         if yp_branch and yp_branch.startswith(b):
             log.msg("builderNames: Filtering branch %s due to entry %s" % (str(yp_branch), str(b)))
-            return config.trigger_builders_wait_releases[b]
+            builders = config.trigger_builders_wait_releases[b]
 
-    return config.trigger_builders_wait_full
+    # Only run performance runs on release builds
+    if props.getProperty("is_release", False):
+        builders = builders + trigger_builders_wait_perf
+
+    return builders
 
 # Upstream Triggerable class will rasise NotImplementedError() which will mean triggers abort upon reconfig
 # Hack to intercept and ignore this, we'd rather they just survive in our case.
