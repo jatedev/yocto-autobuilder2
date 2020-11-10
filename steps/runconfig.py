@@ -37,7 +37,7 @@ def get_publish_internal(props):
         dest = os.path.join(config.publish_dest, "releases", rel_name)
     else:
         dest_base = os.path.join(config.publish_dest, 'non-release',
-                                 datetime.now().strftime("%Y%m%d"))
+                                 datetime.datetime.now().strftime("%Y%m%d"))
 
         # We want to make sure that we aren't writing artefacts to a publish
         # directory which already exists, therefore we keep a list of used
