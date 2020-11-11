@@ -3,6 +3,7 @@ from buildbot.plugins import *
 from yoctoabb import config
 from yoctoabb.steps.writelayerinfo import WriteLayerInfo
 from yoctoabb.steps.runconfig import get_publish_dest, get_publish_resultdir, get_publish_name, RunConfigCheckSteps
+from buildbot.process.results import Results, SUCCESS, FAILURE, CANCELLED, WARNINGS, SKIPPED, EXCEPTION, RETRY
 from yoctoabb.steps.observer import RunConfigLogObserver
 
 from twisted.python import log
@@ -78,6 +79,13 @@ def create_builder_factory():
 
 
     f.addStep(RunConfigCheckSteps(posttrigger=False))
+
+    # If the build was successful, clean up the build directory
+    f.addStep(steps.ShellCommand(
+        command=[clob, util.Interpolate("%(prop:builddir)s/")],
+        doStepIf=lambda step: step.build.results == SUCCESS,
+        haltOnFailure=False,
+        name="Clobber build dir"))
 
     return f
 
