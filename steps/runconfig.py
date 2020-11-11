@@ -180,8 +180,11 @@ class RunConfigCheckSteps(shell.ShellCommand):
         else:
             steps = []
             for s in jsonconfig:
-                name = "run-config-" + s['name'] + "-" + s['phase']
-                steps.append(get_runconfig_step(name, s['name'], s['phase'], name, self.posttrigger))
+                if 'bbname' in s:
+                    name = s['bbname']
+                else:
+                    name = "run-config-" + s['name'] + "-" + s['phase']
+                steps.append(get_runconfig_step(name, s['name'], s['phase'], s['description'], self.posttrigger))
         self.build.addStepsAfterCurrentStep(steps)
         return SUCCESS
 
