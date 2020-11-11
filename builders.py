@@ -2,7 +2,7 @@ from buildbot.plugins import *
 
 from yoctoabb import config
 from yoctoabb.steps.writelayerinfo import WriteLayerInfo
-from yoctoabb.steps.runconfig import get_publish_dest, get_publish_resultdir, get_publish_name, get_runconfig_legacy_step
+from yoctoabb.steps.runconfig import get_publish_dest, get_publish_resultdir, get_publish_name, RunConfigCheckSteps
 from yoctoabb.steps.observer import RunConfigLogObserver
 
 from twisted.python import log
@@ -77,7 +77,7 @@ def create_builder_factory():
                                            name='Set build branch'))
 
 
-    f.addStep(get_runconfig_legacy_step(posttrigger=False))
+    f.addStep(RunConfigCheckSteps(posttrigger=False))
 
     return f
 
@@ -181,7 +181,7 @@ def create_parent_builder_factory(buildername, waitname):
                                                  name='Set build branch'))
 
     # run-config
-    factory.addStep(get_runconfig_legacy_step(posttrigger=False))
+    factory.addStep(RunConfigCheckSteps(posttrigger=False))
 
     # trigger the buildsets contained in the nightly set
     def get_props_set():
@@ -211,7 +211,7 @@ def create_parent_builder_factory(buildername, waitname):
                                   waitForFinish=True,
                                   set_properties=get_props_set()))
 
-    factory.addStep(get_runconfig_legacy_step(posttrigger=True))
+    factory.addStep(RunConfigCheckSteps(posttrigger=True))
 
     factory.addStep(steps.ShellCommand(
         command=[

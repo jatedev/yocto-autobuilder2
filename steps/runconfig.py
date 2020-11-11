@@ -1,7 +1,8 @@
 from twisted.internet import defer
 from buildbot.plugins import steps, util
-from buildbot.process import buildstep
+from buildbot.process import buildstep, logobserver
 from buildbot.process.results import Results, SUCCESS, FAILURE, CANCELLED, WARNINGS, SKIPPED, EXCEPTION, RETRY
+from buildbot.steps import shell
 
 from yoctoabb.steps.observer import RunConfigLogObserver
 
@@ -139,3 +140,67 @@ def get_runconfig_legacy_step(posttrigger):
         timeout=16200)  # default of 1200s/20min is too short, use 4.5hrs
     return step
 
+def get_runconfig_step(name, stepname, phase, description, posttrigger):
+    step = RunConfigLogObserver(
+        command=get_runconfig_command(posttrigger) + ['--stepname', stepname, '--phase', phase],
+        name=name,
+        description=description,
+        logfiles=get_buildlogs(maxsteps),
+        lazylogfiles=True,
+        maxsteps=maxsteps,
+        timeout=16200)  # default of 1200s/20min is too short, use 4.5hrs
+    return step
+
+class RunConfigCheckSteps(shell.ShellCommand):
+    name = 'Check run-config steps to use'
+    descriptionDone = ['Checked which run-config approach to use']
+    haltOnFailure = False
+    flunkOnFailure = True
+    jsonFileName = util.Interpolate("%(prop:builddir)s/runconfig.json")
+    logfiles = {'json': jsonFileName}
+
+    def __init__(self, *args, **kwargs):
+        self.posttrigger = kwargs.pop("posttrigger")
+        self.command = get_runconfig_command(self.posttrigger)
+        self.command.append("--json-outputfile")
+        self.command.append(self.jsonFileName)
+        super().__init__(*args, **kwargs)
+
+    def start(self):
+        self.log_observer_json = logobserver.BufferLogObserver()
+        self.addLogObserver('json', self.log_observer_json)
+        return super().start()
+
+    def evaluateCommand(self, cmd):
+        # If the command fails, fall back to old style run-config execution
+        rc = super().evaluateCommand(cmd)
+        jsonconfig = self.getProperty("runconfig-json", None)
+        if rc == FAILURE or not jsonconfig:
+            steps = [get_runconfig_legacy_step(self.posttrigger)]
+        else:
+            steps = []
+            for s in jsonconfig:
+                name = "run-config-" + s['name'] + "-" + s['phase']
+                steps.append(get_runconfig_step(name, s['name'], s['phase'], name, self.posttrigger))
+        self.build.addStepsAfterCurrentStep(steps)
+        return SUCCESS
+
+    def commandComplete(self, cmd):
+        super().commandComplete(cmd)
+        logLines = self.log_observer_json.getStdout()
+        json_text = ''.join([line for line in logLines.splitlines()])
+        if not json_text:
+            return
+        try:
+            jsonconfig = json.loads(json_text)
+            self.setProperty("runconfig-json", jsonconfig)
+        except Exception as ex:
+            self._addToLog('stderr', 'ERROR: unable to parse data, exception: {}'.format(ex))
+
+    @defer.inlineCallbacks
+    def _addToLog(self, logName, message):
+        try:
+            log = self.getLog(logName)
+        except KeyError:
+            log = yield self.addLog(logName)
+        log.addStdout(message)
