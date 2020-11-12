@@ -13,23 +13,25 @@ from functools import partial
 # Monitor the step 1-X logs and stdio, collecting up any warnings and errors seen
 # and publish them at the end in their own 'logfile' for ease of access to the user
 #
-class RunConfigLogObserver(ShellCommand):
+class SimpleLogObserver(ShellCommand):
 
     warnOnWarnings = True
     warnOnFailure = True
     warnings = 0
     errors = 0
 
-    def __init__(self, python=None, maxsteps=10, *args, **kwargs):
-        ShellCommand.__init__(self, *args, **kwargs)
-        self.python = python
+    def __init__(self, maxsteps=10, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.warningLines = []
         self.errorLines = []
+        if "description" in kwargs:
+            self.description = kwargs["description"]
+        else:
+            self.description = "run-config"
         self.addLogObserver('stdio', logobserver.LineConsumerLogObserver(partial(self.logConsumer, 'stdio')))
-        for i in range(1, maxsteps):
-            for j in ['a', 'b', 'c', 'd']:
-                name = 'step' + str(i) + str(j)
-                self.addLogObserver(name, logobserver.LineConsumerLogObserver(partial(self.logConsumer, name)))
+
+    def describe(self, done=False):
+        return self.description
 
     def logConsumer(self, logname):
         while True:
@@ -42,8 +44,10 @@ class RunConfigLogObserver(ShellCommand):
                 self.errorLines.append(logname + ": " + line)
 
     def commandComplete(self, cmd):
-        self.addCompleteLog('warnings', '\n'.join(self.warningLines))
-        self.addCompleteLog('errors', '\n'.join(self.errorLines))
+        if self.warningLines:
+            self.addCompleteLog('warnings', '\n'.join(self.warningLines))
+        if self.errorLines:
+            self.addCompleteLog('errors', '\n'.join(self.errorLines))
 
     def evaluateCommand(self, cmd):
         if cmd.didFail() or self.errors:
@@ -51,3 +55,12 @@ class RunConfigLogObserver(ShellCommand):
         if self.warnings:
             return WARNINGS
         return SUCCESS
+
+class RunConfigLogObserver(SimpleLogObserver):
+
+    def __init__(self, maxsteps=10, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for i in range(1, maxsteps):
+            for j in ['a', 'b', 'c', 'd']:
+                name = 'step' + str(i) + str(j)
+                self.addLogObserver(name, logobserver.LineConsumerLogObserver(partial(self.logConsumer, name)))

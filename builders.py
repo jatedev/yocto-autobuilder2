@@ -4,7 +4,6 @@ from yoctoabb import config
 from yoctoabb.steps.writelayerinfo import WriteLayerInfo
 from yoctoabb.steps.runconfig import get_publish_dest, get_publish_resultdir, get_publish_name, RunConfigCheckSteps
 from buildbot.process.results import Results, SUCCESS, FAILURE, CANCELLED, WARNINGS, SKIPPED, EXCEPTION, RETRY
-from yoctoabb.steps.observer import RunConfigLogObserver
 
 from twisted.python import log
 

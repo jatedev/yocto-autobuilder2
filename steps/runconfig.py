@@ -4,7 +4,7 @@ from buildbot.process import buildstep, logobserver
 from buildbot.process.results import Results, SUCCESS, FAILURE, CANCELLED, WARNINGS, SKIPPED, EXCEPTION, RETRY
 from buildbot.steps import shell
 
-from yoctoabb.steps.observer import RunConfigLogObserver
+from yoctoabb.steps.observer import RunConfigLogObserver, SimpleLogObserver
 
 import json
 import datetime
@@ -141,13 +141,11 @@ def get_runconfig_legacy_step(posttrigger):
     return step
 
 def get_runconfig_step(name, stepname, phase, description, posttrigger):
-    step = RunConfigLogObserver(
+    step = SimpleLogObserver(
         command=get_runconfig_command(posttrigger) + ['--stepname', stepname, '--phase', phase],
         name=name,
         description=description,
-        logfiles=get_buildlogs(maxsteps),
         lazylogfiles=True,
-        maxsteps=maxsteps,
         timeout=16200)  # default of 1200s/20min is too short, use 4.5hrs
     return step
 
