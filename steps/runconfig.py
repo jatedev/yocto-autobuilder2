@@ -172,7 +172,15 @@ class RunConfigCheckSteps(shell.ShellCommand):
     def evaluateCommand(self, cmd):
         # If the command fails, fall back to old style run-config execution
         rc = super().evaluateCommand(cmd)
-        jsonconfig = self.getProperty("runconfig-json", None)
+        logLines = self.log_observer_json.getStdout()
+        json_text = ''.join([line for line in logLines.splitlines()])
+        jsonconfig = None
+        if json_text:
+            try:
+                jsonconfig = json.loads(json_text)
+            except Exception as ex:
+                self._addToLog('stderr', 'ERROR: unable to parse data, exception: {}'.format(ex))
+
         if rc == FAILURE or not jsonconfig:
             steps = [get_runconfig_legacy_step(self.posttrigger)]
         else:
@@ -185,18 +193,6 @@ class RunConfigCheckSteps(shell.ShellCommand):
                 steps.append(get_runconfig_step(name, s['name'], s['phase'], s['description'], self.posttrigger))
         self.build.addStepsAfterCurrentStep(steps)
         return SUCCESS
-
-    def commandComplete(self, cmd):
-        super().commandComplete(cmd)
-        logLines = self.log_observer_json.getStdout()
-        json_text = ''.join([line for line in logLines.splitlines()])
-        if not json_text:
-            return
-        try:
-            jsonconfig = json.loads(json_text)
-            self.setProperty("runconfig-json", jsonconfig)
-        except Exception as ex:
-            self._addToLog('stderr', 'ERROR: unable to parse data, exception: {}'.format(ex))
 
     @defer.inlineCallbacks
     def _addToLog(self, logName, message):
