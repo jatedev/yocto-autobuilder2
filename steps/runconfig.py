@@ -201,3 +201,17 @@ class RunConfigCheckSteps(shell.ShellCommand):
         except KeyError:
             log = yield self.addLog(logName)
         log.addStdout(message)
+
+class TargetPresent(shell.ShellCommand):
+    name = "Check if branch needs this target"
+    command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/target-present"), util.Property("buildername")]
+
+    def evaluateCommand(self, cmd):
+        # If the command fails, fall back to old style run-config execution
+        rc = super().evaluateCommand(cmd)
+        if rc != SUCCESS:
+            self.finished(SKIPPED)
+            self.build.results = SKIPPED
+            self.descriptionDone = "Target not present in branch configuration"
+            self.build.buildFinished(["Target not present in branch configuration"], SKIPPED)
+        return SUCCESS

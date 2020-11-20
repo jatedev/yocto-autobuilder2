@@ -2,7 +2,7 @@ from buildbot.plugins import *
 
 from yoctoabb import config
 from yoctoabb.steps.writelayerinfo import WriteLayerInfo
-from yoctoabb.steps.runconfig import get_publish_dest, get_publish_resultdir, get_publish_name, RunConfigCheckSteps
+from yoctoabb.steps.runconfig import get_publish_dest, get_publish_resultdir, get_publish_name, RunConfigCheckSteps, TargetPresent
 from buildbot.process.results import Results, SUCCESS, FAILURE, CANCELLED, WARNINGS, SKIPPED, EXCEPTION, RETRY
 
 from twisted.python import log
@@ -53,6 +53,7 @@ def create_builder_factory():
         mode='incremental',
         haltOnFailure=True,
         name='Fetch yocto-autobuilder-helper'))
+    f.addStep(TargetPresent())
     f.addStep(steps.SetProperties(properties=ensure_props_set))
     f.addStep(WriteLayerInfo(name='Write main layerinfo.json', haltOnFailure=True))
     f.addStep(steps.ShellCommand(
