@@ -211,6 +211,7 @@ class TargetPresent(shell.ShellCommand):
         rc = super().evaluateCommand(cmd)
         if rc != SUCCESS:
             self.descriptionDone = "Target not present in branch configuration"
+            self.build.results = SKIPPED
             # Run no further steps, terminate the build
             self.build.terminate = True
             return SKIPPED
