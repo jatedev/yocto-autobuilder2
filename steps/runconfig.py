@@ -210,8 +210,8 @@ class TargetPresent(shell.ShellCommand):
         # If the command fails, fall back to old style run-config execution
         rc = super().evaluateCommand(cmd)
         if rc != SUCCESS:
-            self.finished(SKIPPED)
-            self.build.results = SKIPPED
             self.descriptionDone = "Target not present in branch configuration"
-            self.build.buildFinished(["Target not present in branch configuration"], SKIPPED)
+            # Run no further steps, terminate the build
+            self.build.terminate = True
+            return SKIPPED
         return SUCCESS
