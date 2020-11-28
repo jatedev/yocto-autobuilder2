@@ -15,10 +15,6 @@
 #
 # Copyright Buildbot Team Members
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 try:
     from buildbot_pkg import setup_www_plugin
 except ImportError:
@@ -32,7 +28,6 @@ setup_www_plugin(
     author=u'Richard Purdie',
     author_email=u'richard.purdie@linuxfoundation.org',
     url='http://autobuilder.yoctoproject.org/',
-    license='MIT',
     packages=['yocto_console_view'],
     package_data={
         '': [
@@ -44,4 +39,7 @@ setup_www_plugin(
         [buildbot.www]
         console_view = yocto_console_view:ep
     """,
+    classifiers=[
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)'
+    ],
 )

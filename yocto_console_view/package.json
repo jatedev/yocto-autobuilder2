@@ -1,11 +1,25 @@
 {
     "name": "yocto-console-view",
-    "engines": {
-        "node": ">=0.10.0",
-        "npm": ">=1.4.0"
+    "plugin_name": "console_view",
+    "private": true,
+    "main": "yocto_console_view/static/scripts.js",
+    "style": "yocto_console_view/static/styles.js",
+    "scripts": {
+        "build": "rimraf yocto_console_view/static && webpack --bail --progress --profile --env prod",
+        "build-dev": "rimraf yocto_console_view/static && webpack --bail --progress --profile --env dev",
+        "dev": "webpack --bail --progress --profile --watch --env dev"
+    },
+    "devDependencies": {
+        "angular-mocks": "^1.7.9",
+        "buildbot-build-common": ">0.1",
+        "lodash": "^4.17.11",
+        "rimraf": "^2.6.3"
     },
     "dependencies": {
-        "guanlecoja": "~0.8.3",
-        "gulp": "3.9.0"
+        "@uirouter/angularjs": "^1.0.15",
+        "angular": "^1.7.9",
+        "angular-animate": "^1.7.9",
+        "buildbot-data-js": ">0.1",
+        "guanlecoja-ui": ">0.1"
     }
 }
