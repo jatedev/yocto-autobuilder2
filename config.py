@@ -48,31 +48,10 @@ repos = {
 }
 
 trigger_builders_wait_shared = [
-    "qemuarm", "qemuarm-alt", "qemuarm64", "qemuarm-oecore",
-    "qemumips", "qemumips64",
-    "multilib",
-    "qemuppc",
-    "qemux86", "qemux86-alt",
-    "qemux86-64", "qemux86-64-alt",
-    "qemux86-64-x32", "qemux86-world",
-    "edgerouter",
-    "mpc8315e-rdb",
-    "genericx86", "genericx86-alt",
-    "genericx86-64", "genericx86-64-alt",
-    "beaglebone", "beaglebone-alt",
-    "pkgman-non-rpm",
-    "pkgman-rpm-non-rpm", "pkgman-deb-non-deb",
-    "build-appliance", "buildtools",
-    "non-gpl3", "wic",
-    "poky-tiny", "musl-qemux86", "musl-qemux86-64", "no-x11",
-    "qa-extras", "qa-extras2",
-    "check-layer", "meta-mingw",
-    "qemuarm64-armhost"
+    "poky-tiny", "buildtools", "check-layer"
 ]
 
-trigger_builders_wait_quick = trigger_builders_wait_shared + [
-    "oe-selftest", "qemux86-64-ptest-fast", "qemuarm64-ptest-fast"
-]
+trigger_builders_wait_quick = trigger_builders_wait_shared
 
 trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
@@ -152,22 +131,22 @@ notify_on_missing = None
 
 # Some builders should only run on specific workers (host OS dependent)
 builder_to_workers = {
-    "bringup": "example-worker",
-    "pkgman-rpm-non-rpm": "example-worker",
-    "pkgman-deb-non-deb": "example-worker",
-    "oe-selftest-ubuntu": "example-worker",
-    "oe-selftest-debian": "example-worker",
-    "oe-selftest-fedora": "example-worker",
-    "oe-selftest-opensuse": "example-worker",
-    "oe-selftest-centos": "example-worker",
-    "meta-mingw": "example-worker",
-    "buildperf-ubuntu1604": "example-worker",
-    "buildperf-centos7": "example-worker",
-    "qemuarm-armhost": "example-worker",
-    "qemuarm64-ptest": "example-worker",
-    "qemuarm64-ptest-fast": "example-worker",
-    "qemuarm64-ltp": "example-worker",
-    "qemuarm64-armhost": "example-worker",
-    "auh" : "example-worker",
-    "default": "example-worker"
+    "bringup": workers,
+    "pkgman-rpm-non-rpm": workers,
+    "pkgman-deb-non-deb": workers,
+    "oe-selftest-ubuntu": workers,
+    "oe-selftest-debian": workers,
+    "oe-selftest-fedora": workers,
+    "oe-selftest-opensuse": workers,
+    "oe-selftest-centos": workers,
+    "meta-mingw": workers,
+    "buildperf-ubuntu1604": workers,
+    "buildperf-centos7": workers,
+    "qemuarm-armhost": workers,
+    "qemuarm64-ptest": workers,
+    "qemuarm64-ptest-fast": workers,
+    "qemuarm64-ltp": workers,
+    "qemuarm64-armhost": workers,
+    "auh" : workers,
+    "default": workers
 }

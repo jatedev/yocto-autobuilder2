@@ -312,21 +312,21 @@ schedulers.append(sched.Nightly(name='nightly-full', branch='master', properties
                   builderNames=['a-full'], hour=1, minute=0, dayOfWeek=6))
 
 # Run the build performance tests at 3am, 9am, 3pm and 9pm
-schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='master', properties=parent_default_props('buildperf-ubuntu1604'),
-                  builderNames=['buildperf-ubuntu1604'], hour=[3,9,15,21], minute=0))
-schedulers.append(sched.Nightly(name='nightly-buildperf-centos7', branch='master', properties=parent_default_props('buildperf-centos7'),
-                  builderNames=['buildperf-centos7'], hour=[3,9,15,21], minute=0))
+#schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='master', properties=parent_default_props('buildperf-ubuntu1604'),
+#                  builderNames=['buildperf-ubuntu1604'], hour=[3,9,15,21], minute=0))
+#schedulers.append(sched.Nightly(name='nightly-buildperf-centos7', branch='master', properties=parent_default_props('buildperf-centos7'),
+#                  builderNames=['buildperf-centos7'], hour=[3,9,15,21], minute=0))
 
 # Run the AUH on the 15th of every month
-schedulers.append(sched.Nightly(name='nightly-auh', branch='master', properties=parent_default_props('auh'),
-                  builderNames=['auh'], dayOfMonth=15, hour=1, minute=0))
+#schedulers.append(sched.Nightly(name='nightly-auh', branch='master', properties=parent_default_props('auh'),
+#                  builderNames=['auh'], dayOfMonth=15, hour=1, minute=0))
 
 # If any of our sphinx docs branches change, trigger a build
-schedulers.append(sched.AnyBranchScheduler(name="yocto-docs-changed",
-            change_filter=util.ChangeFilter(project=["yocto-docs"], branch=["master", "master-next", "gatesgarth", "transition"]),
-            codebases = ['', 'yocto-docs', 'bitbake'],
-            treeStableTimer=60,
-            builderNames=["docs"]))
+#schedulers.append(sched.AnyBranchScheduler(name="yocto-docs-changed",
+#            change_filter=util.ChangeFilter(project=["yocto-docs"], branch=["master", "master-next", "gatesgarth", "transition"]),
+#            codebases = ['', 'yocto-docs', 'bitbake'],
+#            treeStableTimer=60,
+#            builderNames=["docs"]))
 
 # If bitbake's sphinx docs change, trigger a build
 def isbitbakeDocFile(change):
@@ -334,10 +334,10 @@ def isbitbakeDocFile(change):
         if "doc/" in f:
             return True
     return False
-schedulers.append(sched.AnyBranchScheduler(name="bitbake-docs-changed",
-            change_filter=util.ChangeFilter(project=["bitbake"], branch=["master", "1.48"]),
-            codebases = ['', 'yocto-docs', 'bitbake'],
-            fileIsImportant=isbitbakeDocFile,
-            onlyImportant=True,
-            treeStableTimer=60,
-            builderNames=["docs"]))
+#schedulers.append(sched.AnyBranchScheduler(name="bitbake-docs-changed",
+#            change_filter=util.ChangeFilter(project=["bitbake"], branch=["master", "1.48"]),
+#            codebases = ['', 'yocto-docs', 'bitbake'],
+#            fileIsImportant=isbitbakeDocFile,
+#            onlyImportant=True,
+#            treeStableTimer=60,
+#            builderNames=["docs"]))
