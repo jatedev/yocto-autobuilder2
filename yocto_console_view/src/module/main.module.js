@@ -142,16 +142,16 @@ class Console {
                         const branch = this.getBuildProperty(properties[0], 'yp_build_branch');
                         if (branch != null) {
                             this.branchmapping[buildid] = branch;
+                            change = true;
                         }
-                        return change = true;
+                    }
+                    if (change && (this.onchange_debounce == null)) {
+                        this.onchange_debounce = this.$timeout(this._onChange, 100);
                     }
                 };
-                if (change && (this.onchange_debounce == null)) {
-                    this.onchange_debounce = this.$timeout(this._onChange, 100);
-                }
             }
             if (change && (this.onchange_debounce == null)) {
-                return this.onchange_debounce = this.$timeout(this._onChange, 100);
+                this.onchange_debounce = this.$timeout(this._onChange, 100);
             }
         };
     }
