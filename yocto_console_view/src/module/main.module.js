@@ -101,7 +101,7 @@ class Console {
         this.$scope.branchmapping = (this.branchmapping = {});
 
         this.$scope.builds = (this.builds = this.dataAccessor.getBuilds({
-            property: ["yp_build_revision", "yp_build_branch", "reason"],
+            property: ["yp_build_revision", "yp_build_branch", "reason", "publish_destination"],
             limit: this.buildLimit,
             order: '-started_at'
         }));
@@ -437,6 +437,9 @@ class Console {
             }
             if ((build.properties != null ? build.properties.reason : undefined) != null) {
                 change.reason = build.properties.reason[0];
+            }
+            if ((build.properties != null ? build.properties.publish_destination : undefined) != null) {
+                change.publishurl = build.properties.publish_destination[0].replace("/srv/autobuilder/autobuilder.yoctoproject.org/", "https://autobuilder.yocto.io/");
             }
         } else {
             rev = `Unresolved Revision`;
