@@ -465,7 +465,9 @@ class Console {
             change.caption = rev;
         }
 
-        return change.buildersById[build.builderid].builds.push(build);
+        if (change.buildersById[build.builderid].builds.indexOf(build) == -1) {
+            change.buildersById[build.builderid].builds.push(build);
+        }
     }
 
     makeFakeChange(revision, when_timestamp, comments) {
