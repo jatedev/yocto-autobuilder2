@@ -185,8 +185,8 @@ class Console {
 
         this.sortBuildersByTags(this.all_builders);
 
-        if (this.changesBySSID == null) { this.changesBySSID = {}; }
-        if (this.changesByRevision == null) { this.changesByRevision = {}; }
+        this.changesBySSID = {};
+        this.changesByRevision = {};
         for (change of Array.from(this.changes)) {
             this.changesBySSID[change.sourcestamp.ssid] = change;
             this.changesByRevision[change.revision] = change;
@@ -417,12 +417,6 @@ class Console {
             if ((change == null)) {
                 change = this.makeFakeChange(rev, build.started_at, rev);
             }
-            if ((buildset != null) && (buildset.parent_buildid != null)) {
-                oldrev = `Unresolved ${buildset.parent_buildid}`;
-                delete this.changesBySSID[oldrev];
-            }
-            oldrev = `Unresolved ${build.builderid}-${build.buildid}`;
-            delete this.changesBySSID[oldrev];
 
             change.caption = "Commit";
             if ((build.properties != null ? build.properties.yp_build_branch : undefined) != null) {
@@ -445,27 +439,14 @@ class Console {
                 change.reason = build.properties.reason[0];
             }
         } else {
-            if ((buildset != null) && (buildset.parent_buildid != null)) {
-                rev = `Unresolved ${buildset.parent_buildid}`;
-                if ((change == null)) {
-                    change = this.changesBySSID[rev];
-                }
-                if ((change == null)) {
-                    oldrev = `Unresolved ${build.builderid}-${build.buildid}`;
-                    delete this.changesBySSID[oldrev];
-                    change = this.makeFakeChange(rev, build.started_at, rev);
-                }
+            rev = `Unresolved Revision`;
+            if ((change == null)) {
+                change = this.changesBySSID[rev];
             }
             if ((change == null)) {
-                rev = `Unresolved ${build.builderid}-${build.buildid}`;
-                if ((change == null)) {
-                    change = this.changesBySSID[rev];
-                }
-                if ((change == null)) {
-                    change = this.makeFakeChange(rev, build.started_at, rev);
-                }
+                change = this.makeFakeChange(rev, build.started_at, rev);
+                change.caption = rev;
             }
-            change.caption = rev;
         }
 
         if (change.buildersById[build.builderid].builds.indexOf(build) == -1) {
