@@ -192,6 +192,7 @@ def create_parent_builder_factory(buildername, waitname):
     factory.addStep(RunConfigCheckSteps(posttrigger=False))
 
     # trigger the buildsets contained in the nightly set
+    # cascade yp_build_* since it makes the UI cleaner for skipped builds
     def get_props_set():
         set_props = {
             "sharedrepolocation": util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir)),
@@ -202,7 +203,9 @@ def create_parent_builder_factory(buildername, waitname):
             "publish_destination": util.Property("publish_destination"),
             "yocto_number": util.Property("yocto_number"),
             "milestone_number": util.Property("milestone_number"),
-            "rc_number": util.Property("rc_number")
+            "rc_number": util.Property("rc_number"),
+            "yp_build_revision": util.Property("yp_build_revision"),
+            "yp_build_branch": util.Property("yp_build_branch")
         }
 
         for repo in config.buildertorepos[buildername]:
