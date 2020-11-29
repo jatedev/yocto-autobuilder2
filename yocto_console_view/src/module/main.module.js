@@ -146,11 +146,13 @@ class Console {
                         }
                     }
                     if (change && (this.onchange_debounce == null)) {
+                        console.log("onNew change props");
                         this.onchange_debounce = this.$timeout(this._onChange, 100);
                     }
                 };
             }
             if (change && (this.onchange_debounce == null)) {
+                console.log("onNew change");
                 this.onchange_debounce = this.$timeout(this._onChange, 100);
             }
         };
@@ -173,6 +175,7 @@ class Console {
     }
 
     _onChange() {
+        console.log("onChange called");
         let build, change;
         this.onchange_debounce = undefined;
         // we only display builders who actually have builds
