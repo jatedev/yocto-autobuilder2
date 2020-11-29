@@ -43,8 +43,6 @@ class _releaseselectorfield {
 
         gatherFields(rootfield.rootfield.fields);
 
-        console.log(fields_ref);
-
         // when our field change, we update the fields that we are suppose to
         $scope.$watch("field.value", function(n, o) {
 
@@ -54,7 +52,6 @@ class _releaseselectorfield {
                     const result = [];
                     for (let k in selector) {
                         const v = selector[k];
-                        console.log(k);
                         result.push(fields_ref[k].value = v);
                     }
                     return result;
