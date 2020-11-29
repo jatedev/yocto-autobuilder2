@@ -109,7 +109,10 @@ class Console {
         this.buildrequests = this.dataAccessor.getBuildrequests({limit: this.buildLimit, order: '-submitted_at'});
         this.buildsets = this.dataAccessor.getBuildsets({limit: this.buildLimit, order: '-submitted_at'});
 
-        this.builds.onChange = (this.changes.onChange = (this.buildrequests.onChange = (this.buildsets.onChange = this.onChange)));
+        this.builds.onChange = this.onChange;
+        this.changes.onChange = this.onChange;
+        this.buildrequests.onChange = this.onChange;
+        this.buildsets.onChange = this.onChange;
 
         this.builds.onNew = build => {
             let change = false;
@@ -165,7 +168,7 @@ class Console {
             return;
         }
         if ((this.onchange_debounce == null)) {
-            return this.onchange_debounce = this.$timeout(this._onChange, 100);
+            this.onchange_debounce = this.$timeout(this._onChange, 100);
         }
     }
 
@@ -193,28 +196,19 @@ class Console {
         }
 
         this.filtered_changes = [];
-        return (() => {
-            const result = [];
-            for (let ssid in this.changesBySSID) {
-                change = this.changesBySSID[ssid];
-                if (change.comments) {
-                    change.subject = change.comments.split("\n")[0];
-                }
-                result.push((() => {
-                    const result1 = [];
-                    for (let builder of Array.from(change.builders)) {
-                        if (builder.builds.length > 0) {
-                            this.filtered_changes.push(change);
-                            break;
-                        } else {
-                            result1.push(undefined);
-                        }
-                    }
-                    return result1;
-                })());
+
+        for (let ssid in this.changesBySSID) {
+            change = this.changesBySSID[ssid];
+            if (change.comments) {
+                change.subject = change.comments.split("\n")[0];
             }
-            return result;
-        })();
+            for (let builder of Array.from(change.builders)) {
+                if (builder.builds.length > 0) {
+                    this.filtered_changes.push(change);
+                    break;
+                }
+            }
+        }
     }
     /*
      * Sort builders by tags
@@ -232,7 +226,7 @@ class Console {
         for (let builder of Array.from(all_builders)) {
             if (builder.hasBuild) {
                 builders_with_builds.push(builder);
-                builderids_with_builds += "." + builder.builderid;
+                builderids_with_builds += `.${builder.builderid}`;
             }
         }
 
@@ -379,15 +373,11 @@ class Console {
     populateChange(change) {
         change.builders = [];
         change.buildersById = {};
-        return (() => {
-            const result = [];
-            for (let builder of Array.from(this.builders)) {
-                builder = {builderid: builder.builderid, name: builder.name, builds: []};
-                change.builders.push(builder);
-                result.push(change.buildersById[builder.builderid] = builder);
-            }
-            return result;
-        })();
+        for (let builder of Array.from(this.builders)) {
+            builder = {builderid: builder.builderid, name: builder.name, builds: []};
+            change.builders.push(builder);
+            change.buildersById[builder.builderid] = builder;
+        }
     }
     /*
      * Match builds with a change
@@ -405,6 +395,9 @@ class Console {
         if  ((buildset != null) && (buildset.sourcestamps != null)) {
             for (let sourcestamp of Array.from(buildset.sourcestamps)) {
                 change = this.changesBySSID[sourcestamp.ssid];
+                if (change != null) {
+                    break;
+                }
             }
         }
 
