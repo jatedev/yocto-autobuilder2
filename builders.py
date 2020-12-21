@@ -29,6 +29,7 @@ def ensure_props_set(props):
     """
     return {
         "sharedrepolocation": props.getProperty("sharedrepolocation", ""),
+        "swat_monitor": props.getProperty("swat_monitor", True),
         "build_type": props.getProperty("build_type", "quick"),
         "is_release": props.getProperty("is_release", False),
         "buildappsrcrev": props.getProperty("buildappsrcrev", ""),

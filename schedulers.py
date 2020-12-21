@@ -69,6 +69,10 @@ def props_for_builder(builder):
     """
 
     props = []
+    props.append(util.BooleanParameter(
+        name="swat_monitor",
+        label="Should SWAT monitor this build?",
+        default=True))
     if builder == 'build-appliance':
         props.append(buildappsrcrev_param())
     if builder in ['build-appliance', 'buildtools', 'eclipse-plugin-neon', 'eclipse-plugin-oxygen']:
@@ -259,6 +263,10 @@ def parent_scheduler(target):
                 'branch_oecore': 'morty',
               }
             }),
+        util.BooleanParameter(
+            name="swat_monitor",
+            label="Should SWAT monitor this build?",
+            default=True),
         buildappsrcrev_param(),
         util.BooleanParameter(
             name="is_release",
