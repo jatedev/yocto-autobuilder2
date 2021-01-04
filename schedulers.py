@@ -331,7 +331,7 @@ schedulers.append(sched.Nightly(name='nightly-auh', branch='master', properties=
 
 # If any of our sphinx docs branches change, trigger a build
 schedulers.append(sched.AnyBranchScheduler(name="yocto-docs-changed",
-            change_filter=util.ChangeFilter(project=["yocto-docs"], branch=["master", "master-next", "gatesgarth", "transition"]),
+            change_filter=util.ChangeFilter(project=["yocto-docs"], branch=["master", "master-next", "gatesgarth", "dunfell", "transition"]),
             codebases = ['', 'yocto-docs', 'bitbake'],
             treeStableTimer=60,
             builderNames=["docs"]))
@@ -343,7 +343,7 @@ def isbitbakeDocFile(change):
             return True
     return False
 schedulers.append(sched.AnyBranchScheduler(name="bitbake-docs-changed",
-            change_filter=util.ChangeFilter(project=["bitbake"], branch=["master", "1.48"]),
+            change_filter=util.ChangeFilter(project=["bitbake"], branch=["master", "1.48", "1.46"]),
             codebases = ['', 'yocto-docs', 'bitbake'],
             fileIsImportant=isbitbakeDocFile,
             onlyImportant=True,
