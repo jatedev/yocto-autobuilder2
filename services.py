@@ -45,3 +45,10 @@ services = []
 #                    "Rpurdie", "Somepass77", "Rpurdie/TestBuildLog",
 #                    "RP Test Cluster")
 #)
+
+
+from yoctoabb.reporters import swatbot
+services.append(
+    swatbot.SwatBot("http://localhost:8000/")
+)
+
