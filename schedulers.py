@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
 from buildbot.plugins import schedulers as sched
 from buildbot.plugins import util
 from yoctoabb import config

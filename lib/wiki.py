@@ -1,11 +1,13 @@
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
 '''
 Created on Dec 13, 2016
 
 __author__ = "Joshua Lock"
 __copyright__ = "Copyright 2016, Intel Corp."
 __credits__ = ["Joshua Lock"]
-__license__ = "GPL"
-__version__ = "2.0"
 __maintainer__ = "Joshua Lock"
 __email__ = "joshua.g.lock@intel.com"
 '''

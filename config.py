@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
 # ## Build configuration, tied to config.json in yocto-autobuilder-helpers
 # Repositories used by each builder
 buildertorepos = {

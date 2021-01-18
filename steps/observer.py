@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
 from twisted.python import log
 
 from buildbot.process import logobserver

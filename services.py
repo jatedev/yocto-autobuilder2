@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
 from buildbot.plugins import reporters
 
 from yoctoabb import config

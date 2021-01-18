@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
 from buildbot.reporters import utils
 from buildbot.util import service
 from twisted.internet import defer, threads

@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
 from twisted.internet import defer
 from buildbot.process import buildstep
 import json
