@@ -8,8 +8,6 @@ Created on Dec 13, 2016
 __author__ = "Joshua Lock"
 __copyright__ = "Copyright 2016, Intel Corp."
 __credits__ = ["Joshua Lock"]
-__maintainer__ = "Joshua Lock"
-__email__ = "joshua.g.lock@intel.com"
 '''
 
 import codecs
