@@ -35,3 +35,8 @@ services = []
 #                     "User", "password", "LogPage",
 #                     "Production Cluster")
 # )
+
+# from yoctoabb.reporters import swatbot
+# services.append(
+#     swatbot.SwatBot("http://localhost:8000/", "buildbot-notifier", "password")
+# )
