@@ -184,11 +184,15 @@ class SwatBotURI(object):
             urls = []
             for l in logs:
                 urls.append('%s/steps/%s/logs/%s' % (build['url'], step_number, l['name']))
+            if urls:
+                urls = " ".join(urls)
+            else:
+                urls = ""
             payload = {
                 'data': {
                     'type': 'StepFailure',
                     'attributes': {
-                        "urls": " ".join(urls),
+                        "urls": urls,
                         "status": s['results'],
                         "stepname": s['name'],
                         "stepnumber": s['number'],
