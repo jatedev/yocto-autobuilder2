@@ -1,6 +1,6 @@
 The Yocto Project Autobuilder has detected a {{ status_detected }} on
 builder {{ buildername }}.
-{% if build.properties.swat_monitor[0] %}
+{% if 'swat_monitor' in build.properties and build.properties.swat_monitor[0] %}
 These build failures need to be triaged by the Swat team.
 {% else %}
 These build failures no not need to be triaged by the Swat team.y
