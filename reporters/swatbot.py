@@ -52,7 +52,7 @@ class SwatBotURI(object):
         if req.status_code == requests.codes.ok:
             data = req.json()['data']
             if len(data) > 1:
-                log.err("More than one buildid matches?: %s" % str(data))
+                log.err("SwatBot: More than one buildid matches?: %s" % str(data))
                 return None
             elif len(data) == 1:
                 return data[0]['id']
@@ -82,15 +82,15 @@ class SwatBotURI(object):
             try:
                 req = self.client.post(url, json=payload, timeout=self.TIMEOUT, headers=self.headers)
             except (requests.exceptions.RequestException, requests.exceptions.Timeout):
-                log.err("Unexpected server response exception")
+                log.err("SwatBot: Unexpected server response exception")
                 return None
             if req.status_code != requests.codes.created:
-                log.err("Couldn't create: %s (%s)" % (str(req.status_code), str(req.json())))
+                log.err("SwatBot: Couldn't create: %s (%s)" % (str(req.status_code), str(req.json())))
                 return None
             data = req.json()['data']
             return data['id']
         if not dbid:
-            log.err("Unexpected server response: %s (%s)" % (str(req.status_code), str(req.json())))
+            log.err("SwatBot: Unexpected server response: %s (%s)" % (str(req.status_code), str(req.json())))
             return None
 
         return dbid
@@ -101,17 +101,17 @@ class SwatBotURI(object):
         dbid = None
         collectionid = self.find_build_collection(build)
         if not collectionid:
-            log.err("Couldn't find BuildCollection database ID")
+            log.err("SwatBot: Couldn't find BuildCollection database ID")
             return False
 
         req = self.client.get(url + "?buildid=" + str(build['buildid']), timeout=self.TIMEOUT, headers=self.headers)
         if req.status_code == requests.codes.ok:
             data = req.json()['data']
             if len(data) > 1:
-                log.err("More than one buildid matches?: %s" % str(data))
+                log.err("SwatBot: More than one buildid matches?: %s" % str(data))
                 return False
             elif len(data) == 1:
-                log.err("Build already exists?: %s" % str(data))
+                log.err("SwatBot: Build already exists?: %s" % str(data))
                 return False
 
         payload = {
@@ -133,7 +133,7 @@ class SwatBotURI(object):
 
         req = self.client.post(url, json=payload, timeout=self.TIMEOUT, headers=self.headers)
         if req.status_code != requests.codes.created:
-            log.err("Couldn't create: %s (%s)" % (str(req.status_code), str(req.json())))
+            log.err("SwatBot: Couldn't create: %s (%s)" % (str(req.status_code), str(req.json())))
             return False
         return True
 
@@ -141,12 +141,12 @@ class SwatBotURI(object):
     def update_build(self, build, master):
         req = self.client.get(self.uri + "rest/build/?buildid=" + str(build['buildid']), timeout=self.TIMEOUT, headers=self.headers)
         if req.status_code != requests.codes.ok:
-            log.err("Couldn't find build to update: %s (%s)" % (str(req.status_code), str(req.json())))
+            log.err("SwatBot: Couldn't find build to update: %s (%s)" % (str(req.status_code), str(req.json())))
             return False
 
         data = req.json()['data']
         if len(data) != 1:
-            log.err("More than one buildid matches?: %s" % str(data))
+            log.err("SwatBot: More than one buildid matches?: %s" % str(data))
             return False
 
         dbid = data[0]['id']
@@ -167,7 +167,7 @@ class SwatBotURI(object):
 
         req = self.client.put(url, json=payload, timeout=self.TIMEOUT, headers=self.headers)
         if req.status_code != requests.codes.ok:
-            log.err("Couldn't update record: %s %s (%s)" % (str(build), str(req.status_code), str(req.json())))
+            log.err("SwatBot: Couldn't update record: %s %s (%s)" % (str(build), str(req.status_code), str(req.json())))
             return False
 
         for s in build['steps']:
@@ -206,7 +206,7 @@ class SwatBotURI(object):
 
             req = self.client.post(self.uri + "rest/stepfailure/", json=payload, timeout=self.TIMEOUT, headers=self.headers)
             if req.status_code != requests.codes.created:
-                log.err("Couldn't create failure entry: %s %s (%s)" % (str(s), str(req.status_code), str(req.headers)))
+                log.err("SwatBot: Couldn't create failure entry: %s %s (%s)" % (str(s), str(req.status_code), str(req.headers)))
         return True
 
 
@@ -247,13 +247,13 @@ class SwatBot(service.BuildbotService):
     @defer.inlineCallbacks
     def buildStarted(self, key, build):
         yield utils.getDetailsForBuild(self.master, build, **self.neededDetails)
-        #log.err("wkl: buildStarted %s %s" % (key, pprint.pformat(build)))
-
+        #log.err("SwatBot: buildStarted %s %s" % (key, pprint.pformat(build)))
         self.helper.add_build(build)
 
     # Assume we only have a parent, doesn't handle builds nested more than one level.
     @defer.inlineCallbacks
     def buildFinished(self, key, build):
         yield utils.getDetailsForBuild(self.master, build, **self.neededDetails)
-        #log.err("wkl: buildFinished %s %s" % (key, pprint.pformat(build)))
+        #log.err("SwatBot: buildFinished %s %s" % (key, pprint.pformat(build)))
         yield self.helper.update_build(build, self.master)
+
