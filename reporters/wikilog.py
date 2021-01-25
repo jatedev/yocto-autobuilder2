@@ -90,16 +90,16 @@ class WikiLog(service.BuildbotService):
 
         # Only run the logging code for builds in the monitored_parents list, or builds with
         # failures (to try and cut down on wiki noise)
-        log = False
+        havelog = False
         headerpresent = False
         if build['results'] in [FAILURE, EXCEPTION, WARNINGS]:
-            log = True
+            havelog = True
         if (parent and parent['builder']['name'] in monitored_parents) or \
                 (build['builder']['name'] in monitored_parents):
-            log = True
+            havelog = True
             headerpresent = True
 
-        if not log:
+        if not havelog:
             return
 
         if not headerpresent:
