@@ -206,7 +206,9 @@ class SwatBotURI(object):
 
             req = self.client.post(self.uri + "rest/stepfailure/", json=payload, timeout=self.TIMEOUT, headers=self.headers)
             if req.status_code != requests.codes.created:
-                log.err("SwatBot: Couldn't create failure entry: %s %s (%s)" % (str(s), str(req.status_code), str(req.headers)))
+                log.err("SwatBot: Couldn't create failure entry: Step data: %s" % (str(s)))
+                log.err("SwatBot: Couldn't create failure entry: Payload: %s" % (str(payload)))
+                log.err("SwatBot: Couldn't create failure entry: %s %s" % (str(req.status_code), str(req.headers)))
         return True
 
 
