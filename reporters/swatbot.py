@@ -74,7 +74,7 @@ class SwatBotURI(object):
                 payload['data']['attributes']['reason'] = build['properties']['reason'][0]
             if 'owner' in build['properties'] and build['properties']['owner'][0]:
                 payload['data']['attributes']['owner'] = build['properties']['owner'][0]
-            if 'swat_monitor' build['properties'] and build['properties']['swat_monitor'][0]:
+            if 'swat_monitor' in build['properties'] and build['properties']['swat_monitor'][0]:
                 payload['data']['attributes']['forswat'] = True
             else:
                 payload['data']['attributes']['forswat'] = False
