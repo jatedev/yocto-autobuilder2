@@ -51,6 +51,7 @@ def repos_for_builder(buildername):
 
 def parent_default_props(buildername):
     props = {}
+    props["swat_monitor"] = True
     repos = config.buildertorepos.get(buildername)
     if not repos:
         repos = config.buildertorepos["default"]
