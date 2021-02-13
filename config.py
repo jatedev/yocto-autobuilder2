@@ -75,12 +75,13 @@ trigger_builders_wait_shared = [
 ]
 
 trigger_builders_wait_quick = trigger_builders_wait_shared + [
-    "oe-selftest", "qemux86-64-ptest-fast", "qemuarm64-ptest-fast"
+    "oe-selftest", "reproducible", "qemux86-64-ptest-fast", "qemuarm64-ptest-fast"
 ]
 
 trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
     "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-centos",
+    "reproducible-ubuntu", "reproducible-debian", "reproducible-fedora", "reproducible-centos",
     "qemux86-64-ptest", "qemux86-64-ltp", "qemuarm64-ptest", "qemuarm64-ltp", "meta-intel", "meta-arm"
 ]
 
