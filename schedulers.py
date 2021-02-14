@@ -110,15 +110,28 @@ for builder in config.subbuilders:
         buttonName="Force Build"))
 
 @util.renderer
-def builderNamesFromConfig(props):
+def builderNamesFromConfigQuick(props):
+    #log.msg("builderNames: Sourcestamp %s, props %s" % (str(props.sourcestamps), str(props)))
+    yp_branch = props.sourcestamps[0]['branch']
+
+    builders = config.trigger_builders_wait_quick
+    for b in config.trigger_builders_wait_quick_releases:
+        if yp_branch and yp_branch.startswith(b):
+            log.msg("builderNames: Filtering branch %s due to entry %s" % (str(yp_branch), str(b)))
+            builders = config.trigger_builders_wait_quick_releases[b]
+
+    return builders
+
+@util.renderer
+def builderNamesFromConfigFull(props):
     #log.msg("builderNames: Sourcestamp %s, props %s" % (str(props.sourcestamps), str(props)))
     yp_branch = props.sourcestamps[0]['branch']
 
     builders = config.trigger_builders_wait_full
-    for b in config.trigger_builders_wait_releases:
+    for b in config.trigger_builders_wait_full_releases:
         if yp_branch and yp_branch.startswith(b):
             log.msg("builderNames: Filtering branch %s due to entry %s" % (str(yp_branch), str(b)))
-            builders = config.trigger_builders_wait_releases[b]
+            builders = config.trigger_builders_wait_full_releases[b]
 
     # Only run performance runs on release builds
     if props.getProperty("is_release", False):
@@ -134,10 +147,10 @@ class ourTriggerable(sched.Triggerable):
 
 # nightly builder triggers various other builders
 wait_quick = ourTriggerable(name="wait-quick",
-                         builderNames=config.trigger_builders_wait_quick)
+                         builderNames=builderNamesFromConfigQuick)
 schedulers.append(wait_quick)
 wait_full = ourTriggerable(name="wait-full",
-                         builderNames=builderNamesFromConfig)
+                         builderNames=builderNamesFromConfigFull)
 schedulers.append(wait_full)
 
 def parent_scheduler(target):

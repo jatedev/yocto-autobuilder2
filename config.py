@@ -85,7 +85,10 @@ trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemux86-64-ptest", "qemux86-64-ltp", "qemuarm64-ptest", "qemuarm64-ltp", "meta-intel", "meta-arm"
 ]
 
-trigger_builders_wait_releases = {
+trigger_builders_wait_quick_releases = {
+}
+
+trigger_builders_wait_full_releases = {
     "sumo" : trigger_builders_wait_shared + ["qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
                                              "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-centos"]
 }
