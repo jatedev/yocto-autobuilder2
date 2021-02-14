@@ -60,7 +60,6 @@ trigger_builders_wait_shared = [
     "qemux86-64", "qemux86-64-alt",
     "qemux86-64-x32", "qemux86-world",
     "edgerouter",
-    "mpc8315e-rdb",
     "genericx86", "genericx86-alt",
     "genericx86-64", "genericx86-64-alt",
     "beaglebone", "beaglebone-alt",
@@ -79,16 +78,21 @@ trigger_builders_wait_quick = trigger_builders_wait_shared + [
 ]
 
 trigger_builders_wait_full = trigger_builders_wait_shared + [
-    "qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
+    "qemumips-alt", "edgerouter-alt", "qemuppc-alt", "qemux86-world-alt",
     "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-centos",
     "reproducible-ubuntu", "reproducible-debian", "reproducible-fedora", "reproducible-centos",
     "qemux86-64-ptest", "qemux86-64-ltp", "qemuarm64-ptest", "qemuarm64-ltp", "meta-intel", "meta-arm"
 ]
 
 trigger_builders_wait_quick_releases = {
+    "zeus" : trigger_builders_wait_quick + ["mpc8315e-rdb"],
+    "thud" : trigger_builders_wait_quick + ["mpc8315e-rdb"],
+    "sumo" : trigger_builders_wait_quick + ["mpc8315e-rdb"]
 }
 
 trigger_builders_wait_full_releases = {
+    "zeus" : trigger_builders_wait_full + ["mpc8315e-rdb-alt"],
+    "thud" : trigger_builders_wait_full + ["mpc8315e-rdb-alt"],
     "sumo" : trigger_builders_wait_shared + ["qemumips-alt", "edgerouter-alt", "mpc8315e-rdb-alt", "qemuppc-alt", "qemux86-world-alt",
                                              "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-centos"]
 }
