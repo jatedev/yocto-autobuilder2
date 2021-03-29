@@ -18,6 +18,7 @@ buildertorepos = {
     "meta-virt": ["poky", "meta-openembedded", "meta-virtualization"],
     "meta-intel": ["poky", "meta-intel"],
     "meta-arm": ["poky", "meta-arm", "meta-kernel"],
+    "meta-agl-core": ["poky", "meta-agl-core"],
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
@@ -38,6 +39,7 @@ repos = {
     "poky": ["git://git.yoctoproject.org/poky", "master"],
     "meta-intel": ["git://git.yoctoproject.org/meta-intel", "master"],
     "meta-arm": ["git://git.yoctoproject.org/meta-arm", "master"],
+    "meta-agl-core": ["https://git.automotivelinux.org/AGL/meta-agl", "next"],
     "oecore": ["git://git.openembedded.org/openembedded-core",
                           "master"],
     "bitbake": ["git://git.openembedded.org/bitbake", "master"],
@@ -104,6 +106,7 @@ builders_others = [
     "meta-oe", "meta-virt",
     "bringup",
     "qemuarm-armhost",
+    "meta-agl-core",
     "auh"
 ]
 
