@@ -6,7 +6,8 @@ This guide will walk through how to install a stand-alone autobuilder controller
 
 The final outputs of this section are a controller and worker installed in the same server, ready for trimming back to an individual organization's needs.
 
- > NOTE: The guide assumes that your host OS has the packages installed to support BitBake for the release(s) you are targeting.  Please refer to the Yocto manual for those packages.
+ > NOTE: The guide assumes that your host OS has the packages installed to support BitBake for the release(s) you are targeting.  Please refer to the Yocto manual for those packages:
+ https://docs.yoctoproject.org/ref-manual/system-requirements.html#ubuntu-and-debian
 
 The latest version of BuildBot is written in Python 3, so installation via pip3:
 
@@ -43,6 +44,14 @@ yocto-controller/yoctoabb
 yocto-worker
 ```
 
+Before proceeding, make sure that the following is added to the
+pokybuild3 user's exports (e.g. in .bashrc), or builds will fail after
+being triggered:
+
+```
+export LANG=en_US.UTF-8
+```
+
 Next, we need to update the `yocto-controller/yoctoabb/master.cfg` towards the bottom where the `title`, `titleURL`, and `buildbotURL` are all set.  This is also where you would specify a different password for binding workers to the master.
 
 Then, we need to update the `yocto-controller/yoctoabb/config.py` to include our worker.  In that file, find the line where `workers` is set and add: ["example-worker"].  _NOTE:_ if your worker's name is different, use that here.  Section 3.1 discusses how to further refine this list of workers.
@@ -61,7 +70,17 @@ Set `BASE_HOMEDIR` should be your build user's home directory.  (There are she
 
  > NOTE: The way the build step is written, the worker will pull a fresh copy of the helper from the server.  Therefore these configuration files must be committed to the `yocto-autobuilder-helper` repo location you have specified in `yoctoabb/config.py` because the worker is given a build step that pulls from that repo (see `yoctoabb/builders.py`).
 
-Finally, as root, add the `yocto-*.service` files to `/lib/systemd/system` (See Appendix A).  Run: `systemctl daemon-reload`.  You should now be able to successfully start these services (e.g., `sudo systemctl start yocto-*`).  The controller may take up to 15 seconds to start.
+Finally, it is time to start the Autobuilder. There are two ways to do this:
+
+1. As the pokybuild3 user, run the following:
+
+```
+yocto-autobuilder-helper/janitor/ab-janitor&
+buildbot start yocto-controller
+buildbot-worker start yocto-worker
+```
+
+2. As root, add the `yocto-*.service` files to `/lib/systemd/system` (See Appendix A).  Run: `systemctl daemon-reload`.  You should now be able to successfully start these services (e.g., `sudo systemctl start yocto-*`).  The controller may take up to 15 seconds to start.
 
 ### 1.1) Configuring the Worker's Hash Equivalency Server
 
@@ -111,6 +130,91 @@ sudo /home/pokybuild3/yocto-worker/qemuarm/build/scripts/runqemu-gen-tapdevs \
 ```
 
 In the above command, we assume the a build named qemuarm failed.  The value of 8 is the number of tap interfaces to create on the worker.
+
+### 1.3) Adding Dedicated Worker Nodes
+
+Running both the controller and the worker together on a single machine
+can quickly result in long build times and an unresponsive web UI,
+especially if you plan on running any of the more comprehensive builders
+(e.g. a-full). Additional workers can be added to the cluster by
+following the steps in Section 1, except that the yocto-controller steps
+do not need to be repeated. For example, to add a new worker
+"ala-blade51" to an Autobuilder cluster with a yocto-controller at the
+IP address 147.11.105.72:
+
+1. On the yocto-controller host, add the name of the new worker to a worker
+list (or create a new one) e.g. 'workers_wrlx = ["ala-blade51"]' and
+make sure that it is added to the "workers" list.
+
+2. On the new worker node:
+
+```
+useradd -m --system pokybuild3
+cd /home/pokybuild3
+mkdir -p git/trash
+buildbot-worker create-worker -r --umask=0o22 yocto-worker 147.11.105.72 ala-blade51 pass
+chown -R pokybuild3:pokybuild3 /home/pokybuild3
+```
+
+ > Note 1: The URL/IP given to the create-worker command must match the
+host running the yocto-controller.
+
+ > Note 2: The "pass" argument given to the create-worker command must
+match the common "worker_pass" variable set in yocto-controller/yoctoabb/config.py.
+
+3. Once you have finished with configuration, you can run the following
+and the worker should successfully join the cluster and become available 
+to use with the builders, where "yocto-worker/" is the directory created
+in step 2:
+
+```
+buildbot-worker start yocto-worker/
+```
+
+
+
+### 1.4) Configuring NFS for the Autobuilder Cluster
+
+The Yocto Autobuilder relies on NFS to distribute a common sstate cache
+and other outputs between nodes. A similar configuration can be
+deployed by performing the steps given below, which were written for
+Ubuntu 18.04.In order for both the controller and worker nodes to be able 
+to access the NFS share without issue, the "pokybuild3" user on all 
+systems must have the same UID/GID, or sufficient permissions must be 
+granted on the /srv/autobuilder path (or wherever you modified the config 
+files to point to). The following instructions assume a controller node
+at 147.11.105.72 and a single worker node at 147.11.105.71, but
+additional worker nodes can be added as needed (see the previous
+section).
+
+1. On the NFS host:
+
+```
+sudo apt install -y nfs-kernel-server
+sudo mkdir -p /srv/autobuilder/autobuilder.yoctoproject.org/
+sudo chown -R pokybuild3:pokybuild3 /srv/autobuilder/autobuilder.yoctoproject.org
+```
+2. Add the following to /etc/exports, replacing the path and IP fields
+   as necessary for each client node:
+```
+/srv/autobuilder/autobuilder.yoctoproject.org/ 147.11.105.71(rw,sync,no_subtree_check)
+```
+
+3. Run
+```
+sudo systemctl restart nfs-kernel-server
+```
+
+4. Adjust the firewall (if required). Example:
+```
+sudo ufw allow from 147.11.105.71 to any port nfs
+```
+
+5. On the client node(s):
+```
+sudo apt-get install nfs-common
+sudo mount 147.11.105.72:/srv/autobuilder/autobuilder.yoctoproject.org/ /srv/autobuilder/autobuilder.yoctoproject.org/
+```
 
 ## 2) Basics
 
