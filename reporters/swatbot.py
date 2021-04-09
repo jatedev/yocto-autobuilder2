@@ -12,6 +12,7 @@ import requests
 import time
 import pprint
 import re
+import json
 
 #monitored_parents = ['a-full', 'a-quick']
 
@@ -50,12 +51,16 @@ class SwatBotURI(object):
 
         req = self.client.get(url + "?buildid=" + str(collection_build_id), timeout=self.TIMEOUT, headers=self.headers)
         if req.status_code == requests.codes.ok:
-            data = req.json()['data']
-            if len(data) > 1:
-                log.err("SwatBot: More than one buildid matches?: %s" % str(data))
+            try:
+                data = req.json()['data']
+                if len(data) > 1:
+                    log.err("SwatBot: More than one buildid matches?: %s" % str(data))
+                    return None
+                elif len(data) == 1:
+                    return data[0]['id']
+            except (json.decoder.JSONDecodeError, KeyError, IndexError) as e:
+                log.err("SwatBot: Couldn't decode json data: %s (ret code %s)" % (req.text, req.status_code))
                 return None
-            elif len(data) == 1:
-                return data[0]['id']
         if req.status_code == requests.codes.not_found or not dbid:
             payload = {
                 'data': {
@@ -144,7 +149,12 @@ class SwatBotURI(object):
             log.err("SwatBot: Couldn't find build to update: %s (%s)" % (str(req.status_code), str(req.json())))
             return False
 
-        data = req.json()['data']
+        try:
+            data = req.json()['data']
+        except (json.decoder.JSONDecodeError, KeyError, IndexError) as e:
+            log.err("SwatBot: Couldn't decode json data: %s (ret code %s)" % (req.text, req.status_code))
+            return False
+
         if len(data) != 1:
             log.err("SwatBot: More than one buildid matches?: %s" % str(data))
             return False
