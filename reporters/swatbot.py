@@ -40,6 +40,15 @@ class SwatBotURI(object):
         csrftoken = req2.cookies['csrftoken']
         self.headers = {'Content-type':'application/vnd.api+json', 'X-CSRFToken': csrftoken}
 
+    def query_with_login(self, query):
+        req = self.client.get(query, timeout=self.TIMEOUT, headers=self.headers, allow_redirects=False)
+        # A 302 status means we probably need to renew the login
+        if req.status_code == requests.codes.found and "login" in req.headers['Location']:
+            log.err("SwatBot: Attempting to renew login")
+            self.login()
+            return self.client.get(query, timeout=self.TIMEOUT, headers=self.headers, allow_redirects=False)
+        return req
+
     def find_build_collection(self, build):
         dbid = None
 
@@ -49,7 +58,7 @@ class SwatBotURI(object):
         if build['buildset']['parent_buildid']:
             collection_build_id = build['buildset']['parent_buildid']
 
-        req = self.client.get(url + "?buildid=" + str(collection_build_id), timeout=self.TIMEOUT, headers=self.headers)
+        req = self.query_with_login(url + "?buildid=" + str(collection_build_id))
         if req.status_code == requests.codes.ok:
             try:
                 data = req.json()['data']
@@ -109,7 +118,7 @@ class SwatBotURI(object):
             log.err("SwatBot: Couldn't find BuildCollection database ID")
             return False
 
-        req = self.client.get(url + "?buildid=" + str(build['buildid']), timeout=self.TIMEOUT, headers=self.headers)
+        req = self.query_with_login(url + "?buildid=" + str(build['buildid']))
         if req.status_code == requests.codes.ok:
             data = req.json()['data']
             if len(data) > 1:
@@ -144,7 +153,7 @@ class SwatBotURI(object):
 
     @defer.inlineCallbacks
     def update_build(self, build, master):
-        req = self.client.get(self.uri + "rest/build/?buildid=" + str(build['buildid']), timeout=self.TIMEOUT, headers=self.headers)
+        req = self.query_with_login(self.uri + "rest/build/?buildid=" + str(build['buildid']))
         if req.status_code != requests.codes.ok:
             log.err("SwatBot: Couldn't find build to update: %s (%s)" % (str(req.status_code), str(req.json())))
             return False
