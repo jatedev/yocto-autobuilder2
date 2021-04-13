@@ -169,7 +169,7 @@ def parent_scheduler(target):
             name="branchselector",
             default="master",
             label="Release Shortcut Selector",
-            choices=["master", "master-next", "mut", "gatesgarth", "dunfell", "zeus", "warrior", "thud", "sumo", "rocko", "pyro", "morty"],
+            choices=["master", "master-next", "mut", "hardknott", "gatesgarth", "dunfell", "zeus", "warrior", "thud", "sumo", "rocko", "pyro", "morty"],
             selectors={
               'master': {
                 'branch': 'master',
@@ -201,6 +201,16 @@ def parent_scheduler(target):
                 'branch_meta-intel': 'master',
                 'branch_meta-mingw': 'master',
                 'branch_oecore': 'master',
+              },
+              'hardknott': {
+                'branch': 'hardknott',
+                'branch_poky': 'hardknott',
+                'branch_bitbake': '1.50',
+                'branch_meta-arm': 'hardknott',
+                'branch_meta-gplv2': 'hardknott',
+                'branch_meta-intel': 'hardknott',
+                'branch_meta-mingw': 'hardknott',
+                'branch_oecore': 'hardknott',
               },
               'gatesgarth': {
                 'branch': 'gatesgarth',
@@ -354,7 +364,7 @@ schedulers.append(sched.Nightly(name='nightly-auh', branch='master', properties=
 
 # If any of our sphinx docs branches change, trigger a build
 schedulers.append(sched.AnyBranchScheduler(name="yocto-docs-changed",
-            change_filter=util.ChangeFilter(project=["yocto-docs"], branch=["master", "master-next", "gatesgarth", "dunfell", "transition"]),
+            change_filter=util.ChangeFilter(project=["yocto-docs"], branch=["master", "master-next", "hardknott", "gatesgarth", "dunfell", "transition"]),
             codebases = ['', 'yocto-docs', 'bitbake'],
             treeStableTimer=60,
             builderNames=["docs"]))
