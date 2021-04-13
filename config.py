@@ -19,6 +19,7 @@ buildertorepos = {
     "meta-intel": ["poky", "meta-intel"],
     "meta-arm": ["poky", "meta-arm", "meta-kernel"],
     "meta-agl-core": ["poky", "meta-agl"],
+    "meta-aws": ["poky", "meta-aws", "meta-openembedded"],
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
@@ -40,6 +41,7 @@ repos = {
     "meta-intel": ["git://git.yoctoproject.org/meta-intel", "master"],
     "meta-arm": ["git://git.yoctoproject.org/meta-arm", "master"],
     "meta-agl": ["https://git.automotivelinux.org/AGL/meta-agl", "next"],
+    "meta-aws": ["https://github.com/aws/meta-aws.git", "master"],
     "oecore": ["git://git.openembedded.org/openembedded-core",
                           "master"],
     "bitbake": ["git://git.openembedded.org/bitbake", "master"],
@@ -107,6 +109,7 @@ builders_others = [
     "bringup",
     "qemuarm-armhost",
     "meta-agl-core",
+    "meta-aws",
     "auh"
 ]
 
