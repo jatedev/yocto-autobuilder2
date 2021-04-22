@@ -23,6 +23,7 @@ buildertorepos = {
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
+    "check-layer-nightly": ["poky", "meta-agl", "meta-arm", "meta-aws", "meta-intel", "meta-openembedded", "meta-virtualization"],
     "docs": ["yocto-docs", "bitbake"],
     "default": ["poky"]
 }
@@ -110,6 +111,7 @@ builders_others = [
     "qemuarm-armhost",
     "meta-agl-core",
     "meta-aws",
+    "check-layer-nightly",
     "auh"
 ]
 

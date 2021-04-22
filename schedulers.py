@@ -352,6 +352,11 @@ schedulers.append(sched.Nightly(name='nightly-quick', branch='master', propertie
 schedulers.append(sched.Nightly(name='nightly-full', branch='master', properties=parent_default_props('a-full'),
                   builderNames=['a-full'], hour=1, minute=0, dayOfWeek=6))
 
+# Run check-layer-nightly each day
+schedulers.append(sched.Nightly(name='nightly-check-layer', branch='master', properties=parent_default_props('check-layer-nightly'),
+                  builderNames=['check-layer-nightly'], hour=0, minute=0))
+
+
 # Run the build performance tests at 3am, 9am, 3pm and 9pm
 schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='master', properties=parent_default_props('buildperf-ubuntu1604'),
                   builderNames=['buildperf-ubuntu1604'], hour=[3,9,15,21], minute=0))
