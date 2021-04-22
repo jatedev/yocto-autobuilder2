@@ -206,7 +206,7 @@ def parent_scheduler(target):
                 'branch': 'hardknott',
                 'branch_poky': 'hardknott',
                 'branch_bitbake': '1.50',
-                'branch_meta-arm': 'hardknott',
+                'branch_meta-arm': 'master',
                 'branch_meta-gplv2': 'hardknott',
                 'branch_meta-intel': 'hardknott',
                 'branch_meta-mingw': 'hardknott',
@@ -376,7 +376,7 @@ def isbitbakeDocFile(change):
             return True
     return False
 schedulers.append(sched.AnyBranchScheduler(name="bitbake-docs-changed",
-            change_filter=util.ChangeFilter(project=["bitbake"], branch=["master", "1.48", "1.46"]),
+            change_filter=util.ChangeFilter(project=["bitbake"], branch=["master", "1.50", "1.48", "1.46"]),
             codebases = ['', 'yocto-docs', 'bitbake'],
             fileIsImportant=isbitbakeDocFile,
             onlyImportant=True,
