@@ -23,7 +23,7 @@ buildertorepos = {
     "qemuarm-oecore": ["oecore", "bitbake"],
     "checkuri": ["poky"],
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
-    "check-layer-nightly": ["poky", "meta-agl", "meta-arm", "meta-aws", "meta-intel", "meta-openembedded", "meta-virtualization"],
+    "check-layer-nightly": ["poky", "meta-agl", "meta-arm", "meta-aws", "meta-intel", "meta-openembedded", "meta-virtualization", "meta-ti", "meta-security"],
     "docs": ["yocto-docs", "bitbake"],
     "default": ["poky"]
 }
@@ -43,6 +43,8 @@ repos = {
     "meta-arm": ["git://git.yoctoproject.org/meta-arm", "master"],
     "meta-agl": ["https://git.automotivelinux.org/AGL/meta-agl", "next"],
     "meta-aws": ["https://github.com/aws/meta-aws.git", "master"],
+    "meta-ti": ["git://git.yoctoproject.org/meta-ti", "master"],
+    "meta-security": ["git://git.yoctoproject.org/meta-security", "master"],
     "oecore": ["git://git.openembedded.org/openembedded-core",
                           "master"],
     "bitbake": ["git://git.openembedded.org/bitbake", "master"],
