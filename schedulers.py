@@ -206,7 +206,7 @@ def parent_scheduler(target):
                 'branch': 'hardknott',
                 'branch_poky': 'hardknott',
                 'branch_bitbake': '1.50',
-                'branch_meta-arm': 'master',
+                'branch_meta-arm': 'hardknott',
                 'branch_meta-gplv2': 'hardknott',
                 'branch_meta-intel': 'hardknott',
                 'branch_meta-mingw': 'hardknott',
