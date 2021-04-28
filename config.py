@@ -10,14 +10,14 @@ buildertorepos = {
     "a-quick": ["poky", "meta-intel", "oecore", "bitbake",
                 "meta-mingw", "meta-gplv2"],
     "a-full": ["poky", "meta-intel", "oecore", "bitbake",
-                "meta-mingw", "meta-gplv2", "meta-arm", "meta-kernel"],
+                "meta-mingw", "meta-gplv2", "meta-arm"],
     "non-gpl3": ["poky", "meta-gplv2"],
     "meta-mingw": ["poky", "meta-mingw"],
     "qa-extras": ["poky", "meta-mingw"],
     "meta-oe": ["poky", "meta-openembedded"],
     "meta-virt": ["poky", "meta-openembedded", "meta-virtualization"],
     "meta-intel": ["poky", "meta-intel"],
-    "meta-arm": ["poky", "meta-arm", "meta-kernel"],
+    "meta-arm": ["poky", "meta-arm"],
     "meta-agl-core": ["poky", "meta-agl"],
     "meta-aws": ["poky", "meta-aws", "meta-openembedded"],
     "qemuarm-oecore": ["oecore", "bitbake"],
@@ -54,7 +54,6 @@ repos = {
     "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"],
     "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "master"],
     "meta-virtualization": ["git://git.yoctoproject.org/meta-virtualization", "master"],
-    "meta-kernel": ["https://gitlab.com/openembedded/community/meta-kernel.git", "master"],
     "yocto-docs": ["git://git.yoctoproject.org/yocto-docs", "master"]
 }
 
