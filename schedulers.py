@@ -13,6 +13,132 @@ from yoctoabb.yocto_console_view.yocto_console_view import ReleaseSelector
 
 schedulers = []
 
+branchdefaults = {
+    'master': {
+        'branch': 'master',
+        'branch_poky': 'master',
+        'branch_bitbake': 'master',
+        'branch_meta-arm': 'master',
+        'branch_meta-gplv2': 'master',
+        'branch_meta-intel': 'master',
+        'branch_meta-mingw': 'master',
+        'branch_oecore': 'master',
+    },
+    'master-next': {
+        'branch': 'master',
+        'branch_poky': 'master-next',
+        'branch_bitbake': 'master-next',
+        'branch_meta-arm': 'master',
+        'branch_meta-gplv2': 'master',
+        'branch_meta-intel': 'master',
+        'branch_meta-mingw': 'master',
+        'branch_oecore': 'master-next',
+    },
+    'mut': {
+        'branch': 'master',
+        'branch_poky': 'ross/mut',
+        'repo_poky': 'git://git.yoctoproject.org/poky-contrib',
+        'branch_bitbake': 'master',
+        'branch_meta-arm': 'master',
+        'branch_meta-gplv2': 'master',
+        'branch_meta-intel': 'master',
+        'branch_meta-mingw': 'master',
+        'branch_oecore': 'master',
+    },
+    'hardknott': {
+        'branch': 'hardknott',
+        'branch_poky': 'hardknott',
+        'branch_bitbake': '1.50',
+        'branch_meta-arm': 'hardknott',
+        'branch_meta-gplv2': 'hardknott',
+        'branch_meta-intel': 'hardknott',
+        'branch_meta-mingw': 'hardknott',
+        'branch_oecore': 'hardknott',
+    },
+    'gatesgarth': {
+        'branch': 'gatesgarth',
+        'branch_poky': 'gatesgarth',
+        'branch_bitbake': '1.48',
+        'branch_meta-arm': 'gatesgarth',
+        'branch_meta-gplv2': 'gatesgarth',
+        'branch_meta-intel': 'gatesgarth',
+        'branch_meta-mingw': 'gatesgarth',
+        'branch_oecore': 'gatesgarth',
+    },
+    'dunfell': {
+        'branch': 'dunfell',
+        'branch_poky': 'dunfell',
+        'branch_bitbake': '1.46',
+        'branch_meta-arm': 'dunfell',
+        'branch_meta-gplv2': 'dunfell',
+        'branch_meta-intel': 'dunfell',
+        'branch_meta-mingw': 'dunfell',
+        'branch_oecore': 'dunfell',
+    },
+    'zeus': {
+        'branch': 'zeus',
+        'branch_poky': 'zeus',
+        'branch_bitbake': '1.44',
+        'branch_meta-gplv2': 'zeus',
+        'branch_meta-intel': 'zeus',
+        'branch_meta-mingw': 'zeus',
+        'branch_oecore': 'zeus',
+    },
+    'warrior': {
+        'branch': 'warrior',
+        'branch_poky': 'warrior',
+        'branch_bitbake': '1.42',
+        'branch_meta-gplv2': 'warrior',
+        'branch_meta-intel': 'warrior',
+        'branch_meta-mingw': 'warrior',
+        'branch_oecore': 'warrior',
+    },
+    'thud': {
+        'branch': 'thud',
+        'branch_poky': 'thud',
+        'branch_bitbake': '1.40',
+        'branch_meta-gplv2': 'thud',
+        'branch_meta-intel': 'thud',
+        'branch_meta-mingw': 'thud',
+        'branch_oecore': 'thud',
+    },
+    'sumo': {
+        'branch': 'sumo',
+        'branch_poky': 'sumo',
+        'branch_bitbake': '1.38',
+        'branch_meta-gplv2': 'sumo',
+        'branch_meta-intel': 'sumo',
+        'branch_meta-mingw': 'sumo',
+        'branch_oecore': 'sumo',
+    },
+    'rocko': {
+        'branch': 'rocko',
+        'branch_poky': 'rocko',
+        'branch_bitbake': '1.36',
+        'branch_meta-gplv2': 'rocko',
+        'branch_meta-intel': 'rocko',
+        'branch_meta-mingw': 'rocko',
+        'branch_oecore': 'rocko',
+    },
+    'pyro': {
+        'branch': 'pyro',
+        'branch_poky': 'pyro',
+        'branch_bitbake': '1.34',
+        'branch_meta-gplv2': 'pyro',
+        'branch_meta-intel': 'pyro',
+        'branch_meta-mingw': 'pyro',
+        'branch_oecore': 'pyro',
+    },
+    'morty': {
+        'branch': 'morty',
+        'branch_poky': 'morty',
+        'branch_bitbake': '1.32',
+        'branch_meta-gplv2': 'master',
+        'branch_meta-intel': 'morty',
+        'branch_meta-mingw': 'morty',
+        'branch_oecore': 'morty',
+    }
+}
 
 def create_repo_inputs(reponame):
     """
@@ -49,7 +175,7 @@ def repos_for_builder(buildername):
         parameters = parameters + [util.NestedParameter(name='', label=repo, fields=inputs, columns=2)]
     return parameters
 
-def parent_default_props(buildername):
+def parent_default_props(buildername, branchname=None):
     props = {}
     props["swat_monitor"] = True
     repos = config.buildertorepos.get(buildername)
@@ -57,7 +183,12 @@ def parent_default_props(buildername):
         repos = config.buildertorepos["default"]
     for repo in repos:
         props["repo_{}".format(repo)] = config.repos[repo][0]
-        props["branch_{}".format(repo)] = config.repos[repo][1]
+        branchkey = "branch_{}".format(repo)
+        if branchname and branchname in branchdefaults and branchkey in branchdefaults[branchname]:
+            props[branchkey] = branchdefaults[branchname][branchkey]
+        else:
+            props[branchkey] = config.repos[repo][1]
+        config.repos[repo][1]
         props["commit_{}".format(repo)] = "HEAD"
     return props
 
@@ -170,132 +301,7 @@ def parent_scheduler(target):
             default="master",
             label="Release Shortcut Selector",
             choices=["master", "master-next", "mut", "hardknott", "gatesgarth", "dunfell", "zeus", "warrior", "thud", "sumo", "rocko", "pyro", "morty"],
-            selectors={
-              'master': {
-                'branch': 'master',
-                'branch_poky': 'master',
-                'branch_bitbake': 'master',
-                'branch_meta-arm': 'master',
-                'branch_meta-gplv2': 'master',
-                'branch_meta-intel': 'master',
-                'branch_meta-mingw': 'master',
-                'branch_oecore': 'master',
-              },
-              'master-next': {
-                'branch': 'master',
-                'branch_poky': 'master-next',
-                'branch_bitbake': 'master-next',
-                'branch_meta-arm': 'master',
-                'branch_meta-gplv2': 'master',
-                'branch_meta-intel': 'master',
-                'branch_meta-mingw': 'master',
-                'branch_oecore': 'master-next',
-              },
-              'mut': {
-                'branch': 'master',
-                'branch_poky': 'ross/mut',
-                'repo_poky': 'git://git.yoctoproject.org/poky-contrib',
-                'branch_bitbake': 'master',
-                'branch_meta-arm': 'master',
-                'branch_meta-gplv2': 'master',
-                'branch_meta-intel': 'master',
-                'branch_meta-mingw': 'master',
-                'branch_oecore': 'master',
-              },
-              'hardknott': {
-                'branch': 'hardknott',
-                'branch_poky': 'hardknott',
-                'branch_bitbake': '1.50',
-                'branch_meta-arm': 'hardknott',
-                'branch_meta-gplv2': 'hardknott',
-                'branch_meta-intel': 'hardknott',
-                'branch_meta-mingw': 'hardknott',
-                'branch_oecore': 'hardknott',
-              },
-              'gatesgarth': {
-                'branch': 'gatesgarth',
-                'branch_poky': 'gatesgarth',
-                'branch_bitbake': '1.48',
-                'branch_meta-arm': 'gatesgarth',
-                'branch_meta-gplv2': 'gatesgarth',
-                'branch_meta-intel': 'gatesgarth',
-                'branch_meta-mingw': 'gatesgarth',
-                'branch_oecore': 'gatesgarth',
-              },
-              'dunfell': {
-                'branch': 'dunfell',
-                'branch_poky': 'dunfell',
-                'branch_bitbake': '1.46',
-                'branch_meta-arm': 'dunfell',
-                'branch_meta-gplv2': 'dunfell',
-                'branch_meta-intel': 'dunfell',
-                'branch_meta-mingw': 'dunfell',
-                'branch_oecore': 'dunfell',
-              },
-              'zeus': {
-                'branch': 'zeus',
-                'branch_poky': 'zeus',
-                'branch_bitbake': '1.44',
-                'branch_meta-gplv2': 'zeus',
-                'branch_meta-intel': 'zeus',
-                'branch_meta-mingw': 'zeus',
-                'branch_oecore': 'zeus',
-              },
-              'warrior': {
-                'branch': 'warrior',
-                'branch_poky': 'warrior',
-                'branch_bitbake': '1.42',
-                'branch_meta-gplv2': 'warrior',
-                'branch_meta-intel': 'warrior',
-                'branch_meta-mingw': 'warrior',
-                'branch_oecore': 'warrior',
-              },
-              'thud': {
-                'branch': 'thud',
-                'branch_poky': 'thud',
-                'branch_bitbake': '1.40',
-                'branch_meta-gplv2': 'thud',
-                'branch_meta-intel': 'thud',
-                'branch_meta-mingw': 'thud',
-                'branch_oecore': 'thud',
-              },
-              'sumo': {
-                'branch': 'sumo',
-                'branch_poky': 'sumo',
-                'branch_bitbake': '1.38',
-                'branch_meta-gplv2': 'sumo',
-                'branch_meta-intel': 'sumo',
-                'branch_meta-mingw': 'sumo',
-                'branch_oecore': 'sumo',
-              },
-              'rocko': {
-                'branch': 'rocko',
-                'branch_poky': 'rocko',
-                'branch_bitbake': '1.36',
-                'branch_meta-gplv2': 'rocko',
-                'branch_meta-intel': 'rocko',
-                'branch_meta-mingw': 'rocko',
-                'branch_oecore': 'rocko',
-              },
-              'pyro': {
-                'branch': 'pyro',
-                'branch_poky': 'pyro',
-                'branch_bitbake': '1.34',
-                'branch_meta-gplv2': 'pyro',
-                'branch_meta-intel': 'pyro',
-                'branch_meta-mingw': 'pyro',
-                'branch_oecore': 'pyro',
-              },
-              'morty': {
-                'branch': 'morty',
-                'branch_poky': 'morty',
-                'branch_bitbake': '1.32',
-                'branch_meta-gplv2': 'master',
-                'branch_meta-intel': 'morty',
-                'branch_meta-mingw': 'morty',
-                'branch_oecore': 'morty',
-              }
-            }),
+            selectors=branchdefaults),
         util.BooleanParameter(
             name="swat_monitor",
             label="Should SWAT monitor this build?",
@@ -357,11 +363,11 @@ schedulers.append(sched.Nightly(name='nightly-check-layer', branch='master', pro
                   builderNames=['check-layer-nightly'], hour=0, minute=0))
 
 # Run check-layer-nightly twice a week for hardknott
-schedulers.append(sched.Nightly(name='nightly-check-layer', branch='hardknott', properties=parent_default_props('check-layer-nightly'),
+schedulers.append(sched.Nightly(name='nightly-check-layer', branch='hardknott', properties=parent_default_props('check-layer-nightly', 'hardknott'),
                   builderNames=['check-layer-nightly'], dayOfWeek=[0, 3], hour=2, minute=0))
 
 # Run check-layer-nightly twice a week for dunfell
-schedulers.append(sched.Nightly(name='nightly-check-layer', branch='dunfell', properties=parent_default_props('check-layer-nightly'),
+schedulers.append(sched.Nightly(name='nightly-check-layer', branch='dunfell', properties=parent_default_props('check-layer-nightly', 'dunfell'),
                   builderNames=['check-layer-nightly'], dayOfWeek=[1, 4], hour=2, minute=0))
 
 # Run the build performance tests at 3am, 9am, 3pm and 9pm
