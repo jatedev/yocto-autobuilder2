@@ -352,10 +352,17 @@ schedulers.append(sched.Nightly(name='nightly-quick', branch='master', propertie
 schedulers.append(sched.Nightly(name='nightly-full', branch='master', properties=parent_default_props('a-full'),
                   builderNames=['a-full'], hour=1, minute=0, dayOfWeek=6))
 
-# Run check-layer-nightly each day
+# Run check-layer-nightly each day for master
 schedulers.append(sched.Nightly(name='nightly-check-layer', branch='master', properties=parent_default_props('check-layer-nightly'),
                   builderNames=['check-layer-nightly'], hour=0, minute=0))
 
+# Run check-layer-nightly twice a week for hardknott
+schedulers.append(sched.Nightly(name='nightly-check-layer', branch='hardknott', properties=parent_default_props('check-layer-nightly'),
+                  builderNames=['check-layer-nightly'], dayOfWeek=[0, 3], hour=2, minute=0))
+
+# Run check-layer-nightly twice a week for dunfell
+schedulers.append(sched.Nightly(name='nightly-check-layer', branch='dunfell', properties=parent_default_props('check-layer-nightly'),
+                  builderNames=['check-layer-nightly'], dayOfWeek=[1, 4], hour=2, minute=0))
 
 # Run the build performance tests at 3am, 9am, 3pm and 9pm
 schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='master', properties=parent_default_props('buildperf-ubuntu1604'),
@@ -363,9 +370,9 @@ schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='mas
 schedulers.append(sched.Nightly(name='nightly-buildperf-centos7', branch='master', properties=parent_default_props('buildperf-centos7'),
                   builderNames=['buildperf-centos7'], hour=[3,9,15,21], minute=0))
 
-# Run the AUH on the 15th of every month
+# Run the AUH every Sunday
 schedulers.append(sched.Nightly(name='nightly-auh', branch='master', properties=parent_default_props('auh'),
-                  builderNames=['auh'], dayOfMonth=15, hour=1, minute=0))
+                  builderNames=['auh'], dayOfWeek=6, hour=5, minute=0))
 
 # If any of our sphinx docs branches change, trigger a build
 schedulers.append(sched.AnyBranchScheduler(name="yocto-docs-changed",
