@@ -181,6 +181,8 @@ def parent_default_props(buildername, branchname=None):
     repos = config.buildertorepos.get(buildername)
     if not repos:
         repos = config.buildertorepos["default"]
+    if branchname:
+        props['branch'] = branchname
     for repo in repos:
         props["repo_{}".format(repo)] = config.repos[repo][0]
         branchkey = "branch_{}".format(repo)
