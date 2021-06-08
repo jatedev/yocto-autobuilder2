@@ -365,12 +365,12 @@ schedulers.append(sched.Nightly(name='nightly-check-layer', branch='master', pro
                   builderNames=['check-layer-nightly'], hour=0, minute=0))
 
 # Run check-layer-nightly twice a week for hardknott
-schedulers.append(sched.Nightly(name='nightly-check-layer-hardknott', branch='hardknott', properties=parent_default_props('check-layer-nightly', 'hardknott'),
-                  builderNames=['check-layer-nightly'], dayOfWeek=[0, 3], hour=2, minute=0))
+schedulers.append(sched.Nightly(name='nightly-check-layer-hardknott', properties=parent_default_props('check-layer-nightly', 'hardknott'),
+                  builderNames=['check-layer-nightly'], dayOfWeek=[0, 3], hour=2, minute=0, codebases = {'' : {'branch' : 'hardknott'}}))
 
 # Run check-layer-nightly twice a week for dunfell
-schedulers.append(sched.Nightly(name='nightly-check-layer-dunfell', branch='dunfell', properties=parent_default_props('check-layer-nightly', 'dunfell'),
-                  builderNames=['check-layer-nightly'], dayOfWeek=[1, 4], hour=2, minute=0))
+schedulers.append(sched.Nightly(name='nightly-check-layer-dunfell', properties=parent_default_props('check-layer-nightly', 'dunfell'),
+                  builderNames=['check-layer-nightly'], dayOfWeek=[1, 4], hour=2, minute=0, codebases = {'' : {'branch' : 'dunfell'}}))
 
 # Run the build performance tests at 3am, 9am, 3pm and 9pm
 schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='master', properties=parent_default_props('buildperf-ubuntu1604'),
