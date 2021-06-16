@@ -292,4 +292,6 @@ def create_doc_builder_factory():
         name="Run documentation Build"))
     return f
 
-builders.append(util.BuilderConfig(name="docs", workernames=config.workers, factory=create_doc_builder_factory(), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
+# Only run one docs build at a time
+docs_lock = util.MasterLock("docs_lock")
+builders.append(util.BuilderConfig(name="docs", workernames=config.workers, factory=create_doc_builder_factory(), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env, locks=[docs_lock.access('exclusive')]))
