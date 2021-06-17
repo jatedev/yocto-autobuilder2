@@ -202,7 +202,7 @@ class SwatBotURI(object):
             logs = list(logs)
             urls = []
             for l in logs:
-                urls.append('%s/steps/%s/logs/%s' % (build['url'], step_number, l['name']))
+                urls.append('%s/steps/%s/logs/%s' % (build['url'], step_number, l['name'].replace(" ", "_")))
             if urls:
                 urls = " ".join(urls)
             else:
