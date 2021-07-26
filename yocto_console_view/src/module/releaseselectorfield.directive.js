@@ -52,7 +52,9 @@ class _releaseselectorfield {
                     const result = [];
                     for (let k in selector) {
                         const v = selector[k];
-                        result.push(fields_ref[k].value = v);
+                        if (k in fields_ref) {
+                            result.push(fields_ref[k].value = v);
+                        }
                     }
                     return result;
                 })();
