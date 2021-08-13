@@ -109,5 +109,5 @@ __TODO__: requires a custom config.json for yocto-autobuilder-helper
 
 ## Contributions
 
-Patches for this code should be sent to the yocto@yoctoproject.org mailing list
+Patches for this code should be sent to the yocto@lists.yoctoproject.org mailing list
 with [yocto-autobuilder2] in the subject.
