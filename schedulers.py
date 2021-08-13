@@ -218,11 +218,15 @@ def props_for_builder(builder):
     scheduler
     """
 
+    swat_default = True
+    if builder in ['auh', 'meta-oe']:
+        swat_default = False
+
     props = []
     props.append(util.BooleanParameter(
         name="swat_monitor",
         label="Should SWAT monitor this build?",
-        default=True))
+        default=swat_default))
     if builder == 'build-appliance':
         props.append(buildappsrcrev_param())
     if builder in ['build-appliance', 'buildtools', 'eclipse-plugin-neon', 'eclipse-plugin-oxygen']:
