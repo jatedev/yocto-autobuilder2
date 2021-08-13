@@ -70,9 +70,11 @@ branchdefaults = {
         'branch_poky': 'dunfell',
         'branch_bitbake': '1.46',
         'branch_meta-arm': 'dunfell',
+        'branch_meta-aws': 'dunfell',
         'branch_meta-gplv2': 'dunfell',
         'branch_meta-intel': 'dunfell',
         'branch_meta-mingw': 'dunfell',
+        'branch_meta-openembedded': 'dunfell',
         'branch_oecore': 'dunfell',
     },
     'zeus': {
