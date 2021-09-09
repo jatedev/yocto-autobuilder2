@@ -135,6 +135,19 @@ for builder in config.subbuilders:
                                        workernames=workers, nextWorker=nextWorker, nextBuild=nextBuild,
                                        factory=f, env=extra_env))
 
+# prioritize assigning builders to available workers based on the length
+# of the worker lists they are associated with. Builders that have fewer
+# valid worker options should always be assigned first
+def prioritizeBuilders(buildmaster, builders):
+    # re-use the builder_to_workers list
+    builder_to_workers = config.builder_to_workers
+
+    # sort builders by the length of their worker lists. Since not all 
+    # builders are explicitly listed in builder_to_workers, make sure to
+    # default to the len() of the "default" value
+    builders.sort(key=lambda b: len(builder_to_workers.get(b.name)) if b.name in builder_to_workers.keys() else len(builder_to_workers.get("default")))
+    return builders
+
 def create_parent_builder_factory(buildername, waitname):
     factory = util.BuildFactory()
     # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
