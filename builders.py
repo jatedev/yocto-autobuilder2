@@ -10,6 +10,10 @@ from yoctoabb.steps.runconfig import get_publish_dest, get_publish_resultdir, ge
 from buildbot.process.results import Results, SUCCESS, FAILURE, CANCELLED, WARNINGS, SKIPPED, EXCEPTION, RETRY
 
 from twisted.python import log
+from twisted.internet import defer
+
+from datetime import datetime, timedelta
+from dateutil.tz import tzutc
 
 import os
 import json
@@ -135,18 +139,52 @@ for builder in config.subbuilders:
                                        workernames=workers, nextWorker=nextWorker, nextBuild=nextBuild,
                                        factory=f, env=extra_env))
 
-# prioritize assigning builders to available workers based on the length
+# Prioritize assigning builders to available workers based on the length
 # of the worker lists they are associated with. Builders that have fewer
 # valid worker options should always be assigned first
-def prioritizeBuilders(buildmaster, builders):
-    # re-use the builder_to_workers list
-    builder_to_workers = config.builder_to_workers
+# Add 2 seconds * length as the weight so tightly constrained builders go first
+builder_bonuses = {}
+for builder in config.builder_to_workers:
+    bonus = (len(config.workers) - len(config.builder_to_workers)) * 2
+    builder_bonuses[builder] = timedelta(seconds=bonus)
 
-    # sort builders by the length of their worker lists. Since not all 
-    # builders are explicitly listed in builder_to_workers, make sure to
-    # default to the len() of the "default" value
-    builders.sort(key=lambda b: len(builder_to_workers.get(b.name)) if b.name in builder_to_workers.keys() else len(builder_to_workers.get("default")))
-    return builders
+# Modified default algothirm from buildbot with a bonus mechanism (thanks tardyp!)
+@defer.inlineCallbacks
+def prioritizeBuilders(master, builders):
+    # perform an asynchronous schwarzian transform, transforming None
+    # into a really big date, so that any
+    # date set to 'None' will appear at the
+    # end of the list during comparisons.
+    max_time = datetime.max
+    # Need to set the timezone on the date, in order
+    # to perform comparisons with other dates which
+    # have the time zone set.
+    max_time = max_time.replace(tzinfo=tzutc())
+
+    @defer.inlineCallbacks
+    def transform(bldr):
+        time = yield bldr.getOldestRequestTime()
+        if time is None:
+            time = max_time
+        else:
+            if bldr.name in builder_bonuses:
+                time = time + builder_bonuses[bldr.name]
+        defer.returnValue((time, bldr))
+
+    transformed = yield defer.gatherResults(
+        [transform(bldr) for bldr in builders])
+
+    # sort the transformed list synchronously, comparing None to the end of
+    # the list
+    def transformedKey(a):
+        (date, builder) = a
+        return (date, builder.name)
+
+    transformed.sort(key=transformedKey)
+
+    # and reverse the transform
+    rv = [xf[1] for xf in transformed]
+    return rv
 
 def create_parent_builder_factory(buildername, waitname):
     factory = util.BuildFactory()
