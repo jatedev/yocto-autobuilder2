@@ -181,7 +181,7 @@ for builder in config.subbuilders:
 # Add 2 seconds * length as the weight so tightly constrained builders go first
 builder_bonuses = {}
 for builder in config.builder_to_workers:
-    bonus = (len(config.workers) - len(config.builder_to_workers)) * 2
+    bonus = (len(config.workers) - len(config.builder_to_workers[builder])) * 2
     builder_bonuses[builder] = timedelta(seconds=bonus)
 
 # Modified default algothirm from buildbot with a bonus mechanism (thanks tardyp!)
