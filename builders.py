@@ -8,6 +8,7 @@ from yoctoabb import config
 from yoctoabb.steps.writelayerinfo import WriteLayerInfo
 from yoctoabb.steps.runconfig import get_publish_dest, get_publish_resultdir, get_publish_name, RunConfigCheckSteps, TargetPresent
 from buildbot.process.results import Results, SUCCESS, FAILURE, CANCELLED, WARNINGS, SKIPPED, EXCEPTION, RETRY
+from buildbot.process.remotecommand import RemoteCommand
 
 from twisted.python import log
 from twisted.internet import defer
@@ -44,6 +45,41 @@ def ensure_props_set(props):
         "deploy_artefacts": props.getProperty("deploy_artefacts", False),
         "publish_destination": props.getProperty("publish_destination", "")
     }
+
+@defer.inlineCallbacks
+def shell(command, worker, builder):
+    args = {
+        'command': command,
+        'workdir': worker.worker_basedir,
+        'logEnviron': False,
+        'want_stdout': True,
+        'want_stderr': False,
+    }
+
+    cmd = RemoteCommand('shell', args, collectStdout=True, stdioLogName="stdio")
+    cmd.worker = worker
+    yield cmd.run(None, worker.conn, builder.name)
+    return cmd
+
+@defer.inlineCallbacks
+def canStartBuild(builder, wfb, request):
+    log.msg("Checking available disk space...")
+
+    cmd = yield shell("df -BG | grep $(findmnt -T . | awk '{print $2}' | sed -n 2p) | awk '{print $4}' | sed 's/[^0-9]*//g'", wfb.worker, builder)
+    threshold = 60 # GB of space
+    if int(cmd.stdout) < threshold:
+        log.msg("Detected {0} GB of space available, less than threshold of {1} GB. Can't start build".format(cmd.stdout, threshold))
+        wfb.worker.putInQuarantine()
+        return False
+    else:
+        log.msg("Detected {0} GB of space available, more than threshold of {1} GB. OK to build".format(cmd.stdout, threshold))
+
+    wfb.worker.quarantine_timeout = 120
+    wfb.worker.putInQuarantine()
+
+    wfb.worker.resetQuarantine()
+
+    return True
 
 def create_builder_factory():
     f = util.BuildFactory()
@@ -136,7 +172,7 @@ for builder in config.subbuilders:
     if not workers:
         workers = config.builder_to_workers['default']
     builders.append(util.BuilderConfig(name=builder,
-                                       workernames=workers, nextWorker=nextWorker, nextBuild=nextBuild,
+                                       workernames=workers, canStartBuild=canStartBuild, nextWorker=nextWorker, nextBuild=nextBuild,
                                        factory=f, env=extra_env))
 
 # Prioritize assigning builders to available workers based on the length
@@ -300,8 +336,8 @@ def create_parent_builder_factory(buildername, waitname):
 
     return factory
 
-builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
-builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
+builders.append(util.BuilderConfig(name="a-quick", workernames=config.workers, factory=create_parent_builder_factory("a-quick", "wait-quick"), canStartBuild=canStartBuild, nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
+builders.append(util.BuilderConfig(name="a-full", workernames=config.workers, factory=create_parent_builder_factory("a-full", "wait-full"), canStartBuild=canStartBuild,nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env))
 
 def create_doc_builder_factory():
     f = util.BuildFactory()
@@ -345,4 +381,4 @@ def create_doc_builder_factory():
 
 # Only run one docs build at a time
 docs_lock = util.MasterLock("docs_lock")
-builders.append(util.BuilderConfig(name="docs", workernames=config.workers, factory=create_doc_builder_factory(), nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env, locks=[docs_lock.access('exclusive')]))
+builders.append(util.BuilderConfig(name="docs", workernames=config.workers, factory=create_doc_builder_factory(), canStartBuild=canStartBuild, nextWorker=nextWorker, nextBuild=nextBuild, env=extra_env, locks=[docs_lock.access('exclusive')]))
