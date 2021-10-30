@@ -204,7 +204,8 @@ def prioritizeBuilders(master, builders):
             time = max_time
         else:
             if bldr.name in builder_bonuses:
-                time = time + builder_bonuses[bldr.name]
+                time = time - builder_bonuses[bldr.name]
+
         defer.returnValue((time, bldr))
 
     transformed = yield defer.gatherResults(
