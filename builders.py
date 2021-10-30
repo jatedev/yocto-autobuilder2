@@ -69,16 +69,17 @@ def canStartBuild(builder, wfb, request):
     threshold = 60 # GB of space
     if int(cmd.stdout) < threshold:
         log.msg("Detected {0} GB of space available, less than threshold of {1} GB. Can't start build".format(cmd.stdout, threshold))
+        wfb.worker.quarantine_timeout = 2 * 60
         wfb.worker.putInQuarantine()
         return False
+
+    log.msg("Detected {0} GB of space available, more than threshold of {1} GB. OK to build".format(cmd.stdout, threshold))
+    if wfb.worker.isPaused:
+        # It was low on space so delay the builds starting a bit
+        wfb.worker.quarantine_timeout = 2 * 60
+        wfb.worker.putInQuarantine()
     else:
-        log.msg("Detected {0} GB of space available, more than threshold of {1} GB. OK to build".format(cmd.stdout, threshold))
-
-    wfb.worker.quarantine_timeout = 120
-    wfb.worker.putInQuarantine()
-
-    wfb.worker.resetQuarantine()
-
+        wfb.worker.exitQuarantine()
     return True
 
 def create_builder_factory():
