@@ -74,7 +74,7 @@ def canStartBuild(builder, wfb, request):
         return False
 
     log.msg("Detected {0} GB of space available, more than threshold of {1} GB. OK to build".format(cmd.stdout, threshold))
-    if wfb.worker.isPaused:
+    if wfb.worker.isPaused():
         # It was low on space so delay the builds starting a bit
         wfb.worker.quarantine_timeout = 2 * 60
         wfb.worker.putInQuarantine()
