@@ -241,12 +241,11 @@ def props_for_builder(builder):
         default=swat_default))
     if builder == 'build-appliance':
         props.append(buildappsrcrev_param())
-    if builder in ['build-appliance', 'buildtools', 'eclipse-plugin-neon', 'eclipse-plugin-oxygen']:
-        props.append(util.BooleanParameter(
-            name="deploy_artefacts",
-            label="Do we want to deploy artefacts? ",
-            default=False
-        ))
+    props.append(util.BooleanParameter(
+        name="deploy_artefacts",
+        label="Do we want to deploy artefacts?",
+        default=False
+    ))
     props = props + repos_for_builder(builder)
     worker_list = config.builder_to_workers.get(builder, config.builder_to_workers['default'])
     props.append(util.ChoiceStringParameter(name="worker",
