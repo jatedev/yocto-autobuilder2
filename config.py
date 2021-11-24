@@ -32,29 +32,29 @@ buildertorepos = {
 # user customisable
 repos = {
     "yocto-autobuilder-helper":
-        ["git://git.yoctoproject.org/yocto-autobuilder-helper",
+        ["ssh://git@push.yoctoproject.org/yocto-autobuilder-helper",
          "master"],
-    "eclipse-poky-neon": ["git://git.yoctoproject.org/eclipse-yocto",
+    "eclipse-poky-neon": ["ssh://git@push.yoctoproject.org/eclipse-yocto",
                           "neon-master"],
-    "eclipse-poky-oxygen": ["git://git.yoctoproject.org/eclipse-yocto",
+    "eclipse-poky-oxygen": ["ssh://git@push.yoctoproject.org/eclipse-yocto",
                             "oxygen-master"],
-    "poky": ["git://git.yoctoproject.org/poky", "master"],
-    "meta-intel": ["git://git.yoctoproject.org/meta-intel", "master"],
-    "meta-arm": ["git://git.yoctoproject.org/meta-arm", "master"],
+    "poky": ["ssh://git@push.yoctoproject.org/poky", "master"],
+    "meta-intel": ["ssh://git@push.yoctoproject.org/meta-intel", "master"],
+    "meta-arm": ["ssh://git@push.yoctoproject.org/meta-arm", "master"],
     "meta-agl": ["https://git.automotivelinux.org/AGL/meta-agl", "next"],
     "meta-aws": ["https://github.com/aws/meta-aws.git", "master"],
-    "meta-ti": ["git://git.yoctoproject.org/meta-ti", "master"],
-    "meta-security": ["git://git.yoctoproject.org/meta-security", "master"],
-    "oecore": ["git://git.openembedded.org/openembedded-core",
+    "meta-ti": ["ssh://git@push.yoctoproject.org/meta-ti", "master"],
+    "meta-security": ["ssh://git@push.yoctoproject.org/meta-security", "master"],
+    "oecore": ["ssh://git@push.openembedded.org/openembedded-core",
                           "master"],
-    "bitbake": ["git://git.openembedded.org/bitbake", "master"],
-    "meta-qt4": ["git://git.yoctoproject.org/meta-qt4", "master"],
-    "meta-qt3": ["git://git.yoctoproject.org/meta-qt3", "master"],
-    "meta-mingw": ["git://git.yoctoproject.org/meta-mingw", "master"],
-    "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"],
-    "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "master"],
-    "meta-virtualization": ["git://git.yoctoproject.org/meta-virtualization", "master"],
-    "yocto-docs": ["git://git.yoctoproject.org/yocto-docs", "master"]
+    "bitbake": ["ssh://git@push.openembedded.org/bitbake", "master"],
+    "meta-qt4": ["ssh://git@push.yoctoproject.org/meta-qt4", "master"],
+    "meta-qt3": ["ssh://git@push.yoctoproject.org/meta-qt3", "master"],
+    "meta-mingw": ["ssh://git@push.yoctoproject.org/meta-mingw", "master"],
+    "meta-gplv2": ["ssh://git@push.yoctoproject.org/meta-gplv2", "master"],
+    "meta-openembedded": ["ssh://git@push.openembedded.org/meta-openembedded", "master"],
+    "meta-virtualization": ["ssh://git@push.yoctoproject.org/meta-virtualization", "master"],
+    "yocto-docs": ["ssh://git@push.yoctoproject.org/yocto-docs", "master"]
 }
 
 trigger_builders_wait_shared = [

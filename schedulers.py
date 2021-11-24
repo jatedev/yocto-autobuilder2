@@ -41,7 +41,7 @@ branchdefaults = {
     'mut': {
         'branch': 'master',
         'branch_poky': 'ross/mut',
-        'repo_poky': 'git://git.yoctoproject.org/poky-contrib',
+        'repo_poky': 'ssh://git@push.yoctoproject.org/poky-contrib',
         'branch_bitbake': 'master',
         'branch_meta-arm': 'master',
         'branch_meta-aws': 'master',
