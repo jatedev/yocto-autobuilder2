@@ -45,14 +45,14 @@ repos = {
     "meta-aws": ["https://github.com/aws/meta-aws.git", "master"],
     "meta-ti": ["ssh://git@push.yoctoproject.org/meta-ti", "master"],
     "meta-security": ["ssh://git@push.yoctoproject.org/meta-security", "master"],
-    "oecore": ["ssh://git@push.openembedded.org/openembedded-core",
+    "oecore": ["git://git.openembedded.org/openembedded-core",
                           "master"],
-    "bitbake": ["ssh://git@push.openembedded.org/bitbake", "master"],
+    "bitbake": ["git://git.openembedded.org/bitbake", "master"],
     "meta-qt4": ["ssh://git@push.yoctoproject.org/meta-qt4", "master"],
     "meta-qt3": ["ssh://git@push.yoctoproject.org/meta-qt3", "master"],
     "meta-mingw": ["ssh://git@push.yoctoproject.org/meta-mingw", "master"],
     "meta-gplv2": ["ssh://git@push.yoctoproject.org/meta-gplv2", "master"],
-    "meta-openembedded": ["ssh://git@push.openembedded.org/meta-openembedded", "master"],
+    "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "master"],
     "meta-virtualization": ["ssh://git@push.yoctoproject.org/meta-virtualization", "master"],
     "yocto-docs": ["ssh://git@push.yoctoproject.org/yocto-docs", "master"]
 }
