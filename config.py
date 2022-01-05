@@ -112,6 +112,8 @@ builders_others = [
     "bringup",
     "qemuarm-armhost",
     "check-layer-nightly",
+    "oe-selftest-arm",
+    "oe-selftest-armhost",
     "auh"
 ]
 
@@ -172,6 +174,7 @@ builder_to_workers = {
     "oe-selftest-fedora": workers_fedora,
     "oe-selftest-opensuse": workers_opensuse,
     "oe-selftest-centos": workers_centos,
+    "oe-selftest-armhost": workers_arm,
     "reproducible-ubuntu": workers_ubuntu,
     "reproducible-debian": workers_debian,
     "reproducible-fedora": workers_fedora,
