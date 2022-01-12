@@ -58,7 +58,7 @@ repos = {
 }
 
 trigger_builders_wait_shared = [
-    "qemuarm", "qemuarm-alt", "qemuarm64", "qemuarm-oecore",
+    "qemuarm", "qemuarm-alt", "qemuarm64", "qemuarm64-alt", "qemuarm-oecore",
     "qemumips", "qemumips64",
     "multilib",
     "qemuppc",
