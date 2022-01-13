@@ -61,6 +61,8 @@ branchdefaults = {
         'branch_meta-intel': 'honister',
         'branch_meta-mingw': 'honister',
         'branch_meta-openembedded': 'honister',
+        'branch_meta-ti': 'honister',
+        'branch_meta-virtualization': 'honister',
         'branch_oecore': 'honister',
     },
     'hardknott': {
@@ -73,6 +75,8 @@ branchdefaults = {
         'branch_meta-intel': 'hardknott',
         'branch_meta-mingw': 'hardknott',
         'branch_meta-openembedded': 'hardknott',
+        'branch_meta-ti': 'hardknott',
+        'branch_meta-virtualization': 'hardknott',
         'branch_oecore': 'hardknott',
     },
     'gatesgarth': {
@@ -85,6 +89,8 @@ branchdefaults = {
         'branch_meta-intel': 'gatesgarth',
         'branch_meta-mingw': 'gatesgarth',
         'branch_meta-openembedded': 'gatesgarth',
+        'branch_meta-ti': 'gatesgarth',
+        'branch_meta-virtualization': 'gatesgarth',
         'branch_oecore': 'gatesgarth',
     },
     'dunfell': {
@@ -97,6 +103,8 @@ branchdefaults = {
         'branch_meta-intel': 'dunfell',
         'branch_meta-mingw': 'dunfell',
         'branch_meta-openembedded': 'dunfell',
+        'branch_meta-ti': 'dunfell',
+        'branch_meta-virtualization': 'dunfell',
         'branch_oecore': 'dunfell',
     },
     'zeus': {
