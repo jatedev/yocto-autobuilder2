@@ -417,9 +417,9 @@ schedulers.append(sched.Nightly(name='nightly-buildperf-ubuntu1604', branch='mas
 schedulers.append(sched.Nightly(name='nightly-buildperf-centos7', branch='master', properties=parent_default_props('buildperf-centos7'),
                   builderNames=['buildperf-centos7'], hour=[3,9,15,21], minute=0))
 
-# Run the AUH every Sunday
+# Run the AUH twice a month on 1st and 15th
 schedulers.append(sched.Nightly(name='nightly-auh', branch='master', properties=parent_default_props('auh'),
-                  builderNames=['auh'], dayOfWeek=6, hour=5, minute=0))
+                  builderNames=['auh'], dayOfMonth=[1, 15], hour=5, minute=0))
 
 # If any of our sphinx docs branches change, trigger a build
 schedulers.append(sched.AnyBranchScheduler(name="yocto-docs-changed",
