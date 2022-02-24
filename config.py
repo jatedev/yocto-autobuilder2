@@ -123,7 +123,7 @@ builders = ["a-quick", "a-full", "docs"] + subbuilders
 # ## Cluster configuration
 # Publishing settings
 sharedrepodir = "/srv/autobuilder/repos"
-publish_dest = "/srv/autobuilder/autobuilder.yoctoproject.org/pub"
+publish_dest = "/srv/autobuilder/autobuilder.yocto.io/pub"
 
 # Web UI settings
 web_port = 8010
