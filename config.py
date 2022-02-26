@@ -76,17 +76,17 @@ trigger_builders_wait_shared = [
     "poky-tiny", "musl-qemux86", "musl-qemux86-64", "no-x11",
     "qa-extras", "qa-extras2",
     "check-layer", "meta-mingw",
+    "reproducible",
     "qemuarm64-armhost"
 ]
 
 trigger_builders_wait_quick = trigger_builders_wait_shared + [
-    "oe-selftest", "reproducible", "qemux86-64-ptest-fast", "qemuarm64-ptest-fast"
+    "oe-selftest", "qemux86-64-ptest-fast", "qemuarm64-ptest-fast"
 ]
 
 trigger_builders_wait_full = trigger_builders_wait_shared + [
     "qemumips-alt", "edgerouter-alt", "qemuppc-alt", "qemux86-world-alt",
     "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-centos",
-    "reproducible-ubuntu", "reproducible-debian", "reproducible-fedora", "reproducible-centos",
     "qemux86-64-ptest", "qemux86-64-ltp", "qemuarm64-ptest", "qemuarm64-ltp", 
     "meta-intel", "meta-arm", "meta-aws", "meta-agl-core"
 ]
@@ -108,6 +108,7 @@ trigger_builders_wait_perf = ["buildperf-ubuntu1604", "buildperf-centos7"]
 
 # Builders which are individually triggered
 builders_others = [
+    "reproducible-ubuntu", "reproducible-debian", "reproducible-fedora", "reproducible-centos",
     "meta-oe", "meta-virt",
     "bringup",
     "qemuarm-armhost",
