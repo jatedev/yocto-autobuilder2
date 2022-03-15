@@ -184,6 +184,8 @@ builder_bonuses = {}
 for builder in config.builder_to_workers:
     bonus = (len(config.workers) - len(config.builder_to_workers[builder])) * 2
     builder_bonuses[builder] = timedelta(seconds=bonus)
+# Ensure plain reproducible builds start earlier too
+builder_bonuses["reproducible"] = builder_bonuses["reproducible-debian"]
 
 # Modified default algothirm from buildbot with a bonus mechanism (thanks tardyp!)
 @defer.inlineCallbacks
