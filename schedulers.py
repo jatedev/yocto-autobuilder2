@@ -51,6 +51,20 @@ branchdefaults = {
         'branch_meta-openembedded': 'master',
         'branch_oecore': 'master',
     },
+    'kirkstone': {
+        'branch': 'kirkstone',
+        'branch_poky': 'kirkstone',
+        'branch_bitbake': '2.0',
+        'branch_meta-arm': 'master',
+        'branch_meta-aws': 'master',
+        'branch_meta-gplv2': 'kirkstone',
+        'branch_meta-intel': 'master',
+        'branch_meta-mingw': 'kirkstone',
+        'branch_meta-openembedded': 'master',
+        'branch_meta-ti': 'master',
+        'branch_meta-virtualization': 'master',
+        'branch_oecore': 'kirkstone',
+    },
     'honister': {
         'branch': 'honister',
         'branch_poky': 'honister',
@@ -337,7 +351,7 @@ def parent_scheduler(target):
             name="branchselector",
             default="master",
             label="Release Shortcut Selector",
-            choices=["master", "master-next", "mut", "honister", "hardknott", "gatesgarth", "dunfell", "zeus", "warrior", "thud", "sumo", "rocko", "pyro", "morty"],
+            choices=["master", "master-next", "mut", "kirkstone", "honister", "hardknott", "gatesgarth", "dunfell", "zeus", "warrior", "thud", "sumo", "rocko", "pyro", "morty"],
             selectors=branchdefaults),
         util.BooleanParameter(
             name="swat_monitor",
@@ -403,9 +417,9 @@ schedulers.append(sched.Nightly(name='nightly-check-layer', branch='master', pro
 schedulers.append(sched.Nightly(name='nightly-check-layer-honister', properties=parent_default_props('check-layer-nightly', 'honister'),
                   builderNames=['check-layer-nightly'], dayOfWeek=[2, 5], hour=2, minute=0, codebases = {'' : {'branch' : 'honister'}}))
 
-# Run check-layer-nightly twice a week for hardknott
-schedulers.append(sched.Nightly(name='nightly-check-layer-hardknott', properties=parent_default_props('check-layer-nightly', 'hardknott'),
-                  builderNames=['check-layer-nightly'], dayOfWeek=[0, 3], hour=2, minute=0, codebases = {'' : {'branch' : 'hardknott'}}))
+# Run check-layer-nightly twice a week for kirkstone
+schedulers.append(sched.Nightly(name='nightly-check-layer-kirkstone', properties=parent_default_props('check-layer-nightly', 'kirkstone'),
+                  builderNames=['check-layer-nightly'], dayOfWeek=[0, 3], hour=2, minute=0, codebases = {'' : {'branch' : 'kirkstone'}}))
 
 # Run check-layer-nightly twice a week for dunfell
 schedulers.append(sched.Nightly(name='nightly-check-layer-dunfell', properties=parent_default_props('check-layer-nightly', 'dunfell'),
@@ -423,7 +437,7 @@ schedulers.append(sched.Nightly(name='nightly-auh', branch='master', properties=
 
 # If any of our sphinx docs branches change, trigger a build
 schedulers.append(sched.AnyBranchScheduler(name="yocto-docs-changed",
-            change_filter=util.ChangeFilter(project=["yocto-docs"], branch=[None, "master", "master-next", "honister", "hardknott", "gatesgarth", "dunfell", "transition"]),
+            change_filter=util.ChangeFilter(project=["yocto-docs"], branch=[None, "master", "master-next", "kirkstone", "honister", "hardknott", "gatesgarth", "dunfell", "transition"]),
             codebases = ['', 'yocto-docs', 'bitbake'],
             treeStableTimer=60,
             builderNames=["docs"]))
