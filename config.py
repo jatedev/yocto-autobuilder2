@@ -110,7 +110,7 @@ trigger_builders_wait_perf = ["buildperf-ubuntu1604", "buildperf-centos7", "buil
 builders_others = [
     "reproducible-ubuntu", "reproducible-debian", "reproducible-fedora", "reproducible-centos",
     "meta-oe", "meta-virt",
-    "bringup",
+    "bringup", "bringup-fast",
     "qemuarm-armhost",
     "check-layer-nightly",
     "oe-selftest-arm",
@@ -169,7 +169,8 @@ notify_on_missing = None
 
 # Some builders should only run on specific workers (host OS dependent)
 builder_to_workers = {
-    "bringup": workers_bringup,
+    "bringup": workers_bringup + workers,
+    "bringup-fast": workers_bringup + workers,
     "pkgman-rpm-non-rpm": workers_ubuntu + workers_debian,
     "pkgman-deb-non-deb": workers_fedora + workers_centos + workers_opensuse,
     "oe-selftest-ubuntu": workers_ubuntu,
