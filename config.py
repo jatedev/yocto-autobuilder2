@@ -115,6 +115,7 @@ builders_others = [
     "check-layer-nightly",
     "oe-selftest-arm",
     "oe-selftest-armhost",
+    "qemuriscv32", "qemuriscv64", "qemuriscv64-ptest", "qemuppc64",
     "auh"
 ]
 
