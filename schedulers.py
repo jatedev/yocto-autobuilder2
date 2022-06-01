@@ -417,10 +417,6 @@ schedulers.append(sched.Nightly(name='nightly-check-layer', branch='master', pro
 schedulers.append(sched.Nightly(name='nightly-metrics', branch='master', properties=parent_default_props('metrics'),
                   builderNames=['metrics'], hour=7, minute=0))
 
-# Run check-layer-nightly twice a week for honister
-schedulers.append(sched.Nightly(name='nightly-check-layer-honister', properties=parent_default_props('check-layer-nightly', 'honister'),
-                  builderNames=['check-layer-nightly'], dayOfWeek=[2, 5], hour=2, minute=0, codebases = {'' : {'branch' : 'honister'}}))
-
 # Run check-layer-nightly twice a week for kirkstone
 schedulers.append(sched.Nightly(name='nightly-check-layer-kirkstone', properties=parent_default_props('check-layer-nightly', 'kirkstone'),
                   builderNames=['check-layer-nightly'], dayOfWeek=[0, 3], hour=2, minute=0, codebases = {'' : {'branch' : 'kirkstone'}}))
