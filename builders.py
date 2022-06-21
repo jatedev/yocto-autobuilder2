@@ -144,7 +144,7 @@ def nextWorker(bldr, workers, buildrequest):
     if '' in buildrequest.sources:
         # Has to be a better way to do this
         branch = buildrequest.sources[''].branch
-    if branch and branch in config.workers_prev_releases:
+    if branch and branch in config.workers_prev_releases and "bringup" not in bldr.name:
         possible_workers = []
         for w in workers:
             if w.worker.workername.startswith(config.workers_prev_releases[branch]):
