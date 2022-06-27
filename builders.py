@@ -113,12 +113,12 @@ def create_builder_factory():
         haltOnFailure=True,
         name="Unpack shared repositories"))
 
-    f.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
+    f.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation:~%(prop:builddir)s)s/poky; git rev-parse HEAD"),
                                            property="yp_build_revision",
                                            haltOnFailure=True,
                                            name='Set build revision'))
 
-    f.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse --abbrev-ref HEAD"),
+    f.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation:~%(prop:builddir)s)s/poky; git rev-parse --abbrev-ref HEAD"),
                                            property="yp_build_branch",
                                            haltOnFailure=True,
                                            name='Set build branch'))
@@ -274,12 +274,12 @@ def create_parent_builder_factory(buildername, waitname):
         haltOnFailure=True,
         name="Unpack shared repositories"))
 
-    factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse HEAD"),
+    factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation:~%(prop:builddir)s)s/poky; git rev-parse HEAD"),
                                                  property="yp_build_revision",
                                                  haltOnFailure=True,
                                                  name='Set build revision'))
 
-    factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation)s/poky; git rev-parse --abbrev-ref HEAD"),
+    factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:sharedrepolocation:~%(prop:builddir)s)s/poky; git rev-parse --abbrev-ref HEAD"),
                                                  property="yp_build_branch",
                                                  haltOnFailure=True,
                                                  name='Set build branch'))
