@@ -37,7 +37,7 @@ class WriteLayerInfo(buildstep.ShellMixin, buildstep.BuildStep):
         repojson = self.generateLayerInfo()
         layerinfo = os.path.join(self.getProperty("builddir"),
                                  "layerinfo.json")
-        writerepos = "printf '%s' >> %s" % (repojson, layerinfo)
+        writerepos = "printf '%s' > %s" % (repojson, layerinfo)
         cmd = yield self.makeRemoteShellCommand(
             command=writerepos)
         yield self.runCommand(cmd)
