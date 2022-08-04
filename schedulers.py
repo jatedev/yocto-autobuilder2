@@ -62,7 +62,7 @@ branchdefaults = {
         'branch_meta-mingw': 'kirkstone',
         'branch_meta-openembedded': 'kirkstone',
         'branch_meta-ti': 'master',
-        'branch_meta-virtualization': 'master',
+        'branch_meta-virtualization': 'kirkstone',
         'branch_oecore': 'kirkstone',
     },
     'honister': {
