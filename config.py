@@ -77,6 +77,7 @@ trigger_builders_wait_shared = [
     "qa-extras", "qa-extras2",
     "check-layer", "meta-mingw",
     "reproducible",
+    "oe-selftest-armhost",
     "qemuarm64-armhost"
 ]
 
@@ -114,7 +115,6 @@ builders_others = [
     "qemuarm-armhost",
     "check-layer-nightly",
     "oe-selftest-arm",
-    "oe-selftest-armhost",
     "metrics",
     "qemuriscv32", "qemuriscv64", "qemuriscv64-ptest", "qemuppc64",
     "auh"
