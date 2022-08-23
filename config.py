@@ -144,7 +144,7 @@ workers_bringup = []
 # workers with wine on them for meta-mingw
 workers_wine = ["ubuntu1804-ty-3"]
 workers_buildperf = ["perf-ubuntu1604", "perf-centos7", "perf-debian11"]
-workers_arm = ["ubuntu1804-arm-1", "ubuntu2004-arm-1"]
+workers_arm = ["ubuntu1804-arm-1", "ubuntu2004-arm-1", "ubuntu2204-arm-1"]
 # workers which don't need buildtools for AUH and are able to send email to mailing lists
 workers_auh = ["alma8-ty-1", "alma8-ty-2"]
 
