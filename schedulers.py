@@ -70,6 +70,7 @@ branchdefaults = {
         'branch_poky': 'kirkstone',
         'branch_bitbake': '2.0',
         'branch_meta-arm': 'kirkstone',
+        'branch_meta-agl': 'master',
         'branch_meta-aws': 'kirkstone',
         'branch_meta-gplv2': 'kirkstone',
         'branch_meta-intel': 'kirkstone',
