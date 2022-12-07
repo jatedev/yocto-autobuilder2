@@ -9,7 +9,7 @@ from buildbot.process.results import FAILURE
 from buildbot.process.results import SKIPPED
 from buildbot.process.results import SUCCESS
 from buildbot.process.results import WARNINGS
-from buildbot.steps.shell import ShellCommand
+from buildbot.steps.shell import ShellCommandNewStyle
 
 from functools import partial
 
@@ -17,7 +17,7 @@ from functools import partial
 # Monitor the step 1-X logs and stdio, collecting up any warnings and errors seen
 # and publish them at the end in their own 'logfile' for ease of access to the user
 #
-class SimpleLogObserver(ShellCommand):
+class SimpleLogObserver(ShellCommandNewStyle):
 
     warnOnWarnings = True
     warnOnFailure = True
