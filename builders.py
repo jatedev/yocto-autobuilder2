@@ -88,7 +88,7 @@ def create_builder_factory():
     # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
     # directory of the user running buildbot.
     clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
-    f.addStep(steps.ShellCommandNewStyle(
+    f.addStep(steps.ShellCommand(
         command=[clob, util.Interpolate("%(prop:builddir)s/")],
         haltOnFailure=True,
         name="Clobber build dir"))
@@ -102,7 +102,7 @@ def create_builder_factory():
     f.addStep(TargetPresent())
     f.addStep(steps.SetProperties(properties=ensure_props_set))
     f.addStep(WriteLayerInfo(name='Write main layerinfo.json', haltOnFailure=True))
-    f.addStep(steps.ShellCommandNewStyle(
+    f.addStep(steps.ShellCommand(
         command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/shared-repo-unpack"),
                  util.Interpolate("%(prop:builddir)s/layerinfo.json"),
                  util.Interpolate("%(prop:builddir)s/build"),
@@ -113,12 +113,12 @@ def create_builder_factory():
         haltOnFailure=True,
         name="Unpack shared repositories"))
 
-    f.addStep(steps.SetPropertyFromCommandNewStyle(command=util.Interpolate("cd %(prop:builddir)s/build; git rev-parse HEAD"),
+    f.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:builddir)s/build; git rev-parse HEAD"),
                                            property="yp_build_revision",
                                            haltOnFailure=True,
                                            name='Set build revision'))
 
-    f.addStep(steps.SetPropertyFromCommandNewStyle(command=util.Interpolate("cd %(prop:builddir)s/build; git rev-parse --abbrev-ref HEAD"),
+    f.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:builddir)s/build; git rev-parse --abbrev-ref HEAD"),
                                            property="yp_build_branch",
                                            haltOnFailure=True,
                                            name='Set build branch'))
@@ -127,7 +127,7 @@ def create_builder_factory():
     f.addStep(RunConfigCheckSteps(posttrigger=False))
 
     # If the build was successful, clean up the build directory
-    f.addStep(steps.ShellCommandNewStyle(
+    f.addStep(steps.ShellCommand(
         command=[clob, util.Interpolate("%(prop:builddir)s/")],
         doStepIf=lambda step: step.build.results == SUCCESS,
         haltOnFailure=False,
@@ -231,7 +231,7 @@ def create_parent_builder_factory(buildername, waitname):
     # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
     # directory of the user running buildbot.
     clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
-    factory.addStep(steps.ShellCommandNewStyle(
+    factory.addStep(steps.ShellCommand(
                     command=[clob, util.Interpolate("%(prop:builddir)s/")],
                     haltOnFailure=True,
                     name="Clobber build dir"))
@@ -244,7 +244,7 @@ def create_parent_builder_factory(buildername, waitname):
         haltOnFailure=True,
         name='Fetch yocto-autobuilder-helper'))
     factory.addStep(WriteLayerInfo(name='Write main layerinfo.json', haltOnFailure=True))
-    factory.addStep(steps.ShellCommandNewStyle(
+    factory.addStep(steps.ShellCommand(
         command=[
             util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/prepare-shared-repos"),
             util.Interpolate("%(prop:builddir)s/layerinfo.json"),
@@ -262,7 +262,7 @@ def create_parent_builder_factory(buildername, waitname):
         factory.addStep(steps.SetProperty(property="build_type", value="quick"))
 
     # shared-repo-unpack
-    factory.addStep(steps.ShellCommandNewStyle(
+    factory.addStep(steps.ShellCommand(
         command=[
             util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/shared-repo-unpack"),
             util.Interpolate("%(prop:builddir)s/layerinfo.json"),
@@ -274,12 +274,12 @@ def create_parent_builder_factory(buildername, waitname):
         haltOnFailure=True,
         name="Unpack shared repositories"))
 
-    factory.addStep(steps.SetPropertyFromCommandNewStyle(command=util.Interpolate("cd %(prop:builddir)s/build; git rev-parse HEAD"),
+    factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:builddir)s/build; git rev-parse HEAD"),
                                                  property="yp_build_revision",
                                                  haltOnFailure=True,
                                                  name='Set build revision'))
 
-    factory.addStep(steps.SetPropertyFromCommandNewStyle(command=util.Interpolate("cd %(prop:builddir)s/build; git rev-parse --abbrev-ref HEAD"),
+    factory.addStep(steps.SetPropertyFromCommand(command=util.Interpolate("cd %(prop:builddir)s/build; git rev-parse --abbrev-ref HEAD"),
                                                  property="yp_build_branch",
                                                  haltOnFailure=True,
                                                  name='Set build branch'))
@@ -320,7 +320,7 @@ def create_parent_builder_factory(buildername, waitname):
 
     factory.addStep(RunConfigCheckSteps(posttrigger=True))
 
-    factory.addStep(steps.ShellCommandNewStyle(
+    factory.addStep(steps.ShellCommand(
         command=[
             util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/send-qa-email"),
             util.Property("send_email"),
@@ -333,7 +333,7 @@ def create_parent_builder_factory(buildername, waitname):
         name="Send QA Email"))
 
 
-    factory.addStep(steps.ShellCommandNewStyle(
+    factory.addStep(steps.ShellCommand(
                     command=["rm", "-fr", util.Interpolate("{}/%(prop:buildername)s-%(prop:buildnumber)s".format(config.sharedrepodir))],
                     haltOnFailure=True,
                     name="Remove shared repo dir"))
@@ -349,7 +349,7 @@ def create_doc_builder_factory():
     # NOTE: Assumes that yocto-autobuilder repo has been cloned to home
     # directory of the user running buildbot.
     clob = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
-    f.addStep(steps.ShellCommandNewStyle(
+    f.addStep(steps.ShellCommand(
         command=[clob, util.Interpolate("%(prop:builddir)s/")],
         haltOnFailure=True,
         name="Clobber build dir"))
@@ -374,7 +374,7 @@ def create_doc_builder_factory():
         mode='incremental',
         haltOnFailure=True,
         name='Fetch bitbake'))
-    f.addStep(steps.ShellCommandNewStyle(
+    f.addStep(steps.ShellCommand(
         command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/run-docs-build"),
                  util.Interpolate("%(prop:builddir)s"),
                  util.Interpolate("%(prop:builddir)s/yocto-docs"),

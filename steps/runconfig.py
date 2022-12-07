@@ -153,7 +153,7 @@ def get_runconfig_step(name, stepname, phase, description, posttrigger):
         timeout=16200)  # default of 1200s/20min is too short, use 4.5hrs
     return step
 
-class RunConfigCheckSteps(shell.ShellCommandNewStyle):
+class RunConfigCheckSteps(shell.ShellCommand):
     name = 'Check run-config steps to use'
     descriptionDone = ['Checked which run-config approach to use']
     haltOnFailure = False
@@ -214,7 +214,7 @@ class RunConfigCheckSteps(shell.ShellCommandNewStyle):
             log = yield self.addLog(logName)
         log.addStdout(message)
 
-class TargetPresent(shell.ShellCommandNewStyle):
+class TargetPresent(shell.ShellCommand):
     name = "Check if branch needs this target"
     command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/target-present"), util.Property("buildername")]
 
