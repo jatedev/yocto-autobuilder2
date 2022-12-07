@@ -153,7 +153,7 @@ def get_runconfig_step(name, stepname, phase, description, posttrigger):
         timeout=16200)  # default of 1200s/20min is too short, use 4.5hrs
     return step
 
-class RunConfigCheckSteps(shell.ShellCommand):
+class RunConfigCheckSteps(shell.ShellCommandNewStyle):
     name = 'Check run-config steps to use'
     descriptionDone = ['Checked which run-config approach to use']
     haltOnFailure = False
@@ -168,22 +168,30 @@ class RunConfigCheckSteps(shell.ShellCommand):
         self.command.append(self.jsonFileName)
         super().__init__(*args, **kwargs)
 
-    def start(self):
         self.log_observer_json = logobserver.BufferLogObserver()
         self.addLogObserver('json', self.log_observer_json)
-        return super().start()
+
+    @defer.inlineCallbacks
+    def run(self):
+        cmd = yield self.makeRemoteShellCommand()
+        yield self.runCommand(cmd)
+
+        # Steal from shell.py (new style)
+        stdio_log = yield self.getLog('json')
+        yield stdio_log.finish()
+
+        yield self.evaluateCommand(cmd)
+        return cmd.results()
 
     def evaluateCommand(self, cmd):
         # If the command fails, fall back to old style run-config execution
-        rc = super().evaluateCommand(cmd)
+        rc = cmd.results()
         logLines = self.log_observer_json.getStdout()
-        json_text = ''.join([line for line in logLines.splitlines()])
         jsonconfig = None
-        if json_text:
-            try:
-                jsonconfig = json.loads(json_text)
-            except Exception as ex:
-                self._addToLog('stderr', 'ERROR: unable to parse data, exception: {}'.format(ex))
+        try:
+            jsonconfig = json.loads(logLines)
+        except Exception as ex:
+            self._addToLog('stderr', 'ERROR: unable to parse data, exception {}: {}'.format(ex.__class__, ex))
 
         if rc == FAILURE or not jsonconfig:
             steps = [get_runconfig_legacy_step(self.posttrigger)]
@@ -206,7 +214,7 @@ class RunConfigCheckSteps(shell.ShellCommand):
             log = yield self.addLog(logName)
         log.addStdout(message)
 
-class TargetPresent(shell.ShellCommand):
+class TargetPresent(shell.ShellCommandNewStyle):
     name = "Check if branch needs this target"
     command=[util.Interpolate("%(prop:builddir)s/yocto-autobuilder-helper/scripts/target-present"), util.Property("buildername")]
 
